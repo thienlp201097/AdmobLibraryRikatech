@@ -71,11 +71,15 @@ AdmodUtils.getInstance().loadAndShowAdInterstitialWithCallback(context, admobId,
                     @Override
                     public void onAdClosed() {
                       //code here
+                      // Utils.getInstance().replaceActivity(MainActivity.this,OtherActivity.class);
+                      // Utils.getInstance().addActivity(MainActivity.this,OtherActivity.class);
                     }
 
                     @Override
                     public void onAdFail() {
                       //code here
+                      // Utils.getInstance().replaceActivity(MainActivity.this,OtherActivity.class);
+                      // Utils.getInstance().addActivity(MainActivity.this,OtherActivity.class);
                     }
                 }, isEnableDialog);
 
@@ -88,17 +92,17 @@ AdmodUtils.getInstance().loadAndShowAdInterstitialWithCallback(context, admobId,
                 AdmodUtils.getInstance().loadAndShowAdInterstitialWithCallback(MainActivity.this, getString(R.string.ads_admob_inter_id), 0, new AdCallback() {
                     @Override
                     public void onAdClosed() {
-                        //code here
-//                        Utils.getInstance().replaceActivity(MainActivity.this,OtherActivity.class);
-                        Utils.getInstance().addActivity(MainActivity.this,OtherActivity.class);
+                      //code here
+                      // Utils.getInstance().replaceActivity(MainActivity.this,OtherActivity.class);
+                      // Utils.getInstance().addActivity(MainActivity.this,OtherActivity.class);
 
                     }
 
                     @Override
                     public void onAdFail() {
-                        //code here
-//                        Utils.getInstance().replaceActivity(MainActivity.this,OtherActivity.class);
-                        Utils.getInstance().addActivity(MainActivity.this,OtherActivity.class);
+                      //code here
+                      // Utils.getInstance().replaceActivity(MainActivity.this,OtherActivity.class);
+                      // Utils.getInstance().addActivity(MainActivity.this,OtherActivity.class);
                     }
                 }, true);
  ```
