@@ -27,18 +27,25 @@ defaultConfig {
 - init Aplication
 ```bash
 public class MyApplication extends AdsMultiDexApplication {
+    boolean isShowAds = true;
+    boolean isShowAdsResume = true;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        
-        AdmodUtils.getInstance().initAdmob(this, isDebug, isAddDeviceTest, isEnableAds);        
-        // isDebug:bool = use admob id test
-        // isAddDeviceTest:bool = get and add device test this device
-        // isEnableAds:bool = is show ads
-        
-        if (enableAdsResume()) {
-            AppOpenManager.getInstance().init(this, getOpenAppAdId());
+
+        PurchaseUtils.getInstance().initBilling(this,getString(R.string.play_console_license));
+        if (PurchaseUtils.getInstance().isPurchased(getString(R.string.premium))) {
+            isShowAds = false;
+        }else {
+            isShowAds = true;
+        }
+
+        AdmodUtils.getInstance().initAdmob(this, true, true, isShowAds);
+
+        if (isShowAdsResume) {
+            AppOpenManager.getInstance().init(this, getString(R.string.ads_admob_app_open));
+            AppOpenManager.getInstance().disableAppResumeWithActivity(SplashActivity.class);
         }
     }
 
@@ -47,17 +54,6 @@ public class MyApplication extends AdsMultiDexApplication {
         super.attachBaseContext(base);
         MultiDex.install(this);
     }
-
-    @Override
-    public boolean enableAdsResume() {
-        return true;
-    }
-
-    @Override
-    public String getOpenAppAdId() {
-        return "ca-app-pub-3940256099942544/3419835294";
-    }
-
 }
 ```
 - Add MyApplication to manifest
