@@ -1,15 +1,14 @@
-package com.vapp.admobexample;
+package com.vapp.admobexample.view;
 
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ads.google.admobads.admobnative.GoogleENative;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.vapp.admobexample.R;
 import com.vapp.admobexample.iap.IAPActivity;
 import com.vapp.admoblibrary.Utils;
 import com.vapp.admoblibrary.ads.AdCallback;

@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AdmobExample">
         <activity
-            android:name=".OtherActivity"
+            android:name=".view.OtherActivity"
             android:theme="@style/Theme.AdmobExample.NoActionBar"></activity>
 
         <meta-data
@@ -19,7 +19,7 @@
             android:value="ca-app-pub-3940256099942544~3347511713" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".view.MainActivity"
             android:theme="@style/Theme.AdmobExample.NoActionBar" />
         <activity android:name=".SplashActivity">
             <intent-filter>
@@ -28,7 +28,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".NativeRecyclerActivity" />
+        <activity android:name=".view.NativeRecyclerActivity" />
         <activity android:name=".iap.IAPActivity" />
     </application>
 

@@ -1,9 +1,11 @@
-package com.vapp.admobexample;
+package com.vapp.admobexample.view;
 
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.vapp.admobexample.R;
 
 public class OtherActivity extends AppCompatActivity {
 

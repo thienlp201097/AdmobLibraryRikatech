@@ -1,4 +1,4 @@
-package com.vapp.admobexample;
+package com.vapp.admobexample.view;
 
 import android.os.Bundle;
 
@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ads.google.admobads.admobnative.GoogleENative;
 import com.ads.google.admobads.admobnative.GoogleNativeAdAdapter;
+import com.vapp.admobexample.R;
 import com.vapp.admobexample.adapter.ClickListener;
 import com.vapp.admobexample.adapter.ItemModel;
 import com.vapp.admobexample.adapter.MainAdapter;
