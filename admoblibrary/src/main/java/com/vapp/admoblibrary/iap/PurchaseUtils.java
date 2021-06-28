@@ -6,15 +6,21 @@ import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.BillingClientStateListener;
+import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.TransactionDetails;
 import com.vapp.admoblibrary.Utils;
 import com.vapp.admoblibrary.ads.AdmodUtils;
 
+import java.util.List;
+
 public class PurchaseUtils {
     public static BillingProcessor bp;
     public static TransactionDetails purchaseTransactionDetails = null;
-    public static boolean statusSubscriptioned = false;
 
     private static volatile PurchaseUtils INSTANCE;
 
@@ -27,6 +33,10 @@ public class PurchaseUtils {
     }
 
     public  void initBilling(Context context, String play_console_license) {
+
+
+
+
         bp = new BillingProcessor(context, play_console_license, new BillingProcessor.IBillingHandler() {
             @Override
             public void onProductPurchased(String productId, TransactionDetails details) {
@@ -47,11 +57,58 @@ public class PurchaseUtils {
 
             @Override
             public void onBillingInitialized() {
-
             }
         });
         bp.initialize();
+
+        BillingClient billingClient = BillingClient.newBuilder(context)
+                .setListener(purchasesUpdatedListener)
+                .enablePendingPurchases()
+                .build();
+
+        billingClient.startConnection(new BillingClientStateListener() {
+            @Override
+            public void onBillingSetupFinished(BillingResult billingResult) {
+                if (billingResult.getResponseCode() ==  BillingClient.BillingResponseCode.OK) {
+                    // The BillingClient is ready. You can query purchases here.
+                    int a = 0;
+
+                }
+
+            }
+            @Override
+            public void onBillingServiceDisconnected() {
+                // Try to restart the connection on the next request to
+                // Google Play by calling the startConnection() method.
+                int a = 0;
+
+            }
+        });
+
     }
+
+    private PurchasesUpdatedListener purchasesUpdatedListener = new PurchasesUpdatedListener() {
+        @Override
+        public void onPurchasesUpdated(BillingResult billingResult, List<Purchase> purchases) {
+            if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK
+                    && purchases != null) {
+                for (Purchase purchase : purchases) {
+                    int a = 0;
+                }
+            } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) {
+                // Handle an error caused by a user cancelling the purchase flow.
+                int a = 0;
+
+            } else {
+                // Handle any other error codes.
+                int a = 0;
+
+            }
+        }
+    };
+
+
+
 
     private  boolean hasSubscription() {
         if (purchaseTransactionDetails != null) {
@@ -65,9 +122,9 @@ public class PurchaseUtils {
         purchaseTransactionDetails = bp.getSubscriptionTransactionDetails(idSubscribe);
         bp.loadOwnedPurchasesFromGoogle();
         if (hasSubscription()) {
-            return statusSubscriptioned = true;
+            return  true;
         } else {
-            return statusSubscriptioned = false;
+            return false;
         }
     }
 

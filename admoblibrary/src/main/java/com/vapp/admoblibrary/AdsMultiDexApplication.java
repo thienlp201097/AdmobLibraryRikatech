@@ -15,14 +15,7 @@ public abstract class AdsMultiDexApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-//        AdmodUtils.initAdmob(this, false, true,true);
-//        if (enableAdsResume()) {
-//            AppOpenManager.getInstance().init(this, getOpenAppAdId());
-//        }
     }
-
-    public abstract boolean enableAdsResume();
-    public abstract String getOpenAppAdId();
 
     @Override
     protected void attachBaseContext(Context base) {

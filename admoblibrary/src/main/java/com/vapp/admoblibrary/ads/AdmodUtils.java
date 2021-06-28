@@ -53,6 +53,7 @@ public class AdmodUtils {
     ProgressDialog dialog;
     public long lastTimeShowInterstitial = 0;
     public boolean isAdShowing = false;
+    public boolean isShowAds = true;
     public boolean isTesting = false;
     List<String> testDevices = new ArrayList<>();
     private static volatile AdmodUtils INSTANCE;
@@ -66,11 +67,9 @@ public class AdmodUtils {
 
 
     public void initAdmob(Context context, boolean isDebug, boolean isAddDeviceTest, boolean isEnableAds) {
-
         if (!isEnableAds) {
-            isAdShowing = false;
+            isShowAds = false;
         }
-
         MobileAds.initialize(context, initializationStatus -> {
         });
 
@@ -138,6 +137,12 @@ public class AdmodUtils {
 
 
     public void loadAdBanner(Context context,  String bannerId, ViewGroup viewGroup) {
+
+        if (!isShowAds){
+            viewGroup.setVisibility(View.GONE);
+            return;
+        }
+
         AdView mAdView = new AdView(context);
         if (isTesting) {
             bannerId = context.getString(R.string.ads_admob_banner_id);
@@ -153,6 +158,12 @@ public class AdmodUtils {
     // ads native
     @SuppressLint("StaticFieldLeak")
     public void loadNativeAds(Activity activity, String s, ViewGroup viewGroup, GoogleENative size) {
+
+        if (!isShowAds){
+            viewGroup.setVisibility(View.GONE);
+            return;
+        }
+
         AdLoader adLoader;
         if (isTesting) {
             s = activity.getString(R.string.ads_admob_native_id);
@@ -197,6 +208,10 @@ public class AdmodUtils {
     RewardedAd mRewardedAd = null;
 
     public void loadAndShowAdRewardWithCallback(Activity activity, String admobId, AdCallback adCallback2, boolean enableLoadingDialog) {
+        if (!isShowAds){
+            adCallback2.onAdClosed();
+            return;
+        }
 
         if (isTesting) {
             admobId = activity.getString(R.string.ads_admob_reward_id);
@@ -320,6 +335,12 @@ public class AdmodUtils {
     }
 
     public void showAdInterstitialWithCallback(Activity activity, AdCallback adCallback, int limitTime) {
+
+        if (!isShowAds){
+            adCallback.onAdClosed();
+            return;
+        }
+
         long currentTime = getCurrentTime();
         if (mInterstitialAd != null) {
             if (currentTime - lastTimeShowInterstitial >= limitTime) {
@@ -392,6 +413,10 @@ public class AdmodUtils {
     }
 
     public void loadAndShowAdInterstitialWithCallback(Activity activity, String admobId, int limitTime, AdCallback adCallback, boolean enableLoadingDialog) {
+        if (!isShowAds){
+            adCallback.onAdClosed();
+            return;
+        }
 
         long currentTime = getCurrentTime();
         if (currentTime - lastTimeShowInterstitial >= limitTime) {

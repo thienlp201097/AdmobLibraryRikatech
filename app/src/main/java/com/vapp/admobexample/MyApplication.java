@@ -7,19 +7,29 @@ import androidx.multidex.MultiDex;
 import com.vapp.admoblibrary.AdsMultiDexApplication;
 import com.vapp.admoblibrary.ads.AdmodUtils;
 import com.vapp.admoblibrary.ads.AppOpenManager;
+import com.vapp.admoblibrary.iap.PurchaseUtils;
 
 public class MyApplication extends AdsMultiDexApplication {
+    boolean isShowAds = true;
+    boolean isShowAdsResume = true;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        AdmodUtils.getInstance().initAdmob(this, true, true,true);
-        if (enableAdsResume()) {
-            AppOpenManager.getInstance().init(this, getOpenAppAdId());
-            AppOpenManager.getInstance().disableAppResumeWithActivity(SplashActivity.class);
 
+        PurchaseUtils.getInstance().initBilling(this,getString(R.string.play_console_license));
+        if (PurchaseUtils.getInstance().isPurchased(getString(R.string.premium))) {
+            isShowAds = false;
+        }else {
+            isShowAds = true;
         }
 
+        AdmodUtils.getInstance().initAdmob(this, true, true, isShowAds);
+
+        if (isShowAdsResume) {
+            AppOpenManager.getInstance().init(this, getString(R.string.ads_admob_app_open));
+            AppOpenManager.getInstance().disableAppResumeWithActivity(SplashActivity.class);
+        }
     }
 
     @Override
@@ -27,16 +37,4 @@ public class MyApplication extends AdsMultiDexApplication {
         super.attachBaseContext(base);
         MultiDex.install(this);
     }
-
-    @Override
-    public boolean enableAdsResume() {
-        return true;
-    }
-
-    @Override
-    public String getOpenAppAdId() {
-        return "ca-app-pub-3940256099942544/3419835294";
-    }
-
-
 }
