@@ -158,3 +158,19 @@ PurchaseUtils.getInstance().subscribe(Activity context, String idSubscribe);
 ```bash
 PurchaseUtils.getInstance().isPurchased(String idSubscribe);
 ```
+# Utils
+```bash
+Utils.getInstance().showMessenger(Context context, String content)
+ ```
+ ```bash
+ Utils.getInstance().addActivity(Context context, Class activity)
+ ```
+ ```bash
+ Utils.getInstance()replaceActivity(Context context, Class activity)
+ ```
+ ```bash
+ Utils.getInstance()addFragment(AppCompatActivity context, Fragment fragment, int contentFrame, boolean addToBackStack)
+ ```
+  ```bash
+ Utils.getInstance()replaceFragment(FragmentManager fm, Fragment fragment, int contentFrame, boolean addToBackStack)
+ ```
