@@ -32,7 +32,7 @@ public class MyApplication extends AdsMultiDexApplication {
     public void onCreate() {
         super.onCreate();
         
-        AdmodUtils.initAdmob(this, isDebug, isAddDeviceTest, isEnableAds);        
+        AdmodUtils.getInstance().initAdmob(this, isDebug, isAddDeviceTest, isEnableAds);        
         // isDebug:bool = use admob id test
         // isAddDeviceTest:bool = get and add device test this device
         // isEnableAds:bool = is show ads
@@ -70,7 +70,7 @@ public class MyApplication extends AdsMultiDexApplication {
   + loadAndShowAdInterstitialWithCallback
 
 ```bash 
-AdmodUtils.loadAndShowAdInterstitialWithCallback(context, admobId, limitTime, 
+AdmodUtils.getInstance().loadAndShowAdInterstitialWithCallback(context, admobId, limitTime, 
       new AdCallback() {
                     @Override
                     public void onAdClosed() {
@@ -96,13 +96,13 @@ AdmodUtils.loadAndShowAdInterstitialWithCallback(context, admobId, limitTime,
 # PurchaseUtils
 - init
 ```bash
-PurchaseUtils.initBilling(Context context,String play_console_license, String idSubscribe);
+PurchaseUtils.getInstance().initBilling(Context context,String play_console_license, String idSubscribe);
 ```
 - subscribe
 ```bash
-PurchaseUtils.subscribe(Activity context, String idSubscribe);
+PurchaseUtils.getInstance().subscribe(Activity context, String idSubscribe);
 ```
 - isPurchased
 ```bash
-PurchaseUtils.isPurchased(String idSubscribe);
+PurchaseUtils.getInstance().isPurchased(String idSubscribe);
 ```
