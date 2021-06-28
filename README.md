@@ -145,6 +145,20 @@ AdmodUtils.getInstance().loadAdBanner(MainActivity.this, getString(R.string.ads_
 AdmodUtils.getInstance().loadNativeAds(MainActivity.this, getString(R.string.ads_admob_native_id), viewGroup_nativeAds, GoogleENative.UNIFIED_SMALL);
 //GoogleENative = UNIFIED_MEDIUM | UNIFIED_SMALL
 ```
+- AdNative in recyclerview
+```bash 
+ recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        MainAdapter mainAdapter = new MainAdapter(itemModel, this::onNavigate);
+        GoogleNativeAdAdapter googleNativeAdAdapter = new GoogleNativeAdAdapter(
+                new GoogleNativeAdAdapter.Param(
+                        NativeRecyclerActivity.this,
+                        mainAdapter, GoogleENative.UNIFIED_SMALL,
+                        2,
+                        R.layout.layout_ad, R.id.layout_ad));
+        recyclerView.setAdapter(googleNativeAdAdapter);
+        //GoogleENative = UNIFIED_MEDIUM | UNIFIED_SMALL
+        //2 is position show ad native
+```
 # PurchaseUtils
 - init
 ```bash
@@ -158,3 +172,19 @@ PurchaseUtils.getInstance().subscribe(Activity context, String idSubscribe);
 ```bash
 PurchaseUtils.getInstance().isPurchased(String idSubscribe);
 ```
+# Utils
+```bash
+Utils.getInstance().showMessenger(Context context, String content)
+ ```
+ ```bash
+ Utils.getInstance().addActivity(Context context, Class activity)
+ ```
+ ```bash
+ Utils.getInstance()replaceActivity(Context context, Class activity)
+ ```
+ ```bash
+ Utils.getInstance()addFragment(AppCompatActivity context, Fragment fragment, int contentFrame, boolean addToBackStack)
+ ```
+  ```bash
+ Utils.getInstance()replaceFragment(FragmentManager fm, Fragment fragment, int contentFrame, boolean addToBackStack)
+ ```
