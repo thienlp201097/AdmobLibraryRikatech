@@ -1,4 +1,4 @@
-# AdmobUtilsLibrary
+# Admob Utils Library
 
 - Adding the library to your project:
 Add the following in your root build.gradle at the end of repositories:
