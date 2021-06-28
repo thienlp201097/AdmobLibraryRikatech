@@ -145,6 +145,20 @@ AdmodUtils.getInstance().loadAdBanner(MainActivity.this, getString(R.string.ads_
 AdmodUtils.getInstance().loadNativeAds(MainActivity.this, getString(R.string.ads_admob_native_id), viewGroup_nativeAds, GoogleENative.UNIFIED_SMALL);
 //GoogleENative = UNIFIED_MEDIUM | UNIFIED_SMALL
 ```
+- AdNative in recyclerview
+```bash 
+ recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        MainAdapter mainAdapter = new MainAdapter(itemModel, this::onNavigate);
+        GoogleNativeAdAdapter googleNativeAdAdapter = new GoogleNativeAdAdapter(
+                new GoogleNativeAdAdapter.Param(
+                        NativeRecyclerActivity.this,
+                        mainAdapter, GoogleENative.UNIFIED_SMALL,
+                        2,
+                        R.layout.layout_ad, R.id.layout_ad));
+        recyclerView.setAdapter(googleNativeAdAdapter);
+        //GoogleENative = UNIFIED_MEDIUM | UNIFIED_SMALL
+        //2 is position show ad native
+```
 # PurchaseUtils
 - init
 ```bash
