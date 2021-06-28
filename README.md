@@ -13,7 +13,7 @@ allprojects {
 Implement library in your app level build.gradle:
 ```bash
 dependencies {
-    implementation 'com.'
+    implementation 'com.github.Namdh1212:AdmobUtilsLibrary:{version}'
     //multidex
     implementation "androidx.multidex:multidex:2.0.1"
 }
@@ -88,15 +88,71 @@ AdmodUtils.getInstance().loadAndShowAdInterstitialWithCallback(context, admobId,
 // isEnableDialog:Bool 
 ```
   + loadAdInterstitial
+ ```bash 
+                AdmodUtils.getInstance().loadAndShowAdInterstitialWithCallback(MainActivity.this, getString(R.string.ads_admob_inter_id), 0, new AdCallback() {
+                    @Override
+                    public void onAdClosed() {
+                        //code here
+//                        Utils.getInstance().replaceActivity(MainActivity.this,OtherActivity.class);
+                        Utils.getInstance().addActivity(MainActivity.this,OtherActivity.class);
+
+                    }
+
+                    @Override
+                    public void onAdFail() {
+                        //code here
+//                        Utils.getInstance().replaceActivity(MainActivity.this,OtherActivity.class);
+                        Utils.getInstance().addActivity(MainActivity.this,OtherActivity.class);
+                    }
+                }, true);
+ ```
   + showAdInterstitialWithCallback
-- AdBanner
+  ```bash 
+         AdmodUtils.getInstance().loadAndShowAdRewardWithCallback(MainActivity.this, getString(R.string.ads_admob_reward_id), new AdCallback() {
+                    @Override
+                    public void onAdClosed() {
+                        //code here
+                        Utils.getInstance().showMessenger(MainActivity.this,"Reward");
+
+                    }
+
+                    @Override
+                    public void onAdFail() {
+                        //code here
+                        Utils.getInstance().showMessenger(MainActivity.this,"Reward fail");
+                    }
+                }, true);
+ ```
 - AdReward
+```bash 
+ AdmodUtils.getInstance().loadAndShowAdRewardWithCallback(MainActivity.this, getString(R.string.ads_admob_reward_id), new AdCallback() {
+                    @Override
+                    public void onAdClosed() {
+                        //code here
+                        Utils.getInstance().showMessenger(MainActivity.this,"Reward");
+
+                    }
+
+                    @Override
+                    public void onAdFail() {
+                        //code here
+                        Utils.getInstance().showMessenger(MainActivity.this,"Reward fail");
+                    }
+                }, true);
+```
+- AdBanner
+```bash 
+AdmodUtils.getInstance().loadAdBanner(MainActivity.this, getString(R.string.ads_admob_native_id), viewGroup_banner);
+```
 - AdNative
-- AppOpenAds
+```bash 
+AdmodUtils.getInstance().loadNativeAds(MainActivity.this, getString(R.string.ads_admob_native_id), viewGroup_nativeAds, GoogleENative.UNIFIED_SMALL);
+//GoogleENative = UNIFIED_MEDIUM | UNIFIED_SMALL
+```
 # PurchaseUtils
 - init
 ```bash
-PurchaseUtils.getInstance().initBilling(Context context,String play_console_license, String idSubscribe);
+PurchaseUtils.getInstance().initBilling(Context context,String play_console_license);
 ```
 - subscribe
 ```bash
