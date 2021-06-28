@@ -3,21 +3,24 @@
     package="com.vapp.admobexample">
 
     <application
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AdmobExample">
+        <activity
+            android:name=".OtherActivity"
+            android:theme="@style/Theme.AdmobExample.NoActionBar"></activity>
+
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-3940256099942544~3347511713" />
 
         <activity
-            android:name=".main.MainActivity"
-            android:label="@string/title_activity_main"
-            android:theme="@style/Theme.AdmobExample.NoActionBar"/>
-
+            android:name=".MainActivity"
+            android:theme="@style/Theme.AdmobExample.NoActionBar" />
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,7 +28,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".main.Second2Fragment" />
+        <activity android:name=".NativeRecyclerActivity" />
+        <activity android:name=".iap.IAPActivity" />
     </application>
 
 </manifest>

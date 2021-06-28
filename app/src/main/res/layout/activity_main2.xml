@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".main.MainActivity">
+    tools:context=".MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -16,18 +16,78 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
+            app:title="AdmobUtils"
             app:popupTheme="@style/Theme.AdmobExample.PopupOverlay" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_main2" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_gravity="center|top"
+        android:gravity="center|top">
+        <Button
+            android:id="@+id/btn_LoadInter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="load inter"
+            android:layout_marginTop="10dp"/>
+        <Button
+            android:id="@+id/btn_ShowInter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="show inter"
+            android:layout_marginTop="5dp"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        <Button
+            android:id="@+id/btn_LoadAndShowInter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="load and show inter"
+            android:layout_marginTop="5dp"/>
+
+        <Button
+            android:id="@+id/btn_LoadAndShowReward"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="load and show reward"
+            android:layout_marginTop="5dp"/>
+
+        <Button
+            android:id="@+id/btn_LoadNative"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="load native in recycleview"
+            android:layout_marginTop="5dp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_IAP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="IAP"
+            android:textColor="@color/white"
+            android:background="@color/teal_700"
+            android:layout_marginTop="10dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/banner"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/nativeAds"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"/>
+    </LinearLayout>
+
+
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
