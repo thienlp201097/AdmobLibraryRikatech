@@ -12,14 +12,17 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.vapp.admobexample.R;
+import com.vapp.admoblibrary.Utils;
 import com.vapp.admoblibrary.ads.AdmodUtils;
 import com.vapp.admoblibrary.ads.AppOpenManager;
 import com.vapp.admoblibrary.iap.PurchaseUtils;
+import com.vapp.admoblibrary.iap.SkuDetailsModel;
 
 public class IAPActivity extends AppCompatActivity {
     private TextView tvStatus;
     private Button btnPremium;
-
+    private Button btnDetail;
+    private Button btnRestore;
     @Override
     protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,12 +30,38 @@ public class IAPActivity extends AppCompatActivity {
 
         tvStatus = findViewById(R.id.tv_status);
         btnPremium = findViewById(R.id.btn_premium);
-
+        btnDetail = findViewById(R.id.btn_detail);
+        btnRestore = findViewById(R.id.btn_restore);
 
         btnPremium.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PurchaseUtils.getInstance().subscribe(IAPActivity.this,getString(R.string.premium));
+            }
+        });
+
+        btnDetail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               SkuDetailsModel skuDetailsModel = PurchaseUtils.getInstance().getDetailSubscribe(IAPActivity.this,getString(R.string.premium));
+                Utils.getInstance().showMessenger(IAPActivity.this,skuDetailsModel.getPriceValue().toString() + " " + skuDetailsModel.getCurrency());
+            }
+        });
+
+        btnRestore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Handler().postDelayed(() -> {
+                    if (PurchaseUtils.getInstance().isPurchased(getString(R.string.premium))) {
+                        tvStatus.setText("Vip");
+                        AdmodUtils.getInstance().initAdmob(IAPActivity.this, true, true, false);
+
+                    }else {
+                        tvStatus.setText("Free");
+                        AdmodUtils.getInstance().initAdmob(IAPActivity.this, true, true, true);
+
+                    }
+                }, 1000);
             }
         });
     }

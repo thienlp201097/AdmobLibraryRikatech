@@ -3,6 +3,7 @@ package com.vapp.admoblibrary.iap;
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,6 +13,7 @@ import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.anjlab.android.iab.v3.BillingProcessor;
+import com.anjlab.android.iab.v3.SkuDetails;
 import com.anjlab.android.iab.v3.TransactionDetails;
 import com.vapp.admoblibrary.Utils;
 import com.vapp.admoblibrary.ads.AdmodUtils;
@@ -32,15 +34,11 @@ public class PurchaseUtils {
         return INSTANCE;
     }
 
-    public  void initBilling(Context context, String play_console_license) {
-
-
-
-
-        bp = new BillingProcessor(context, play_console_license, new BillingProcessor.IBillingHandler() {
+    public void initBilling(Context context, String play_console_license) {
+            bp = new BillingProcessor(context, play_console_license, new BillingProcessor.IBillingHandler() {
             @Override
             public void onProductPurchased(String productId, TransactionDetails details) {
-                Utils.getInstance().showMessenger(context,"onProductPurchased");
+              //  Utils.getInstance().showMessenger(context,"onProductPurchased");
             }
 
             @Override
@@ -107,16 +105,12 @@ public class PurchaseUtils {
         }
     };
 
-
-
-
     private  boolean hasSubscription() {
         if (purchaseTransactionDetails != null) {
             return purchaseTransactionDetails.purchaseInfo != null;
         }
         return false;
     }
-
 
     public  boolean isPurchased(String idSubscribe) {
         purchaseTransactionDetails = bp.getSubscriptionTransactionDetails(idSubscribe);
@@ -135,4 +129,10 @@ public class PurchaseUtils {
             Log.d("MainActivity", "onBillingInitialized: Subscription updated is not supported");
         }
     }
+
+    public SkuDetailsModel getDetailSubscribe(Activity activity, String idSubscribe){
+        SkuDetails subs = bp.getSubscriptionListingDetails(idSubscribe);
+        SkuDetailsModel detailsModel = new  SkuDetailsModel(subs.productId, subs.title, subs.description, subs.isSubscription, subs.currency, subs.priceValue, subs.subscriptionPeriod, subs.subscriptionFreeTrialPeriod, subs.haveTrialPeriod, subs.introductoryPriceValue, subs.introductoryPricePeriod, subs.haveIntroductoryPeriod, subs.introductoryPriceCycles);
+        return detailsModel;
+     }
 }
