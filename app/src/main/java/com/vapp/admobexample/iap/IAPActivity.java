@@ -28,7 +28,6 @@ public class IAPActivity extends AppCompatActivity {
         tvStatus = findViewById(R.id.tv_status);
         btnPremium = findViewById(R.id.btn_premium);
 
-        PurchaseUtils.getInstance().initBilling(this,getString(R.string.play_console_license));
 
         btnPremium.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,8 +43,12 @@ public class IAPActivity extends AppCompatActivity {
         new Handler().postDelayed(() -> {
             if (PurchaseUtils.getInstance().isPurchased(getString(R.string.premium))) {
                 tvStatus.setText("Vip");
+                AdmodUtils.getInstance().initAdmob(this, true, true, false);
+
             }else {
                 tvStatus.setText("Free");
+                AdmodUtils.getInstance().initAdmob(this, true, true, true);
+
             }
         }, 1000);
 
@@ -57,9 +60,13 @@ public class IAPActivity extends AppCompatActivity {
         new Handler().postDelayed(() -> {
             if (PurchaseUtils.getInstance().isPurchased(getString(R.string.premium))) {
                 tvStatus.setText("Vip");
+                AdmodUtils.getInstance().initAdmob(this, true, true, false);
+
             }else {
                 tvStatus.setText("Free");
+                AdmodUtils.getInstance().initAdmob(this, true, true, true);
+
             }
-        }, 800);
+        }, 1000);
     }
 }

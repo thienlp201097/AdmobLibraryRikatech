@@ -27,7 +27,7 @@
         android:id="@+id/tv_AppName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Admob Demo"
+        android:text="Loading...."
         android:textSize="24sp"
         android:textColor="@color/black"
         android:layout_below="@+id/iv_icon"
