@@ -168,13 +168,29 @@ AdmodUtils.getInstance().loadNativeAds(MainActivity.this, getString(R.string.ads
 ```bash
 PurchaseUtils.getInstance().initBilling(Context context,String play_console_license);
 ```
-- subscribe
+- subscribeById
 ```bash
-PurchaseUtils.getInstance().subscribe(Activity context, String idSubscribe);
+PurchaseUtils.getInstance().subscribeById(Activity context, String idSubscribe);
+```
+- getDetailSubscribe
+```bash
+PurchaseUtils.getInstance().getDetailSubscribe(Activity context, String idSubscribe);
+```
+- isSubscription
+```bash
+PurchaseUtils.getInstance().isSubscriptiond(String idSubscribe);
+```
+- purchaseById
+```bash
+PurchaseUtils.getInstance().purchaseById(Activity context, String idPurchased);
+```
+- getDetailPurchased
+```bash
+PurchaseUtils.getInstance().getDetailPurchase(Activity context, String idPurchased);
 ```
 - isPurchased
 ```bash
-PurchaseUtils.getInstance().isPurchased(String idSubscribe);
+PurchaseUtils.getInstance().isPurchased(String idPurchased);
 ```
 # Utils
 ```bash
