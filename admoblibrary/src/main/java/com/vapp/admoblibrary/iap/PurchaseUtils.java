@@ -112,7 +112,7 @@ public class PurchaseUtils {
         return false;
     }
 
-    public  boolean isPurchased(String idSubscribe) {
+    public  boolean isSubscriptiond(String idSubscribe) {
         purchaseTransactionDetails = bp.getSubscriptionTransactionDetails(idSubscribe);
         bp.loadOwnedPurchasesFromGoogle();
         if (hasSubscription()) {
@@ -122,7 +122,17 @@ public class PurchaseUtils {
         }
     }
 
-    public  void subscribe(Activity context, String idSubscribe) {
+    public  boolean isPurchased(String idSubscribe) {
+        purchaseTransactionDetails = bp.getPurchaseTransactionDetails(idSubscribe);
+        bp.loadOwnedPurchasesFromGoogle();
+        if (hasSubscription()) {
+            return  true;
+        } else {
+            return false;
+        }
+    }
+
+    public  void subscribeById(Activity context, String idSubscribe) {
         if (bp.isSubscriptionUpdateSupported()) {
             bp.subscribe(context, idSubscribe);
         } else {
@@ -130,9 +140,36 @@ public class PurchaseUtils {
         }
     }
 
-    public SkuDetailsModel getDetailSubscribe(Activity activity, String idSubscribe){
+
+    public  void purchaseById(Activity context, String idSubscribe) {
+        if (bp.isSubscriptionUpdateSupported()) {
+            bp.purchase(context, idSubscribe);
+        } else {
+            Log.d("MainActivity", "onBillingInitialized: Subscription updated is not supported");
+        }
+    }
+
+    public SkuDetailsModel getDetailSubscribe(Activity activity, String idSubscribe) {
         SkuDetails subs = bp.getSubscriptionListingDetails(idSubscribe);
-        SkuDetailsModel detailsModel = new  SkuDetailsModel(subs.productId, subs.title, subs.description, subs.isSubscription, subs.currency, subs.priceValue, subs.subscriptionPeriod, subs.subscriptionFreeTrialPeriod, subs.haveTrialPeriod, subs.introductoryPriceValue, subs.introductoryPricePeriod, subs.haveIntroductoryPeriod, subs.introductoryPriceCycles);
+        SkuDetailsModel detailsModel = new SkuDetailsModel(subs.productId, subs.title, subs.description, subs.isSubscription, subs.currency, subs.priceValue, subs.subscriptionPeriod, subs.subscriptionFreeTrialPeriod, subs.haveTrialPeriod, subs.introductoryPriceValue, subs.introductoryPricePeriod, subs.haveIntroductoryPeriod, subs.introductoryPriceCycles);
         return detailsModel;
-     }
+    }
+
+
+    public SkuDetailsModel getDetailPurchase(Activity activity, String idSubscribe) {
+        SkuDetails subs = bp.getPurchaseListingDetails(idSubscribe);
+        SkuDetailsModel detailsModel = new SkuDetailsModel(subs.productId, subs.title, subs.description, subs.isSubscription, subs.currency, subs.priceValue, subs.subscriptionPeriod, subs.subscriptionFreeTrialPeriod, subs.haveTrialPeriod, subs.introductoryPriceValue, subs.introductoryPricePeriod, subs.haveIntroductoryPeriod, subs.introductoryPriceCycles);
+        return detailsModel;
+    }
+
+
+    public boolean restore(String idSubscribeOrPurchases){
+        purchaseTransactionDetails = bp.getSubscriptionTransactionDetails(idSubscribeOrPurchases);
+        bp.loadOwnedPurchasesFromGoogle();
+        if (hasSubscription()) {
+            return  true;
+        } else {
+            return false;
+        }
+    }
 }
