@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">AdmobExample</string>
-    <string name="play_console_license">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAs1+QCUUYSI0VOf3xtTO6d9+h29RQm53lDXekYy/CqFb+cNZkVrsx6zUfWVGGEQ0sBG4uRJQCK8YBUMk0Y2+Z9f+aOBRQsso+ydzfOA3jtMSkmzWjCbXz36ie5wHtc54+0WK0hC5meRdjKGe5QFS36+iSEDAgc9BC0f6aHgZAM6Lu6G1Q7jnKDZ0RBPIn6qeqy9dX1rRdPSkebgbZFCYBikAlQgYTwKCgLF6V8qTJmxw9KplZSk/1R7Ro2RT4V7phqAji7IvATeALreFVkoMynsB/vl2iZuXwpJf9mr7PXMg3kV3i1wxUnnUJltZq/v9566aIcYjbkPnFP4VSfAIbxQIDAQAB</string>
-    <string name="premium">123</string>
+    <string name="play_console_license">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnw3LqFNhVmbdCzEc7eaMZTDYqlPARE1/IUfZWLnxEmWcOD2ZB59KbFNp92Wz+CizaGrA9NP2rBgm2zXVGx0oDAgu+MIIGkhqyy5LHP0dDFFEZVG3IsuqgRoqM4at0YFohXtgmc2uqec0AVh748SKBZ2gWuM7tM38ZHNhVhzL7tY5iTd8qUScuZIAwLALog7kuFPEkP1j53eghenbq2rwl4uZual2+OLFzGdLTG7BaBYVHealZwiKKxcYuo3N2ElTkq4SQyhyICO+MvRQ1GJtNTaPEhI9GHm7y5VHV1neb2fsr/154TAJxNN0UyW+MmX1/lnLjlLfMbCPvY+8f6tD2wIDAQAB</string>
+    <string name="premium">subscription_remove_ads_all</string>
     <string name="product_id">demo_poduct</string>
 
 </resources>

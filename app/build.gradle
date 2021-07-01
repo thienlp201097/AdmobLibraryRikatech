@@ -8,7 +8,7 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "com.screenrecorder.videorecorder.free.lite"
+        applicationId "com.remote.control.universal.tv.smarttv.ir.remotecontrol"
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 1

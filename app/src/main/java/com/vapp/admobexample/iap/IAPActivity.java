@@ -55,6 +55,7 @@ public class IAPActivity extends AppCompatActivity {
         btnDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                SkuDetailsModel skuDetailsModel = PurchaseUtils.getInstance().getDetailSubscribe(IAPActivity.this,getString(R.string.premium));
                 Utils.getInstance().showMessenger(IAPActivity.this,skuDetailsModel.getPriceValue().toString() + " " + skuDetailsModel.getCurrency());
             }
@@ -63,7 +64,7 @@ public class IAPActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 new Handler().postDelayed(() -> {
-                    if (PurchaseUtils.getInstance().restore(getString(R.string.premium))) {
+                    if (PurchaseUtils.getInstance().restoreSubscription(getString(R.string.premium))) {
                         tvStatus.setText("Vip");
 
                     }else {
@@ -90,17 +91,16 @@ public class IAPActivity extends AppCompatActivity {
         btnRestorePurchases.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 new Handler().postDelayed(() -> {
-                    if (PurchaseUtils.getInstance().isPurchased(getString(R.string.product_id))) {
-                        tvStatusPurchases.setText("Buyed");
-                        AdmodUtils.getInstance().initAdmob(IAPActivity.this, true, true, false);
+                    if (PurchaseUtils.getInstance().restorePurchase(getString(R.string.product_id))) {
+                        tvStatus.setText("Vip");
 
                     }else {
-                        tvStatusPurchases.setText("not buy");
-                        AdmodUtils.getInstance().initAdmob(IAPActivity.this, true, true, true);
-
+                        tvStatus.setText("Free");
                     }
                 }, 1000);
+
             }
         });
     }

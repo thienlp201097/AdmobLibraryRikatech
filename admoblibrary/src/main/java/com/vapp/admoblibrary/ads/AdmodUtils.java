@@ -195,10 +195,7 @@ public class AdmodUtils {
 
                     }
                 })
-                .withNativeAdOptions(new NativeAdOptions.Builder()
-
-                        .build())
-                .build();
+                .withNativeAdOptions(new NativeAdOptions.Builder().build()).build();
 
         adLoader.loadAd(adRequest);
         Log.e(" Admod", "loadAdNativeAds");

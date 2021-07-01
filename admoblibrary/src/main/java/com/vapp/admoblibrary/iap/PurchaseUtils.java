@@ -43,7 +43,7 @@ public class PurchaseUtils {
 
             @Override
             public void onPurchaseHistoryRestored() {
-                Utils.getInstance().showMessenger(context,"onPurchaseHistoryRestored");
+               // Utils.getInstance().showMessenger(context,"onPurchaseHistoryRestored");
 
             }
 
@@ -55,6 +55,7 @@ public class PurchaseUtils {
 
             @Override
             public void onBillingInitialized() {
+//                getDetailSubscribe(context, "1111");
             }
         });
         bp.initialize();
@@ -112,6 +113,7 @@ public class PurchaseUtils {
         return false;
     }
 
+
     public  boolean isSubscriptiond(String idSubscribe) {
         purchaseTransactionDetails = bp.getSubscriptionTransactionDetails(idSubscribe);
         bp.loadOwnedPurchasesFromGoogle();
@@ -149,7 +151,8 @@ public class PurchaseUtils {
         }
     }
 
-    public SkuDetailsModel getDetailSubscribe(Activity activity, String idSubscribe) {
+    public SkuDetailsModel getDetailSubscribe(Context activity, String idSubscribe) {
+        bp.loadOwnedPurchasesFromGoogle();
         SkuDetails subs = bp.getSubscriptionListingDetails(idSubscribe);
         SkuDetailsModel detailsModel = new SkuDetailsModel(subs.productId, subs.title, subs.description, subs.isSubscription, subs.currency, subs.priceValue, subs.subscriptionPeriod, subs.subscriptionFreeTrialPeriod, subs.haveTrialPeriod, subs.introductoryPriceValue, subs.introductoryPricePeriod, subs.haveIntroductoryPeriod, subs.introductoryPriceCycles);
         return detailsModel;
@@ -157,16 +160,27 @@ public class PurchaseUtils {
 
 
     public SkuDetailsModel getDetailPurchase(Activity activity, String idSubscribe) {
+        bp.loadOwnedPurchasesFromGoogle();
         SkuDetails subs = bp.getPurchaseListingDetails(idSubscribe);
         SkuDetailsModel detailsModel = new SkuDetailsModel(subs.productId, subs.title, subs.description, subs.isSubscription, subs.currency, subs.priceValue, subs.subscriptionPeriod, subs.subscriptionFreeTrialPeriod, subs.haveTrialPeriod, subs.introductoryPriceValue, subs.introductoryPricePeriod, subs.haveIntroductoryPeriod, subs.introductoryPriceCycles);
         return detailsModel;
     }
 
 
-    public boolean restore(String idSubscribeOrPurchases){
+    public boolean restoreSubscription(String idSubscribeOrPurchases){
         purchaseTransactionDetails = bp.getSubscriptionTransactionDetails(idSubscribeOrPurchases);
         bp.loadOwnedPurchasesFromGoogle();
         if (hasSubscription()) {
+            return  true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean restorePurchase(String idSubscribeOrPurchases){
+        purchaseTransactionDetails = bp.getPurchaseTransactionDetails(idSubscribeOrPurchases);
+        bp.loadOwnedPurchasesFromGoogle();
+        if (isPurchased(idSubscribeOrPurchases)) {
             return  true;
         } else {
             return false;
