@@ -83,8 +83,8 @@ public class PurchaseUtils {
 
             }
         });
-
     }
+
 
     private PurchasesUpdatedListener purchasesUpdatedListener = new PurchasesUpdatedListener() {
         @Override
@@ -115,8 +115,8 @@ public class PurchaseUtils {
 
 
     public  boolean isSubscriptiond(String idSubscribe) {
-        purchaseTransactionDetails = bp.getSubscriptionTransactionDetails(idSubscribe);
         bp.loadOwnedPurchasesFromGoogle();
+        purchaseTransactionDetails = bp.getSubscriptionTransactionDetails(idSubscribe);
         if (hasSubscription()) {
             return  true;
         } else {
@@ -125,8 +125,8 @@ public class PurchaseUtils {
     }
 
     public  boolean isPurchased(String idSubscribe) {
-        purchaseTransactionDetails = bp.getPurchaseTransactionDetails(idSubscribe);
         bp.loadOwnedPurchasesFromGoogle();
+        purchaseTransactionDetails = bp.getPurchaseTransactionDetails(idSubscribe);
         if (hasSubscription()) {
             return  true;
         } else {
@@ -168,8 +168,8 @@ public class PurchaseUtils {
 
 
     public boolean restoreSubscription(String idSubscribeOrPurchases){
-        purchaseTransactionDetails = bp.getSubscriptionTransactionDetails(idSubscribeOrPurchases);
         bp.loadOwnedPurchasesFromGoogle();
+        purchaseTransactionDetails = bp.getSubscriptionTransactionDetails(idSubscribeOrPurchases);
         if (hasSubscription()) {
             return  true;
         } else {
@@ -178,8 +178,8 @@ public class PurchaseUtils {
     }
 
     public boolean restorePurchase(String idSubscribeOrPurchases){
-        purchaseTransactionDetails = bp.getPurchaseTransactionDetails(idSubscribeOrPurchases);
         bp.loadOwnedPurchasesFromGoogle();
+        purchaseTransactionDetails = bp.getPurchaseTransactionDetails(idSubscribeOrPurchases);
         if (isPurchased(idSubscribeOrPurchases)) {
             return  true;
         } else {

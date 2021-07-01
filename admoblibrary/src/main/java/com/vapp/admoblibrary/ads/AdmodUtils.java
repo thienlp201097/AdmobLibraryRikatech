@@ -500,13 +500,9 @@ public class AdmodUtils {
                     adCallback.onAdFail();
                 }
             });
-
-
         } else {
             adCallback.onAdClosed();
         }
-
-
     }
 
     private long getCurrentTime() {

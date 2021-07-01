@@ -108,31 +108,6 @@ public class IAPActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        new Handler().postDelayed(() -> {
-            if (PurchaseUtils.getInstance().isSubscriptiond(getString(R.string.premium))) {
-                tvStatus.setText("Vip");
-                AdmodUtils.getInstance().initAdmob(this, true, true, false);
-
-            }else {
-                tvStatus.setText("Free");
-                AdmodUtils.getInstance().initAdmob(this, true, true, true);
-
-            }
-
-
-            if (PurchaseUtils.getInstance().isPurchased(getString(R.string.product_id))) {
-                tvStatusPurchases.setText("Buyed");
-                AdmodUtils.getInstance().initAdmob(this, true, true, false);
-
-            }else {
-                tvStatusPurchases.setText("not buy");
-                AdmodUtils.getInstance().initAdmob(this, true, true, true);
-
-            }
-
-
-        }, 1000);
-
     }
 
     @Override
