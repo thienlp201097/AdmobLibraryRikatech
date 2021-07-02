@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Lifecycle;
@@ -36,14 +37,17 @@ import com.google.android.gms.ads.formats.NativeAdOptions;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
+import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeAdView;
 import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.vapp.admoblibrary.R;
+import com.vapp.admoblibrary.ads.admobnative.NativeFunc;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.annotation.Native;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -157,7 +161,7 @@ public class AdmodUtils {
 
     // ads native
     @SuppressLint("StaticFieldLeak")
-    public void loadNativeAds(Activity activity, String s,AdCallback adCallback2, ViewGroup viewGroup, GoogleENative size) {
+    public void loadNativeAds(Activity activity, String s, ViewGroup viewGroup, GoogleENative size) {
 
         if (!isShowAds){
             viewGroup.setVisibility(View.GONE);
@@ -170,10 +174,10 @@ public class AdmodUtils {
         }
 
         adLoader = new AdLoader.Builder(activity, s)
-                .forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
-                    @Override
-                    public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
+                .forNativeAd(new NativeAd.OnNativeAdLoadedListener() {
 
+                    @Override
+                    public void onNativeAdLoaded(@NonNull @NotNull NativeAd nativeAd) {
                         int id = 0;
                         if (size == GoogleENative.UNIFIED_MEDIUM) {
                             id = R.layout.ad_unified_medium;
@@ -184,16 +188,17 @@ public class AdmodUtils {
                         NativeAdView adView = (NativeAdView) activity.getLayoutInflater()
                                 .inflate(id, null);
 
+                        NativeFunc.Companion.populateNativeAdView(nativeAd,adView,size);
+
                         viewGroup.removeAllViews();
                         viewGroup.addView(adView);
                         viewGroup.setVisibility(View.VISIBLE);
-
                     }
+
                 })
                 .withAdListener(new AdListener() {
                     @Override
                     public void onAdFailedToLoad(LoadAdError adError) {
-                        adCallback2.onAdFail();
                     }
                 })
                 .withNativeAdOptions(new NativeAdOptions.Builder().build()).build();
@@ -201,6 +206,8 @@ public class AdmodUtils {
         adLoader.loadAd(adRequest);
         Log.e(" Admod", "loadAdNativeAds");
     }
+
+
 
     //reward
     RewardedAd mRewardedAd = null;
@@ -384,6 +391,9 @@ public class AdmodUtils {
                     }
                 });
             } else {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
                 adCallback.onAdClosed();
                 if (AppOpenManager.getInstance().isInitialized()) {
                     AppOpenManager.getInstance().enableAppResume();
@@ -397,6 +407,9 @@ public class AdmodUtils {
                         dialog.dismiss();
                 } catch (Exception e) {
                     dialog = null;
+                    if (dialog != null) {
+                        dialog.dismiss();
+                    }
                     e.printStackTrace();
                 }
                 new Handler().postDelayed(() -> {
@@ -473,6 +486,9 @@ public class AdmodUtils {
                                     dialog.dismiss();
                             } catch (Exception e) {
                                 dialog = null;
+                                if (dialog != null) {
+                                    dialog.dismiss();
+                                }
                                 e.printStackTrace();
                             }
                             new Handler().postDelayed(() -> {
@@ -490,6 +506,7 @@ public class AdmodUtils {
                             dialog.dismiss();
                         }
                         adCallback.onAdFail();
+
                     }
 
                 }
@@ -498,11 +515,17 @@ public class AdmodUtils {
                 public void onAdFailedToLoad(@NonNull @org.jetbrains.annotations.NotNull LoadAdError loadAdError) {
                     super.onAdFailedToLoad(loadAdError);
                     mInterstitialAd = null;
+                    if (dialog != null) {
+                        dialog.dismiss();
+                    }
                     adCallback.onAdFail();
                 }
             });
         } else {
             adCallback.onAdClosed();
+            if (dialog != null) {
+                dialog.dismiss();
+            }
         }
     }
 

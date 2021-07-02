@@ -119,17 +119,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        AdmodUtils.getInstance().loadNativeAds(MainActivity.this, getString(R.string.ads_admob_native_id), new AdCallback() {
-            @Override
-            public void onAdClosed() {
-
-            }
-
-            @Override
-            public void onAdFail() {
-
-            }
-        }, nativeAds, GoogleENative.UNIFIED_SMALL);
+        AdmodUtils.getInstance().loadNativeAds(MainActivity.this, getString(R.string.ads_admob_native_id), nativeAds, GoogleENative.UNIFIED_SMALL);
         AdmodUtils.getInstance().loadAdBanner(MainActivity.this, getString(R.string.ads_admob_native_id), banner);
 
     }
