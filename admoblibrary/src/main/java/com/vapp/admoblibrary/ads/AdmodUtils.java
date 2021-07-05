@@ -188,7 +188,10 @@ public class AdmodUtils {
                         NativeAdView adView = (NativeAdView) activity.getLayoutInflater()
                                 .inflate(id, null);
 
-                        NativeFunc.Companion.populateNativeAdView(nativeAd,adView,size);
+                        if (!isTesting) {
+                            NativeFunc.Companion.populateNativeAdView(nativeAd,adView,size);
+                        }
+
 
                         viewGroup.removeAllViews();
                         viewGroup.addView(adView);
