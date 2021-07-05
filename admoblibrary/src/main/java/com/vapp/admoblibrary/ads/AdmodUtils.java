@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
@@ -56,9 +57,11 @@ import java.util.List;
 public class AdmodUtils {
     ProgressDialog dialog;
     public long lastTimeShowInterstitial = 0;
+    public long timeOut = 0;
     public boolean isAdShowing = false;
     public boolean isShowAds = true;
     public boolean isTesting = false;
+    boolean isTimeOut = false;
     List<String> testDevices = new ArrayList<>();
     private static volatile AdmodUtils INSTANCE;
 
@@ -70,7 +73,12 @@ public class AdmodUtils {
     }
 
 
-    public void initAdmob(Context context, boolean isDebug, boolean isAddDeviceTest, boolean isEnableAds) {
+    public void initAdmob(Context context, long timeout, boolean isDebug, boolean isAddDeviceTest, boolean isEnableAds) {
+        if (timeout > 0){
+            timeOut = timeout;
+        }else {
+            timeOut = 30000;
+        }
         if (!isEnableAds) {
             isShowAds = false;
         }
@@ -216,9 +224,27 @@ public class AdmodUtils {
     RewardedAd mRewardedAd = null;
 
     public void loadAndShowAdRewardWithCallback(Activity activity, String admobId, AdCallback adCallback2, boolean enableLoadingDialog) {
+        isTimeOut = false;
+
         if (!isShowAds){
             adCallback2.onAdClosed();
             return;
+        }
+
+        if (timeOut > 0) {
+            new CountDownTimer(timeOut, 1000) {
+                public void onTick(long millisUntilFinished) {
+                }
+                public void onFinish() {
+                    if (!isTimeOut){
+                        isTimeOut = true;
+                        adCallback2.onAdFail();
+                        if (dialog != null) {
+                            dialog.dismiss();
+                        }
+                    }
+                }
+            }.start();
         }
 
         if (isTesting) {
@@ -239,10 +265,16 @@ public class AdmodUtils {
                     @Override
                     public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                         // Handle the error.
-                        mRewardedAd = null;
                         if (dialog != null) {
                             dialog.dismiss();
                         }
+                        mRewardedAd = null;
+                        if (isTimeOut){
+                            return;
+                        }
+                        isTimeOut = true;
+
+
                         adCallback2.onAdFail();
                     }
 
@@ -252,6 +284,12 @@ public class AdmodUtils {
                         if (dialog != null) {
                             dialog.dismiss();
                         }
+
+                        if (isTimeOut){
+                            return;
+                        }
+                        isTimeOut = true;
+
                         if (mRewardedAd != null) {
                             mRewardedAd.setFullScreenContentCallback(new FullScreenContentCallback() {
                                 @Override
@@ -298,6 +336,8 @@ public class AdmodUtils {
                                 dialog.dismiss();
                             }
                             adCallback2.onAdFail();
+                            isTimeOut = true;
+
                         }
                     }
                 });
@@ -341,7 +381,6 @@ public class AdmodUtils {
 
 
     }
-
     public void showAdInterstitialWithCallback(Activity activity, AdCallback adCallback, int limitTime) {
 
         if (!isShowAds){
@@ -425,11 +464,28 @@ public class AdmodUtils {
             }
         }
     }
-
     public void loadAndShowAdInterstitialWithCallback(Activity activity, String admobId, int limitTime, AdCallback adCallback, boolean enableLoadingDialog) {
+        isTimeOut = false;
+
         if (!isShowAds){
             adCallback.onAdClosed();
             return;
+        }
+
+        if (timeOut > 0) {
+            new CountDownTimer(timeOut, 1000) {
+                public void onTick(long millisUntilFinished) {
+                }
+                public void onFinish() {
+                    if (!isTimeOut){
+                        isTimeOut = true;
+                        adCallback.onAdFail();
+                        if (dialog != null) {
+                            dialog.dismiss();
+                        }
+                    }
+                   }
+            }.start();
         }
 
         long currentTime = getCurrentTime();
@@ -451,6 +507,14 @@ public class AdmodUtils {
                 @Override
                 public void onAdLoaded(@NonNull @org.jetbrains.annotations.NotNull InterstitialAd interstitialAd) {
                     super.onAdLoaded(interstitialAd);
+                    if (dialog != null) {
+                        dialog.dismiss();
+                    }
+
+                    if (isTimeOut){
+                        return;
+                    }
+                    isTimeOut = true;
                     mInterstitialAd = interstitialAd;
 
                     if (mInterstitialAd != null) {
@@ -511,24 +575,32 @@ public class AdmodUtils {
                         adCallback.onAdFail();
 
                     }
-
                 }
 
                 @Override
                 public void onAdFailedToLoad(@NonNull @org.jetbrains.annotations.NotNull LoadAdError loadAdError) {
                     super.onAdFailedToLoad(loadAdError);
                     mInterstitialAd = null;
+
                     if (dialog != null) {
                         dialog.dismiss();
                     }
+
+                    if (isTimeOut){
+                        return;
+                    }
+                    isTimeOut = true;
+
                     adCallback.onAdFail();
                 }
             });
         } else {
-            adCallback.onAdClosed();
             if (dialog != null) {
                 dialog.dismiss();
             }
+            isTimeOut = true;
+            adCallback.onAdClosed();
+
         }
     }
 
