@@ -20,6 +20,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ProcessLifecycleOwner;
+import androidx.work.Data;
 
 import com.ads.google.admobads.admobnative.GoogleENative;
 import com.google.android.gms.ads.AdError;
@@ -51,7 +52,9 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.annotation.Native;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class AdmodUtils {
@@ -77,7 +80,7 @@ public class AdmodUtils {
         if (timeout > 0){
             timeOut = timeout;
         }else {
-            timeOut = 30000;
+            timeOut = 10000;
         }
         if (!isEnableAds) {
             isShowAds = false;
@@ -421,6 +424,7 @@ public class AdmodUtils {
                             dialog.dismiss();
                         }
                         adCallback.onAdClosed();
+                        lastTimeShowInterstitial = new Date().getTime();
 
                         if (AppOpenManager.getInstance().isInitialized()) {
                             AppOpenManager.getInstance().enableAppResume();
@@ -459,6 +463,7 @@ public class AdmodUtils {
                         AppOpenManager.getInstance().disableAppResume();
                     }
                     mInterstitialAd.show(activity);
+
                 }, 800);
 
             }
@@ -537,6 +542,7 @@ public class AdmodUtils {
                                 if (dialog != null) {
                                     dialog.dismiss();
                                 }
+                                lastTimeShowInterstitial = new Date().getTime();
                                 isAdShowing = false;
                                 if (AppOpenManager.getInstance().isInitialized()) {
                                     AppOpenManager.getInstance().enableAppResume();
