@@ -25,7 +25,6 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onAdFail() {
                 Utils.getInstance().replaceActivity(SplashActivity.this,MainActivity.class);
-
             }
         },false);
     }

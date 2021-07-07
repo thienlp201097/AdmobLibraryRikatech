@@ -328,7 +328,7 @@ public class AdmodUtils {
                                     // Handle the reward.
                                     adCallback2.onAdClosed();
                                     if (AppOpenManager.getInstance().isInitialized()) {
-                                        AppOpenManager.getInstance().enableAppResume();
+                                        AppOpenManager.getInstance().isAppResumeEnabled = true;
                                     }
                                 }
 
@@ -406,7 +406,7 @@ public class AdmodUtils {
                         }
                         adCallback.onAdClosed();
                         if (AppOpenManager.getInstance().isInitialized()) {
-                            AppOpenManager.getInstance().enableAppResume();
+                            AppOpenManager.getInstance().isAppResumeEnabled = true;
                         }
                     }
 
@@ -427,7 +427,8 @@ public class AdmodUtils {
                         lastTimeShowInterstitial = new Date().getTime();
 
                         if (AppOpenManager.getInstance().isInitialized()) {
-                            AppOpenManager.getInstance().enableAppResume();
+                            AppOpenManager.getInstance().isAppResumeEnabled = true;
+
                         }
                     }
 
@@ -442,7 +443,8 @@ public class AdmodUtils {
                 }
                 adCallback.onAdClosed();
                 if (AppOpenManager.getInstance().isInitialized()) {
-                    AppOpenManager.getInstance().enableAppResume();
+                    AppOpenManager.getInstance().isAppResumeEnabled = true;
+
                 }
             }
         }
@@ -460,7 +462,8 @@ public class AdmodUtils {
                 }
                 new Handler().postDelayed(() -> {
                     if (AppOpenManager.getInstance().isInitialized()) {
-                        AppOpenManager.getInstance().disableAppResume();
+                        AppOpenManager.getInstance().isAppResumeEnabled = false;
+
                     }
                     mInterstitialAd.show(activity);
 
@@ -532,7 +535,8 @@ public class AdmodUtils {
                                 }
                                 isAdShowing = false;
                                 if (AppOpenManager.getInstance().isInitialized()) {
-                                    AppOpenManager.getInstance().enableAppResume();
+                                    AppOpenManager.getInstance().isAppResumeEnabled = true;
+
                                 }
                             }
 
@@ -545,7 +549,8 @@ public class AdmodUtils {
                                 lastTimeShowInterstitial = new Date().getTime();
                                 isAdShowing = false;
                                 if (AppOpenManager.getInstance().isInitialized()) {
-                                    AppOpenManager.getInstance().enableAppResume();
+                                    AppOpenManager.getInstance().isAppResumeEnabled = true;
+
                                 }
                             }
                         });
@@ -566,7 +571,8 @@ public class AdmodUtils {
                             }
                             new Handler().postDelayed(() -> {
                                 if (AppOpenManager.getInstance().isInitialized()) {
-                                    AppOpenManager.getInstance().disableAppResume();
+                                    AppOpenManager.getInstance().isAppResumeEnabled = false;
+
                                 }
 
                                 mInterstitialAd.show(activity);

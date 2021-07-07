@@ -13,6 +13,7 @@ import com.vapp.admobexample.iap.IAPActivity;
 import com.vapp.admoblibrary.Utils;
 import com.vapp.admoblibrary.ads.AdCallback;
 import com.vapp.admoblibrary.ads.AdmodUtils;
+import com.vapp.admoblibrary.ads.AppOpenManager;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -122,5 +123,10 @@ public class MainActivity extends AppCompatActivity {
         AdmodUtils.getInstance().loadNativeAds(MainActivity.this, getString(R.string.ads_admob_native_id), nativeAds, GoogleENative.UNIFIED_SMALL);
         AdmodUtils.getInstance().loadAdBanner(MainActivity.this, getString(R.string.ads_admob_native_id), banner);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 }

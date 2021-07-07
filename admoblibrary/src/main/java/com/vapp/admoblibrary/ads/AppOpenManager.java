@@ -43,7 +43,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
     private int splashTimeout = 0;
 
     private boolean isInitialized = false;
-    private boolean isAppResumeEnabled = true;
+    public boolean isAppResumeEnabled = true;
 
     private final List<Class> disabledAppOpenList;
     private Class splashActivity;
@@ -80,12 +80,23 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
     public void init(Application application, String appOpenAdId) {
         isInitialized = true;
         this.myApplication = application;
+        initAdRequest();
+
         this.myApplication.registerActivityLifecycleCallbacks(this);
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
         this.appResumeAdId = appOpenAdId;
         if (!isAdAvailable(false) && appOpenAdId != null) {
             fetchAd(false);
         }
+    }
+
+    AdRequest adRequest;
+
+    // get AdRequest
+    public void initAdRequest() {
+        adRequest = new AdRequest.Builder()
+                .setHttpTimeoutMillis(5000)
+                .build();
     }
 
     public boolean isInitialized() {
@@ -116,13 +127,6 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
         disabledAppOpenList.remove(activityClass);
     }
 
-    public void disableAppResume() {
-        isAppResumeEnabled = false;
-    }
-
-    public void enableAppResume() {
-        isAppResumeEnabled = true;
-    }
 
     public void setAppResumeAdId(String appResumeAdId) {
         this.appResumeAdId = appResumeAdId;
@@ -136,9 +140,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
         this.fullScreenContentCallback = null;
     }
 
-    /**
-     * Request an ad
-     */
+
     public void fetchAd(final boolean isSplash) {
         Log.d(TAG, "fetchAd: isSplash = " + isSplash);
         if (isAdAvailable(isSplash)) {
@@ -176,19 +178,14 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
 
                 };
 
-        AdRequest request = getAdRequest();
+
         AppOpenAd.load(
-                myApplication, appResumeAdId, request,
+                myApplication, appResumeAdId, adRequest,
                 AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT, loadCallback);
     }
 
 
-    /**
-     * Creates and returns ad request.
-     */
-    private AdRequest getAdRequest() {
-        return new AdRequest.Builder().build();
-    }
+
 
     private boolean wasLoadTimeLessThanNHoursAgo(long loadTime, long numHours) {
         long dateDifference = (new Date()).getTime() - loadTime;
@@ -196,9 +193,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
         return (dateDifference < (numMilliSecondsPerHour * numHours));
     }
 
-    /**
-     * Utility method that checks if ad exists and can be shown.
-     */
+
     public boolean isAdAvailable(boolean isSplash) {
         long loadTime = isSplash ? splashLoadTime : appResumeLoadTime;
         boolean wasLoadTimeLessThanNHoursAgo = wasLoadTimeLessThanNHoursAgo(loadTime, 4);
