@@ -81,10 +81,9 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
         isInitialized = true;
         this.myApplication = application;
         initAdRequest();
-
+        this.appResumeAdId = appOpenAdId;
         this.myApplication.registerActivityLifecycleCallbacks(this);
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
-        this.appResumeAdId = appOpenAdId;
         if (!isAdAvailable(false) && appOpenAdId != null) {
             fetchAd(false);
         }

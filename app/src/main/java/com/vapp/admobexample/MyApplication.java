@@ -26,7 +26,7 @@ public class MyApplication extends AdsMultiDexApplication {
 //        }
         //PurchaseUtils.getInstance().isPurchased(getString(R.string.product_id)
 
-        AdmodUtils.getInstance().initAdmob(this, 10000,true, true, isShowAds);
+        AdmodUtils.getInstance().initAdmob(this, 20000,true, true, isShowAds);
 
         if (isShowAdsResume) {
             AppOpenManager.getInstance().init(this, getString(R.string.ads_admob_app_open));
