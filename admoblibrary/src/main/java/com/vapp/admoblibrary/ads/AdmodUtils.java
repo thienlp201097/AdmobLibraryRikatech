@@ -65,7 +65,7 @@ public class AdmodUtils {
     public boolean isShowAds = true;
     public boolean isTesting = false;
     boolean isTimeOut = false;
-    List<String> testDevices = new ArrayList<>();
+    public static List<String> testDevices = new ArrayList<>();
     private static volatile AdmodUtils INSTANCE;
 
     public static synchronized AdmodUtils getInstance() {
@@ -106,7 +106,7 @@ public class AdmodUtils {
         }
     }
 
-    AdRequest adRequest;
+   public static AdRequest adRequest;
 
     // get AdRequest
     public void initAdRequest() {

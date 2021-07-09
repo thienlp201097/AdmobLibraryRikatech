@@ -17,6 +17,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.appopen.AppOpenAd;
+import com.vapp.admoblibrary.R;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -81,7 +82,12 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
         isInitialized = true;
         this.myApplication = application;
         initAdRequest();
-        this.appResumeAdId = appOpenAdId;
+        if (AdmodUtils.getInstance().isTesting){
+            this.appResumeAdId = application.getString(R.string.ads_admob_app_open);
+
+        }else {
+            this.appResumeAdId = appOpenAdId;
+        }
         this.myApplication.registerActivityLifecycleCallbacks(this);
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
         if (!isAdAvailable(false) && appOpenAdId != null) {
