@@ -274,6 +274,12 @@ public class AdmodUtils {
                     @Override
                     public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
                         mRewardedAd = rewardedAd;
+
+                        isAdShowing = false;
+                        if (AppOpenManager.getInstance().isInitialized()) {
+                            AppOpenManager.getInstance().isAppResumeEnabled = false;
+                        }
+
                         if (dialog != null) {
                             dialog.dismiss();
                         }
@@ -287,7 +293,10 @@ public class AdmodUtils {
                             mRewardedAd.setFullScreenContentCallback(new FullScreenContentCallback() {
                                 @Override
                                 public void onAdShowedFullScreenContent() {
-                                    // Called when ad is shown.
+                                    isAdShowing = false;
+                                    if (AppOpenManager.getInstance().isInitialized()) {
+                                        AppOpenManager.getInstance().isAppResumeEnabled = false;
+                                    }
                                 }
 
                                 @Override
@@ -298,6 +307,9 @@ public class AdmodUtils {
                                     }
                                     adCallback2.onAdFail();
                                     mRewardedAd = null;
+                                    if (AppOpenManager.getInstance().isInitialized()) {
+                                        AppOpenManager.getInstance().isAppResumeEnabled = true;
+                                    }
 
                                 }
 
@@ -309,21 +321,43 @@ public class AdmodUtils {
                                     if (dialog != null) {
                                         dialog.dismiss();
                                     }
-                                }
-                            });
-
-                            mRewardedAd.show(activity, new OnUserEarnedRewardListener() {
-                                @Override
-                                public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
-                                    // Handle the reward.
-                                    adCallback2.onAdClosed();
                                     if (AppOpenManager.getInstance().isInitialized()) {
                                         AppOpenManager.getInstance().isAppResumeEnabled = true;
                                     }
                                 }
-
-
                             });
+
+
+                            if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+                                try {
+                                    if (dialog != null && dialog.isShowing())
+                                        dialog.dismiss();
+                                } catch (Exception e) {
+                                    dialog = null;
+                                    if (dialog != null) {
+                                        dialog.dismiss();
+                                    }
+                                    e.printStackTrace();
+                                }
+                                new Handler().postDelayed(() -> {
+                                    if (AppOpenManager.getInstance().isInitialized()) {
+                                        AppOpenManager.getInstance().isAppResumeEnabled = false;
+
+                                    }
+                                    mRewardedAd.show(activity, new OnUserEarnedRewardListener() {
+                                        @Override
+                                        public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+                                            // Handle the reward.
+                                            adCallback2.onAdClosed();
+
+                                        }
+
+
+                                    });
+                                }, 800);
+
+                            }
+
                         } else {
                             if (dialog != null) {
                                 dialog.dismiss();
@@ -540,7 +574,6 @@ public class AdmodUtils {
                                 isAdShowing = false;
                                 if (AppOpenManager.getInstance().isInitialized()) {
                                     AppOpenManager.getInstance().isAppResumeEnabled = true;
-
                                 }
                             }
                         });
