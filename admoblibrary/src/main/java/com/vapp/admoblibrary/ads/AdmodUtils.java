@@ -2,25 +2,19 @@ package com.vapp.admoblibrary.ads;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ProcessLifecycleOwner;
-import androidx.work.Data;
 
 import com.ads.google.admobads.admobnative.GoogleENative;
 import com.google.android.gms.ads.AdError;
@@ -34,9 +28,7 @@ import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.OnUserEarnedRewardListener;
 import com.google.android.gms.ads.RequestConfiguration;
-import com.google.android.gms.ads.appopen.AppOpenAd;
 import com.google.android.gms.ads.formats.NativeAdOptions;
-import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.android.gms.ads.nativead.NativeAd;
@@ -49,10 +41,8 @@ import com.vapp.admoblibrary.ads.admobnative.NativeFunc;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.annotation.Native;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -160,7 +150,7 @@ public class AdmodUtils {
 
         AdView mAdView = new AdView(context);
         if (isTesting) {
-            bannerId = context.getString(R.string.ads_admob_banner_id);
+            bannerId = context.getString(R.string.test_ads_admob_banner_id);
         }
         mAdView.setAdUnitId(bannerId);
         mAdView.setAdSize(AdSize.SMART_BANNER);
@@ -181,7 +171,7 @@ public class AdmodUtils {
 
         AdLoader adLoader;
         if (isTesting) {
-            s = activity.getString(R.string.ads_admob_native_id);
+            s = activity.getString(R.string.test_ads_admob_native_id);
         }
 
         adLoader = new AdLoader.Builder(activity, s)
@@ -251,7 +241,7 @@ public class AdmodUtils {
         }
 
         if (isTesting) {
-            admobId = activity.getString(R.string.ads_admob_reward_id);
+            admobId = activity.getString(R.string.test_ads_admob_reward_id);
         }
         if (enableLoadingDialog) {
             dialog = new ProgressDialog(activity, R.style.AppCompatAlertDialogStyle);
@@ -354,7 +344,7 @@ public class AdmodUtils {
     public void loadAdInterstitial(Context context, String s, boolean enableLoadingDialog) {
 
         if (isTesting) {
-            s = context.getString(R.string.ads_admob_inter_id);
+            s = context.getString(R.string.test_ads_admob_inter_id);
         }
 
         if (enableLoadingDialog) {
@@ -499,7 +489,7 @@ public class AdmodUtils {
         long currentTime = getCurrentTime();
         if (currentTime - lastTimeShowInterstitial >= limitTime) {
             if (isTesting) {
-                admobId = activity.getString(R.string.ads_admob_inter_id);
+                admobId = activity.getString(R.string.test_ads_admob_inter_id);
             }
             if (enableLoadingDialog) {
                 dialog = new ProgressDialog(activity, R.style.AppCompatAlertDialogStyle);

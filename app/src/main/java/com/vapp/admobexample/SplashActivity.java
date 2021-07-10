@@ -16,7 +16,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
 
-        AdmodUtils.getInstance().loadAndShowAdInterstitialWithCallback(this, getString(R.string.ads_admob_inter_id), 0, new AdCallback() {
+        AdmodUtils.getInstance().loadAndShowAdInterstitialWithCallback(this, getString(R.string.test_ads_admob_inter_id), 0, new AdCallback() {
             @Override
             public void onAdClosed() {
                 Utils.getInstance().replaceActivity(SplashActivity.this, MainActivity.class);

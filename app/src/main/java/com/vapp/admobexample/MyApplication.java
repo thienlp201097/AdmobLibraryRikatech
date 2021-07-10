@@ -28,7 +28,7 @@ public class MyApplication extends AdsMultiDexApplication {
 
         AdmodUtils.getInstance().initAdmob(this, 20000,true, true, isShowAds);
         if (isShowAdsResume) {
-            AppOpenManager.getInstance().init(this, getString(R.string.ads_admob_app_open));
+            AppOpenManager.getInstance().init(this, getString(R.string.test_ads_admob_app_open));
             AppOpenManager.getInstance().disableAppResumeWithActivity(SplashActivity.class);
         }
     }

@@ -83,7 +83,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
         this.myApplication = application;
         initAdRequest();
         if (AdmodUtils.getInstance().isTesting){
-            this.appResumeAdId = application.getString(R.string.ads_admob_app_open);
+            this.appResumeAdId = application.getString(R.string.test_ads_admob_app_open);
 
         }else {
             this.appResumeAdId = appOpenAdId;

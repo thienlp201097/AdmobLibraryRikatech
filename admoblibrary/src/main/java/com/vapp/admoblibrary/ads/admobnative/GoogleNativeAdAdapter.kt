@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import androidx.recyclerview.widget.RecyclerView
 import com.vapp.admoblibrary.R
-import com.vapp.admoblibrary.ads.AdCallback
 import com.vapp.admoblibrary.ads.AdmodUtils
 
 class GoogleNativeAdAdapter(private val mParam: Param) :
@@ -52,7 +51,7 @@ class GoogleNativeAdAdapter(private val mParam: Param) :
     private fun onBindAdViewHolder(holder: RecyclerView.ViewHolder) {
         val adHolder = holder as AdViewHolder
         if (mParam.forceReloadAdOnBind || !adHolder.loaded) {
-            AdmodUtils.getInstance().loadNativeAds(mParam.activity!!, mParam.activity!!.getString(R.string.ads_admob_native_id) , holder.adFrame, mParam.layout)
+            AdmodUtils.getInstance().loadNativeAds(mParam.activity!!, mParam.activity!!.getString(R.string.test_ads_admob_native_id) , holder.adFrame, mParam.layout)
             adHolder.loaded = true
         }
     }
