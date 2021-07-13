@@ -20,6 +20,14 @@ class NativeFunc {
             adView: NativeAdView,
             size: GoogleENative
         ) {
+            if(nativeAd==null || adView == null || size == null){
+                return
+            }
+
+            if (adView.iconView == null){
+                return
+            }
+
             adView.findViewById<MediaView>(R.id.ad_media)?.let {
                 adView.mediaView = it
             }
@@ -56,9 +64,13 @@ class NativeFunc {
                 adView.callToActionView.visibility = View.VISIBLE
                 (adView.callToActionView as Button).text = nativeAd.callToAction
             }
+
+
+
             if (nativeAd.icon == null) {
                 adView.iconView.visibility = View.GONE
             } else {
+
                 (adView.iconView as ImageView).setImageDrawable(
                     nativeAd.icon.drawable
                 )
