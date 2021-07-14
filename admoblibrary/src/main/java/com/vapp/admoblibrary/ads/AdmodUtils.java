@@ -54,7 +54,6 @@ public class AdmodUtils {
     public boolean isAdShowing = false;
     public boolean isShowAds = true;
     public boolean isTesting = false;
-    boolean isTimeOut = false;
     public List<String> testDevices = new ArrayList<>();
     private static volatile AdmodUtils INSTANCE;
 
@@ -217,28 +216,11 @@ public class AdmodUtils {
     RewardedAd mRewardedAd = null;
 
     public void loadAndShowAdRewardWithCallback(Activity activity, String admobId, RewardAdCallback adCallback2, boolean enableLoadingDialog) {
-        isTimeOut = false;
-
         if (!isShowAds){
             adCallback2.onAdClosed();
             return;
         }
 
-        if (timeOut > 0) {
-            new CountDownTimer(timeOut, 1000) {
-                public void onTick(long millisUntilFinished) {
-                }
-                public void onFinish() {
-                    if (!isTimeOut){
-                        isTimeOut = true;
-                        adCallback2.onAdFail();
-                        if (dialog != null) {
-                            dialog.dismiss();
-                        }
-                    }
-                }
-            }.start();
-        }
 
         if (isTesting) {
             admobId = activity.getString(R.string.test_ads_admob_reward_id);
@@ -262,12 +244,6 @@ public class AdmodUtils {
                             dialog.dismiss();
                         }
                         mRewardedAd = null;
-                        if (isTimeOut){
-                            return;
-                        }
-                        isTimeOut = true;
-
-
                         adCallback2.onAdFail();
                     }
 
@@ -284,10 +260,6 @@ public class AdmodUtils {
                             dialog.dismiss();
                         }
 
-                        if (isTimeOut){
-                            return;
-                        }
-                        isTimeOut = true;
 
                         if (mRewardedAd != null) {
                             mRewardedAd.setFullScreenContentCallback(new FullScreenContentCallback() {
@@ -364,7 +336,6 @@ public class AdmodUtils {
                                 dialog.dismiss();
                             }
                             adCallback2.onAdFail();
-                            isTimeOut = true;
 
                         }
                     }
@@ -498,28 +469,12 @@ public class AdmodUtils {
         }
     }
     public void loadAndShowAdInterstitialWithCallback(Activity activity, String admobId, int limitTime, AdCallback adCallback, boolean enableLoadingDialog) {
-        isTimeOut = false;
 
         if (!isShowAds){
             adCallback.onAdClosed();
             return;
         }
 
-        if (timeOut > 0) {
-            new CountDownTimer(timeOut, 1000) {
-                public void onTick(long millisUntilFinished) {
-                }
-                public void onFinish() {
-                    if (!isTimeOut){
-                        isTimeOut = true;
-                        adCallback.onAdFail();
-                        if (dialog != null) {
-                            dialog.dismiss();
-                        }
-                    }
-                   }
-            }.start();
-        }
 
         long currentTime = getCurrentTime();
         if (currentTime - lastTimeShowInterstitial >= limitTime) {
@@ -543,16 +498,11 @@ public class AdmodUtils {
                     if (dialog != null) {
                         dialog.dismiss();
                     }
-
                     mInterstitialAd = interstitialAd;
-
                     if (mInterstitialAd != null) {
                         mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
                             @Override
                             public void onAdFailedToShowFullScreenContent(@NonNull @NotNull AdError adError) {
-                                if (isTimeOut)
-                                    return;
-                                isTimeOut = true;
                                 adCallback.onAdClosed();
                                 if (dialog != null) {
                                     dialog.dismiss();
@@ -566,9 +516,7 @@ public class AdmodUtils {
 
                             @Override
                             public void onAdDismissedFullScreenContent() {
-                                if (isTimeOut)
-                                    return;
-                                isTimeOut = true;
+
                                 adCallback.onAdClosed();
 
                                 if (dialog != null) {
@@ -611,9 +559,6 @@ public class AdmodUtils {
                         if (dialog != null) {
                             dialog.dismiss();
                         }
-                        if (isTimeOut)
-                            return;
-                        isTimeOut = true;
                         adCallback.onAdFail();
 
                     }
@@ -628,9 +573,6 @@ public class AdmodUtils {
                         dialog.dismiss();
                     }
 
-                    if (isTimeOut)
-                        return;
-                    isTimeOut = true;
 
                     adCallback.onAdFail();
                 }
@@ -639,9 +581,6 @@ public class AdmodUtils {
             if (dialog != null) {
                 dialog.dismiss();
             }
-            if (isTimeOut)
-                return;
-            isTimeOut = true;
             adCallback.onAdClosed();
 
         }
