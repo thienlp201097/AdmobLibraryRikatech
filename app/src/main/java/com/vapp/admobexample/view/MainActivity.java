@@ -13,6 +13,7 @@ import com.vapp.admobexample.iap.IAPActivity;
 import com.vapp.admoblibrary.Utils;
 import com.vapp.admoblibrary.ads.AdCallback;
 import com.vapp.admoblibrary.ads.AdmodUtils;
+import com.vapp.admoblibrary.ads.RewardAdCallback;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -89,10 +90,15 @@ public class MainActivity extends AppCompatActivity {
         btn_LoadAndShowReward.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AdmodUtils.getInstance().loadAndShowAdRewardWithCallback(MainActivity.this, getString(R.string.test_ads_admob_reward_id), new AdCallback() {
+                AdmodUtils.getInstance().loadAndShowAdRewardWithCallback(MainActivity.this, getString(R.string.test_ads_admob_reward_id), new RewardAdCallback() {
                     @Override
                     public void onAdClosed() {
-                        //code here
+                        Utils.getInstance().showMessenger(MainActivity.this,"close ad");
+
+                    }
+
+                    @Override
+                    public void onEarned() {
                         Utils.getInstance().showMessenger(MainActivity.this,"Reward");
 
                     }

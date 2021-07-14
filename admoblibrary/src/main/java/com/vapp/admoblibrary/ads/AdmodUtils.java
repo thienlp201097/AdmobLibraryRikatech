@@ -216,7 +216,7 @@ public class AdmodUtils {
     //reward
     RewardedAd mRewardedAd = null;
 
-    public void loadAndShowAdRewardWithCallback(Activity activity, String admobId, AdCallback adCallback2, boolean enableLoadingDialog) {
+    public void loadAndShowAdRewardWithCallback(Activity activity, String admobId, RewardAdCallback adCallback2, boolean enableLoadingDialog) {
         isTimeOut = false;
 
         if (!isShowAds){
@@ -321,6 +321,7 @@ public class AdmodUtils {
                                     if (dialog != null) {
                                         dialog.dismiss();
                                     }
+                                    adCallback2.onAdClosed();
                                     if (AppOpenManager.getInstance().isInitialized()) {
                                         AppOpenManager.getInstance().isAppResumeEnabled = true;
                                     }
@@ -348,7 +349,7 @@ public class AdmodUtils {
                                         @Override
                                         public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
                                             // Handle the reward.
-                                            adCallback2.onAdClosed();
+                                            adCallback2.onEarned();
 
                                         }
 
