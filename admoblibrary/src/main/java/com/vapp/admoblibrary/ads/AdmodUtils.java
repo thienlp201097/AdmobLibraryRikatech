@@ -544,16 +544,15 @@ public class AdmodUtils {
                         dialog.dismiss();
                     }
 
-                    if (isTimeOut){
-                        return;
-                    }
-                    isTimeOut = true;
                     mInterstitialAd = interstitialAd;
 
                     if (mInterstitialAd != null) {
                         mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
                             @Override
                             public void onAdFailedToShowFullScreenContent(@NonNull @NotNull AdError adError) {
+                                if (isTimeOut)
+                                    return;
+                                isTimeOut = true;
                                 adCallback.onAdClosed();
                                 if (dialog != null) {
                                     dialog.dismiss();
@@ -567,7 +566,11 @@ public class AdmodUtils {
 
                             @Override
                             public void onAdDismissedFullScreenContent() {
+                                if (isTimeOut)
+                                    return;
+                                isTimeOut = true;
                                 adCallback.onAdClosed();
+
                                 if (dialog != null) {
                                     dialog.dismiss();
                                 }
@@ -608,6 +611,9 @@ public class AdmodUtils {
                         if (dialog != null) {
                             dialog.dismiss();
                         }
+                        if (isTimeOut)
+                            return;
+                        isTimeOut = true;
                         adCallback.onAdFail();
 
                     }
@@ -622,9 +628,8 @@ public class AdmodUtils {
                         dialog.dismiss();
                     }
 
-                    if (isTimeOut){
+                    if (isTimeOut)
                         return;
-                    }
                     isTimeOut = true;
 
                     adCallback.onAdFail();
@@ -634,6 +639,8 @@ public class AdmodUtils {
             if (dialog != null) {
                 dialog.dismiss();
             }
+            if (isTimeOut)
+                return;
             isTimeOut = true;
             adCallback.onAdClosed();
 
