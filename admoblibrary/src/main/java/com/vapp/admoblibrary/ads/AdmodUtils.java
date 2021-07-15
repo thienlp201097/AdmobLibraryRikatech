@@ -479,7 +479,7 @@ public class AdmodUtils {
                 return;
             }
         }
-    
+
 
         long currentTime = getCurrentTime();
         if (currentTime - lastTimeShowInterstitial >= limitTime) {
@@ -515,7 +515,6 @@ public class AdmodUtils {
                                 isAdShowing = false;
                                 if (AppOpenManager.getInstance().isInitialized()) {
                                     AppOpenManager.getInstance().isAppResumeEnabled = true;
-
                                 }
                             }
 
@@ -565,7 +564,9 @@ public class AdmodUtils {
                             dialog.dismiss();
                         }
                         adCallback.onAdFail();
-
+                        if (AppOpenManager.getInstance().isInitialized()) {
+                            AppOpenManager.getInstance().isAppResumeEnabled = true;
+                        }
                     }
                 }
 
@@ -580,6 +581,9 @@ public class AdmodUtils {
 
 
                     adCallback.onAdFail();
+                    if (AppOpenManager.getInstance().isInitialized()) {
+                        AppOpenManager.getInstance().isAppResumeEnabled = true;
+                    }
                 }
             });
         } else {
@@ -587,6 +591,9 @@ public class AdmodUtils {
                 dialog.dismiss();
             }
             adCallback.onAdClosed();
+            if (AppOpenManager.getInstance().isInitialized()) {
+                AppOpenManager.getInstance().isAppResumeEnabled = true;
+            }
 
         }
     }
