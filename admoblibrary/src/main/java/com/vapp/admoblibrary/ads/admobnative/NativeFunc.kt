@@ -24,6 +24,10 @@ class NativeFunc {
                 return
             }
 
+            if (nativeAd.body == null || nativeAd.callToAction == null){
+                return
+            }
+
             adView.findViewById<MediaView>(R.id.ad_media)?.let {
                 adView.mediaView = it
             }
