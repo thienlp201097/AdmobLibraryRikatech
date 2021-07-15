@@ -66,7 +66,7 @@ class NativeFunc {
             }
 
 
-            if( adView.iconView != null){
+            if(adView.iconView != null){
                 if (nativeAd.icon == null) {
                     adView.iconView.visibility = View.GONE
                 } else {
@@ -93,6 +93,5 @@ class NativeFunc {
                 }
             }
         }
-
     }
 }

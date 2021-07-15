@@ -192,7 +192,6 @@ public class AdmodUtils {
                             NativeFunc.Companion.populateNativeAdView(nativeAd,adView,size);
                         }
 
-
                         viewGroup.removeAllViews();
                         viewGroup.addView(adView);
                         viewGroup.setVisibility(View.VISIBLE);
