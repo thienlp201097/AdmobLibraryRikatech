@@ -66,16 +66,17 @@ class NativeFunc {
             }
 
 
-
-            if (nativeAd.icon == null) {
-                adView.iconView.visibility = View.GONE
-            } else {
-
-                (adView.iconView as ImageView).setImageDrawable(
-                    nativeAd.icon.drawable
-                )
-                adView.iconView.visibility = View.VISIBLE
+            if( adView.iconView != null){
+                if (nativeAd.icon == null) {
+                    adView.iconView.visibility = View.GONE
+                } else {
+                    (adView.iconView as ImageView).setImageDrawable(
+                        nativeAd.icon.drawable
+                    )
+                    adView.iconView.visibility = View.VISIBLE
+                }
             }
+
             if (nativeAd.starRating == null) {
                 adView.starRatingView.visibility = View.INVISIBLE
             } else {
