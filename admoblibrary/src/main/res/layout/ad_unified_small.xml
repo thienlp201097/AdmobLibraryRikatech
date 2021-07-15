@@ -30,6 +30,7 @@
                 android:isIndicator="true"
                 android:numStars="5"
                 android:stepSize="0.5"
+                android:rating="5"
                 app:layout_constraintBottom_toBottomOf="@+id/textView2"
                 app:layout_constraintStart_toEndOf="@+id/textView2"
                 app:layout_constraintTop_toTopOf="@+id/textView2" />

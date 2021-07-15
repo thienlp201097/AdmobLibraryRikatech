@@ -80,7 +80,7 @@ class NativeFunc {
             if (nativeAd.starRating == null) {
                 adView.starRatingView.visibility = View.INVISIBLE
             } else {
-                (adView.starRatingView as RatingBar).rating = nativeAd.starRating!!.toFloat()
+                (adView.starRatingView as RatingBar).rating = 5f
                 adView.starRatingView.visibility = View.VISIBLE
             }
             adView.setNativeAd(nativeAd)
