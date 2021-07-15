@@ -474,6 +474,12 @@ public class AdmodUtils {
             return;
         }
 
+        if (AppOpenManager.getInstance().isInitialized()) {
+            if (!AppOpenManager.getInstance().isAppResumeEnabled){
+                return;
+            }
+        }
+    
 
         long currentTime = getCurrentTime();
         if (currentTime - lastTimeShowInterstitial >= limitTime) {
