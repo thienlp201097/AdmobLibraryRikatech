@@ -26,18 +26,27 @@ public class NativeRecyclerActivity extends AppCompatActivity implements ClickLi
         setContentView(R.layout.recycler_activity);
         recyclerView = findViewById(R.id.recyclerViewHome);
 
-        itemModel.add(new ItemModel("Create stylish font"));
-        itemModel.add(new ItemModel("Create stylish font"));
-        itemModel.add(new ItemModel("Create stylish font"));
+        itemModel.add(new ItemModel("Create stylish font 1"));
+        itemModel.add(new ItemModel("Create stylish font 2"));
+        itemModel.add(new ItemModel("Create stylish font 3"));
+        itemModel.add(new ItemModel("Create stylish font 4"));
+        itemModel.add(new ItemModel("Create stylish font 5"));
+        itemModel.add(new ItemModel("Create stylish font 6"));
+        itemModel.add(new ItemModel("Create stylish font 7"));
+        itemModel.add(new ItemModel("Create stylish font 8"));
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         MainAdapter mainAdapter = new MainAdapter(itemModel, this::onNavigate);
         GoogleNativeAdAdapter googleNativeAdAdapter = new GoogleNativeAdAdapter(
                 new GoogleNativeAdAdapter.Param(
                         NativeRecyclerActivity.this,
-                        mainAdapter, GoogleENative.UNIFIED_SMALL,
+                        mainAdapter,
+                        getString(R.string.test_ads_admob_native_id),
+                        R.layout.ad_template_medium, //
                         2,
-                        R.layout.layout_ad, R.id.layout_ad));
+                        R.layout.layout_ad,
+                        R.id.id_ad
+                ));
         recyclerView.setAdapter(googleNativeAdAdapter);
 
     }

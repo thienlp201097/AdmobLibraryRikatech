@@ -7,7 +7,6 @@ import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.ads.google.admobads.admobnative.GoogleENative;
 import com.vapp.admobexample.R;
 import com.vapp.admobexample.iap.IAPActivity;
 import com.vapp.admoblibrary.Utils;
@@ -124,9 +123,9 @@ public class MainActivity extends AppCompatActivity {
                 Utils.getInstance().addActivity(MainActivity.this, IAPActivity.class);
             }
         });
-
-        AdmodUtils.getInstance().loadNativeAds(MainActivity.this, getString(R.string.test_ads_admob_native_id), nativeAds, GoogleENative.UNIFIED_MEDIUM);
-        AdmodUtils.getInstance().loadAdBanner(MainActivity.this, getString(R.string.test_ads_admob_banner_id), banner);
+        AdmodUtils.getInstance().loadNativeAdsWithLayout(MainActivity.this, getString(R.string.test_ads_admob_native_id), nativeAds, R.layout.ad_template_medium);
+//        AdmodUtils.getInstance().loadNativeAds(MainActivity.this, getString(R.string.test_ads_admob_native_id), nativeAds, GoogleENative.UNIFIED_MEDIUM);
+//        AdmodUtils.getInstance().loadAdBanner(MainActivity.this, getString(R.string.test_ads_admob_native_id), banner);
 
     }
 

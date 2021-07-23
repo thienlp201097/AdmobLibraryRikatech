@@ -160,6 +160,48 @@ public class AdmodUtils {
     }
 
     // ads native
+    public void loadNativeAdsWithLayout(Activity activity, String s, ViewGroup viewGroup,  int layout) {
+
+        if (!isShowAds){
+            viewGroup.setVisibility(View.GONE);
+            return;
+        }
+
+        AdLoader adLoader;
+        if (isTesting) {
+            s = activity.getString(R.string.test_ads_admob_native_id);
+        }
+
+        adLoader = new AdLoader.Builder(activity, s)
+                .forNativeAd(new NativeAd.OnNativeAdLoadedListener() {
+
+                    @Override
+                    public void onNativeAdLoaded(@NonNull @NotNull NativeAd nativeAd) {
+                        NativeAdView adView = (NativeAdView) activity.getLayoutInflater()
+                                .inflate(layout, null);
+
+                        if (!isTesting) {
+                            NativeFunc.Companion.populateNativeAdView(nativeAd,adView,GoogleENative.UNIFIED_MEDIUM);
+                        }
+
+                        viewGroup.removeAllViews();
+                        viewGroup.addView(adView);
+                        viewGroup.setVisibility(View.VISIBLE);
+                    }
+
+                })
+                .withAdListener(new AdListener() {
+                    @Override
+                    public void onAdFailedToLoad(LoadAdError adError) {
+                    }
+                })
+                .withNativeAdOptions(new NativeAdOptions.Builder().build()).build();
+
+        adLoader.loadAd(adRequest);
+        Log.e(" Admod", "loadAdNativeAds");
+    }
+
+    // ads native
     @SuppressLint("StaticFieldLeak")
     public void loadNativeAds(Activity activity, String s, ViewGroup viewGroup, GoogleENative size) {
 
@@ -208,7 +250,6 @@ public class AdmodUtils {
         adLoader.loadAd(adRequest);
         Log.e(" Admod", "loadAdNativeAds");
     }
-
 
 
     //reward

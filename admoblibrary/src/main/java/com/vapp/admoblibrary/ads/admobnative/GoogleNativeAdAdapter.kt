@@ -16,6 +16,7 @@ import com.vapp.admoblibrary.ads.AdmodUtils
 
 class GoogleNativeAdAdapter(private val mParam: Param) :
     GoogleRVAdapterWrapper(mParam.adapter as RecyclerView.Adapter<RecyclerView.ViewHolder>) {
+  var isFirst = false;
     private fun assertConfig() {
         if (mParam.gridLayoutManager != null) {
             val nCol = mParam.gridLayoutManager!!.spanCount
@@ -30,28 +31,48 @@ class GoogleNativeAdAdapter(private val mParam: Param) :
     }
 
     private fun convertAdPosition2OrgPosition(position: Int): Int {
-        return position - (position + 1) / (mParam.adItemInterval + 1)
+        return position - (position + 1) / (mParam.adItemInterval)
     }
 
     override fun getItemCount(): Int {
         val realCount = super.getItemCount()
-        return realCount + realCount / mParam.adItemInterval
+        return realCount + 1
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (isAdPosition(position)) {
-            TYPE_FB_NATIVE_ADS
-        } else super.getItemViewType(convertAdPosition2OrgPosition(position))
+         if (isAdPosition(position)) {
+
+             return TYPE_FB_NATIVE_ADS
+        } else {
+             if (position <= mParam.adItemInterval) {
+                 return super.getItemViewType(position)
+             } else {
+                 return super.getItemViewType(position-1)
+             }
+
+        }
     }
 
     private fun isAdPosition(position: Int): Boolean {
-        return (position + 1) % (mParam.adItemInterval + 1) == 0
+        if (position == mParam.adItemInterval) {
+            return true
+        } else {
+            return false
+        }
     }
-
     private fun onBindAdViewHolder(holder: RecyclerView.ViewHolder) {
         val adHolder = holder as AdViewHolder
         if (mParam.forceReloadAdOnBind || !adHolder.loaded) {
-            AdmodUtils.getInstance().loadNativeAds(mParam.activity!!, mParam.activity!!.getString(R.string.test_ads_admob_native_id) , holder.adFrame, mParam.layout)
+           var idAdmob = ""
+            if (AdmodUtils.getInstance().isTesting){
+                idAdmob = mParam.activity!!.getString(R.string.test_ads_admob_native_id);
+            }else{
+                idAdmob = mParam.idAdmob;
+            }
+            AdmodUtils.getInstance().loadNativeAdsWithLayout(mParam.activity!!,
+                idAdmob,
+                holder.adFrame,
+                mParam.layout)
             adHolder.loaded = true
         }
     }
@@ -61,9 +82,18 @@ class GoogleNativeAdAdapter(private val mParam: Param) :
         position: Int
     ) {
         if (getItemViewType(position) == TYPE_FB_NATIVE_ADS) {
+            isFirst = true;
             onBindAdViewHolder(holder)
         } else {
-            super.onBindViewHolder(holder, convertAdPosition2OrgPosition(position))
+
+            if (position <= mParam.adItemInterval) {
+                super.onBindViewHolder(holder,position)
+
+            } else {
+                super.onBindViewHolder(holder,position-1)
+
+            }
+
         }
     }
 
@@ -117,15 +147,15 @@ class GoogleNativeAdAdapter(private val mParam: Param) :
 //
 //    }
 
-     class Param(activity: Activity, mainAdapter: RecyclerView.Adapter<*>?, unifiedSmall: GoogleENative, position: Int, itemContainerLayout: Int, itemContainer: Int) {
+     class Param(activity: Activity, mainAdapter: RecyclerView.Adapter<*>?, idAdmob: String, layoutCustom: Int, position: Int, itemContainerLayout: Int, itemContainer: Int) {
         var gridLayoutManager: GridLayoutManager? = null
         var adapter = mainAdapter
         var forceReloadAdOnBind = false
-        var gridSpanCount = 1
-        var adItemInterval = position
+        var gridSpanCount = 5
+        var adItemInterval = position - 1
         var activity = activity
-        var layout = unifiedSmall
-
+        var layout = layoutCustom
+        var idAdmob = idAdmob
         @LayoutRes
         var itemContainerLayoutRes = itemContainerLayout
 
@@ -169,14 +199,16 @@ class GoogleNativeAdAdapter(private val mParam: Param) :
         companion object {
             fun with(
                 activity: Activity,
+                idAdmob: String,
                 wrapped: RecyclerView.Adapter<*>?,
-                layout: GoogleENative = GoogleENative.UNIFIED_MEDIUM,
+                layout: Int,
                 position: Int
                 , itemContainerLayout: Int, itemContainer: Int
             ): Builder {
-                val param = Param(activity, wrapped,layout, position,itemContainerLayout,itemContainer)
+                val param = Param(activity, wrapped, idAdmob,layout, position,itemContainerLayout,itemContainer)
                 param.activity = activity
                 param.adapter = wrapped
+                param.idAdmob = idAdmob
                 param.layout = layout
                 param.adItemInterval =
                     position
