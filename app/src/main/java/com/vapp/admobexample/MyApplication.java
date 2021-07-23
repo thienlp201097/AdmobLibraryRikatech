@@ -19,12 +19,12 @@ public class MyApplication extends AdsMultiDexApplication {
 
         PurchaseUtils.getInstance().initBilling(this,getString(R.string.play_console_license));
 
-//        if (PurchaseUtils.getInstance().isSubscriptiond(getString(R.string.premium))) {
-//            isShowAds = false;
-//        }else {
-//            isShowAds = true;
-//        }
-        //PurchaseUtils.getInstance().isPurchased(getString(R.string.product_id)
+        if (PurchaseUtils.getInstance().isSubscriptiond(getString(R.string.premium))) {
+            isShowAds = false;
+        }else {
+            isShowAds = true;
+        }
+        PurchaseUtils.getInstance().isPurchased(getString(R.string.product_id));
 
         AdmodUtils.getInstance().initAdmob(this, 20000,true, true, isShowAds);
         if (isShowAdsResume) {
