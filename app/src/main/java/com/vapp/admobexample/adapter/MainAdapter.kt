@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.vapp.admobexample.R
+import com.vapp.admoblibrary.Utils
 import java.util.*
 
 class MainAdapter(private val list: ArrayList<ItemModel>, private val listener: ClickListener) : RecyclerView.Adapter<MainAdapter.ViewHolder>() {
@@ -20,13 +21,15 @@ class MainAdapter(private val list: ArrayList<ItemModel>, private val listener: 
 
     override fun onBindViewHolder(holder: MainAdapter.ViewHolder, position: Int) {
         holder.textViewTitle.text = list[position].title
+        holder.textViewTitle.setOnClickListener(View.OnClickListener {
+            Utils.getInstance().showMessenger(context,position.toString());
+        })
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var textViewTitle: TextView
 
         init {
-
             textViewTitle = itemView.findViewById(R.id.text_reverse)
 
         }

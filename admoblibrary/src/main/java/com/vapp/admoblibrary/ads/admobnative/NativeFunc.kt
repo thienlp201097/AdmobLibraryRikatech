@@ -76,11 +76,8 @@ class NativeFunc {
                 }
             }
 
-            if (nativeAd.starRating == null) {
-                adView.starRatingView.visibility = View.INVISIBLE
-            } else {
+            if (nativeAd.starRating != null) {
                 (adView.starRatingView as RatingBar).rating = 5f
-                adView.starRatingView.visibility = View.VISIBLE
             }
             adView.setNativeAd(nativeAd)
             val vc = nativeAd.mediaContent.videoController
