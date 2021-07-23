@@ -29,41 +29,30 @@ class GoogleNativeAdAdapter(private val mParam: Param) :
             }
         }
     }
-
     private fun convertAdPosition2OrgPosition(position: Int): Int {
-        return position - (position + 1) / (mParam.adItemInterval)
+        return position - (position + 1) / (mParam.adItemInterval + 1)
     }
 
     override fun getItemCount(): Int {
         val realCount = super.getItemCount()
-        return realCount + 1
+        return realCount + realCount / mParam.adItemInterval
     }
 
     override fun getItemViewType(position: Int): Int {
-         if (isAdPosition(position)) {
-
-             return TYPE_FB_NATIVE_ADS
-        } else {
-             if (position <= mParam.adItemInterval) {
-                 return super.getItemViewType(position)
-             } else {
-                 return super.getItemViewType(position-1)
-             }
-
-        }
+        return if (isAdPosition(position)) {
+            TYPE_FB_NATIVE_ADS
+        } else super.getItemViewType(convertAdPosition2OrgPosition(position))
     }
 
     private fun isAdPosition(position: Int): Boolean {
-        if (position == mParam.adItemInterval) {
-            return true
-        } else {
-            return false
-        }
+        return (position + 1) % (mParam.adItemInterval + 1) == 0
     }
+
     private fun onBindAdViewHolder(holder: RecyclerView.ViewHolder) {
         val adHolder = holder as AdViewHolder
         if (mParam.forceReloadAdOnBind || !adHolder.loaded) {
-           var idAdmob = ""
+
+            var idAdmob = ""
             if (AdmodUtils.getInstance().isTesting){
                 idAdmob = mParam.activity!!.getString(R.string.test_ads_admob_native_id);
             }else{
@@ -74,6 +63,8 @@ class GoogleNativeAdAdapter(private val mParam: Param) :
                 holder.adFrame,
                 mParam.layout)
             adHolder.loaded = true
+
+               adHolder.loaded = true
         }
     }
 
@@ -82,20 +73,48 @@ class GoogleNativeAdAdapter(private val mParam: Param) :
         position: Int
     ) {
         if (getItemViewType(position) == TYPE_FB_NATIVE_ADS) {
-            isFirst = true;
             onBindAdViewHolder(holder)
         } else {
-
-            if (position <= mParam.adItemInterval) {
-                super.onBindViewHolder(holder,position)
-
-            } else {
-                super.onBindViewHolder(holder,position-1)
-
-            }
-
+            super.onBindViewHolder(holder, convertAdPosition2OrgPosition(position))
         }
     }
+
+//    private fun onBindAdViewHolder(holder: RecyclerView.ViewHolder) {
+//        val adHolder = holder as AdViewHolder
+//        if (mParam.forceReloadAdOnBind || !adHolder.loaded) {
+//           var idAdmob = ""
+//            if (AdmodUtils.getInstance().isTesting){
+//                idAdmob = mParam.activity!!.getString(R.string.test_ads_admob_native_id);
+//            }else{
+//                idAdmob = mParam.idAdmob;
+//            }
+//            AdmodUtils.getInstance().loadNativeAdsWithLayout(mParam.activity!!,
+//                idAdmob,
+//                holder.adFrame,
+//                mParam.layout)
+//            adHolder.loaded = true
+//        }
+//    }
+
+//    override fun onBindViewHolder(
+//        holder: RecyclerView.ViewHolder,
+//        position: Int
+//    ) {
+//        if (getItemViewType(position) == TYPE_FB_NATIVE_ADS) {
+//            isFirst = true;
+//            onBindAdViewHolder(holder)
+//        } else {
+//
+//            if (position <= mParam.adItemInterval) {
+//                super.onBindViewHolder(holder,position)
+//
+//            } else {
+//                super.onBindViewHolder(holder,position-1)
+//
+//            }
+//
+//        }
+//    }
 
     private fun onCreateAdViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)

@@ -8,7 +8,7 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "com.remote.control.universal.tv.smarttv.ir.remotecontrol"
+        applicationId "com.vapp.admoblibrary.app"
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 1

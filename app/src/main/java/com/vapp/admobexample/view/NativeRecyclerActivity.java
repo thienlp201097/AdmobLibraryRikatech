@@ -34,6 +34,8 @@ public class NativeRecyclerActivity extends AppCompatActivity implements ClickLi
         itemModel.add(new ItemModel("Create stylish font 6"));
         itemModel.add(new ItemModel("Create stylish font 7"));
         itemModel.add(new ItemModel("Create stylish font 8"));
+        itemModel.add(new ItemModel("Create stylish font 9"));
+        itemModel.add(new ItemModel("Create stylish font 10"));
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         MainAdapter mainAdapter = new MainAdapter(itemModel, this::onNavigate);
@@ -43,7 +45,7 @@ public class NativeRecyclerActivity extends AppCompatActivity implements ClickLi
                         mainAdapter,
                         getString(R.string.test_ads_admob_native_id),
                         R.layout.ad_template_medium, //
-                        2,
+                        4,
                         R.layout.layout_ad,
                         R.id.id_ad
                 ));
