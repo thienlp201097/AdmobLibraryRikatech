@@ -244,6 +244,9 @@ public class AdmodUtils {
                         }
                         mRewardedAd = null;
                         adCallback2.onAdFail();
+                        if (AppOpenManager.getInstance().isInitialized()) {
+                            AppOpenManager.getInstance().isAppResumeEnabled = true;
+                        }
                     }
 
                     @Override
@@ -321,7 +324,6 @@ public class AdmodUtils {
                                         public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
                                             // Handle the reward.
                                             adCallback2.onEarned();
-
                                         }
 
 
@@ -335,7 +337,9 @@ public class AdmodUtils {
                                 dialog.dismiss();
                             }
                             adCallback2.onAdFail();
-
+                            if (AppOpenManager.getInstance().isInitialized()) {
+                                AppOpenManager.getInstance().isAppResumeEnabled = true;
+                            }
                         }
                     }
                 });
@@ -517,6 +521,7 @@ public class AdmodUtils {
                                     AppOpenManager.getInstance().isAppResumeEnabled = true;
                                 }
                             }
+
 
                             @Override
                             public void onAdDismissedFullScreenContent() {

@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         AdmodUtils.getInstance().loadNativeAds(MainActivity.this, getString(R.string.test_ads_admob_native_id), nativeAds, GoogleENative.UNIFIED_MEDIUM);
-//        AdmodUtils.getInstance().loadAdBanner(MainActivity.this, getString(R.string.test_ads_admob_native_id), banner);
+        AdmodUtils.getInstance().loadAdBanner(MainActivity.this, getString(R.string.test_ads_admob_banner_id), banner);
 
     }
 
