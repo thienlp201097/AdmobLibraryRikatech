@@ -3,7 +3,6 @@ package com.vapp.admobexample.iap;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -12,9 +11,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.vapp.admobexample.R;
-import com.vapp.admoblibrary.Utils;
+import com.vapp.admoblibrary.utils.Utils;
 import com.vapp.admoblibrary.ads.AdmodUtils;
-import com.vapp.admoblibrary.ads.AppOpenManager;
 import com.vapp.admoblibrary.iap.PurchaseUtils;
 import com.vapp.admoblibrary.iap.SkuDetailsModel;
 

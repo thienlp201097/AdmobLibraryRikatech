@@ -20,3 +20,4 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 -keep class com.android.vending.billing.**
+-keepnames class com.google.android.play.core.review.ReviewInfo

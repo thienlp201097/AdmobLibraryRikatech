@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.vapp.admobexample.R
-import com.vapp.admoblibrary.Utils
+import com.vapp.admoblibrary.utils.Utils
 import java.util.*
 
 class MainAdapter(private val list: ArrayList<ItemModel>, private val listener: ClickListener) : RecyclerView.Adapter<MainAdapter.ViewHolder>() {

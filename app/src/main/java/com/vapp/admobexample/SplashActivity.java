@@ -6,7 +6,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.vapp.admobexample.view.MainActivity;
-import com.vapp.admoblibrary.Utils;
+import com.vapp.admoblibrary.utils.Utils;
 import com.vapp.admoblibrary.ads.AdCallback;
 import com.vapp.admoblibrary.ads.AdmodUtils;
 

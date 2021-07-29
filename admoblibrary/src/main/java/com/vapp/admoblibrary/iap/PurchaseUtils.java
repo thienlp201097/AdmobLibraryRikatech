@@ -3,9 +3,6 @@ package com.vapp.admoblibrary.iap;
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
@@ -15,8 +12,7 @@ import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.SkuDetails;
 import com.anjlab.android.iab.v3.TransactionDetails;
-import com.vapp.admoblibrary.Utils;
-import com.vapp.admoblibrary.ads.AdmodUtils;
+import com.vapp.admoblibrary.utils.Utils;
 
 import java.util.List;
 

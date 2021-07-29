@@ -8,10 +8,10 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "com.vapp.admoblibrary.app"
+        applicationId "com.screenrecorder.videorecorder.free.lite"
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 1
+        versionCode 8
         versionName "1.0"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
