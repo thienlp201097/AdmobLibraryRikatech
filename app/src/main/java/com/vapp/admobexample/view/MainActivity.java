@@ -1,18 +1,16 @@
 package com.vapp.admobexample.view;
 
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
 
 import com.ads.google.admobads.admobnative.GoogleENative;
 import com.vapp.admobexample.R;
 import com.vapp.admobexample.iap.IAPActivity;
+import com.vapp.admoblibrary.rate.MaybeLaterCallback;
 import com.vapp.admoblibrary.rate.RatingDialog;
 import com.vapp.admoblibrary.utils.Utils;
 import com.vapp.admoblibrary.ads.AdCallback;
@@ -135,15 +133,21 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void showDialogRate() {
-
-        final RatingDialog ratingDialog = new RatingDialog.Builder(this)
+        RatingDialog ratingDialog = new RatingDialog.Builder(this)
                 .session(1)
                 .date(1)
                 .setNameApp(getString(R.string.app_name))
                 .setIcon(R.mipmap.ic_launcher)
                 .setEmail("namdh1212@gmail.com")
                 .isShowButtonLater(true)
+                .isClickLaterDismiss(true)
                 .setTextButtonLater("Maybe Later")
+                .setOnlickMaybeLate(new MaybeLaterCallback() {
+                    @Override
+                    public void onClick() {
+                        Utils.getInstance().showMessenger(MainActivity.this,"clicked Maybe Later");
+                    }
+                })
                 .ratingButtonColor(R.color.purple_200)
                 .build();
 

@@ -9,14 +9,10 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -27,7 +23,6 @@ import androidx.appcompat.app.AppCompatDialog;
 import androidx.core.content.ContextCompat;
 
 import com.vapp.admoblibrary.R;
-import com.vapp.admoblibrary.utils.Utils;
 import com.willy.ratingbar.BaseRatingBar;
 import com.willy.ratingbar.RotationRatingBar;
 
@@ -124,7 +119,10 @@ public class RatingDialog extends AppCompatDialog implements RatingBar.OnRatingB
         btnLate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss();
+               builder.maybeLaterCallback.onClick();
+               if (builder.isDismiss){
+                   dismiss();
+               }
             }
         });
 
@@ -421,9 +419,11 @@ public class RatingDialog extends AppCompatDialog implements RatingBar.OnRatingB
 
         private final Activity context;
         private boolean isShowLate;
+        private boolean isDismiss;
         private int logo;
         private String appName;
         private String email;
+        private MaybeLaterCallback maybeLaterCallback;
         private String title, positiveText, negativeText, playstoreUrl, btnLate;
         private int positiveTextColor, negativeTextColor, titleTextColor, ratingBarColor, ratingBarBackgroundColor, feedBackTextColor;
         private int positiveBackgroundColor, negativeBackgroundColor;
@@ -557,6 +557,10 @@ public class RatingDialog extends AppCompatDialog implements RatingBar.OnRatingB
             this.isShowLate = isShowLate;
             return this;
         }
+        public Builder isClickLaterDismiss(boolean isDismiss) {
+            this.isDismiss = isDismiss;
+            return this;
+        }
 
         public Builder setNameApp(String appName) {
             this.appName = appName;
@@ -564,6 +568,11 @@ public class RatingDialog extends AppCompatDialog implements RatingBar.OnRatingB
         }
         public Builder setEmail(String email) {
             this.email = email;
+            return this;
+        }
+
+        public Builder setOnlickMaybeLate(MaybeLaterCallback onlickMaybeLate) {
+            this.maybeLaterCallback = onlickMaybeLate;
             return this;
         }
 
