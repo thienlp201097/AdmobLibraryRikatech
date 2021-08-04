@@ -28,7 +28,6 @@ class MainAdapter(private val list: ArrayList<ItemModel>, private val listener: 
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var textViewTitle: TextView
-
         init {
             textViewTitle = itemView.findViewById(R.id.text_reverse)
 

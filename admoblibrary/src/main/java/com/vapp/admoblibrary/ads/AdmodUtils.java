@@ -180,9 +180,7 @@ public class AdmodUtils {
                         NativeAdView adView = (NativeAdView) activity.getLayoutInflater()
                                 .inflate(layout, null);
 
-                        if (!isTesting) {
-                            NativeFunc.Companion.populateNativeAdView(nativeAd,adView,GoogleENative.UNIFIED_MEDIUM);
-                        }
+                       NativeFunc.Companion.populateNativeAdView(nativeAd,adView,GoogleENative.UNIFIED_MEDIUM);
 
                         viewGroup.removeAllViews();
                         viewGroup.addView(adView);
@@ -230,9 +228,7 @@ public class AdmodUtils {
                         NativeAdView adView = (NativeAdView) activity.getLayoutInflater()
                                 .inflate(id, null);
 
-                        if (!isTesting) {
                             NativeFunc.Companion.populateNativeAdView(nativeAd,adView,size);
-                        }
 
                         viewGroup.removeAllViews();
                         viewGroup.addView(adView);
