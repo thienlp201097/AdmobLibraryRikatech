@@ -14,17 +14,17 @@ import com.vapp.admoblibrary.R
 
 class NativeFunc {
 
-    companion object{
+    companion object {
         fun populateNativeAdView(
             nativeAd: NativeAd,
             adView: NativeAdView,
             size: GoogleENative
         ) {
-            if(nativeAd==null || adView == null || size == null){
+            if (nativeAd == null || adView == null || size == null) {
                 return
             }
 
-            if (nativeAd.body == null || nativeAd.callToAction == null){
+            if (nativeAd.body == null || nativeAd.callToAction == null) {
                 return
             }
 
@@ -46,12 +46,15 @@ class NativeFunc {
             adView.findViewById<RatingBar>(R.id.ad_stars)?.let {
                 adView.starRatingView = it
             }
-
-            if (size == GoogleENative.UNIFIED_MEDIUM) {
-                adView.mediaView.setMediaContent(nativeAd.mediaContent)
+            if (nativeAd.mediaContent != null) {
+                if (size == GoogleENative.UNIFIED_MEDIUM) {
+                    adView.mediaView.setMediaContent(nativeAd.mediaContent)
+                }
             }
 
-            (adView.headlineView as TextView).text = nativeAd.headline
+            if (nativeAd.headline != null) {
+                (adView.headlineView as TextView).text = nativeAd.headline
+            }
             if (nativeAd.body == null) {
                 adView.bodyView.visibility = View.INVISIBLE
             } else {
@@ -65,7 +68,7 @@ class NativeFunc {
             }
 
 
-            if(adView.iconView != null){
+            if (adView.iconView != null) {
                 if (nativeAd.icon == null) {
                     adView.iconView.visibility = View.GONE
                 } else {
@@ -79,7 +82,9 @@ class NativeFunc {
             if (nativeAd.starRating != null) {
                 (adView.starRatingView as RatingBar).rating = 5f
             }
+
             adView.setNativeAd(nativeAd)
+
             val vc = nativeAd.mediaContent.videoController
             if (vc.hasVideoContent()) {
                 vc.videoLifecycleCallbacks = object : VideoController.VideoLifecycleCallbacks() {
