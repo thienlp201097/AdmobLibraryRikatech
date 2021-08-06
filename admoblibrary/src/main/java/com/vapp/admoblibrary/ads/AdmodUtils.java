@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
@@ -16,7 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ProcessLifecycleOwner;
 
-import com.ads.google.admobads.admobnative.GoogleENative;
+import com.vapp.admoblibrary.ads.admobnative.enumclass.GoogleEBanner;
+import com.vapp.admoblibrary.ads.admobnative.enumclass.GoogleENative;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
@@ -66,9 +66,9 @@ public class AdmodUtils {
 
 
     public void initAdmob(Context context, long timeout, boolean isDebug, boolean isAddDeviceTest, boolean isEnableAds) {
-        if (timeout > 0){
+        if (timeout > 0) {
             timeOut = timeout;
-        }else {
+        } else {
             timeOut = 10000;
         }
         if (!isEnableAds) {
@@ -95,7 +95,7 @@ public class AdmodUtils {
         }
     }
 
-   public AdRequest adRequest;
+    public AdRequest adRequest;
 
     // get AdRequest
     public void initAdRequest() {
@@ -140,9 +140,9 @@ public class AdmodUtils {
     }
 
 
-    public void loadAdBanner(Context context,  String bannerId, ViewGroup viewGroup) {
+    public void loadAdBanner(Context context, String bannerId, ViewGroup viewGroup, GoogleEBanner size) {
 
-        if (!isShowAds){
+        if (!isShowAds) {
             viewGroup.setVisibility(View.GONE);
             return;
         }
@@ -152,7 +152,16 @@ public class AdmodUtils {
             bannerId = context.getString(R.string.test_ads_admob_banner_id);
         }
         mAdView.setAdUnitId(bannerId);
-        mAdView.setAdSize(AdSize.SMART_BANNER);
+        if (size == GoogleEBanner.SIZE_SMALL) {
+            mAdView.setAdSize(AdSize.BANNER);
+        } else if (size == GoogleEBanner.SIZE_MEDIUM) {
+            mAdView.setAdSize(AdSize.LARGE_BANNER);
+        } else if (size == GoogleEBanner.SIZE_FULL) {
+            mAdView.setAdSize(AdSize.FULL_BANNER);
+        } else {
+            mAdView.setAdSize(AdSize.SMART_BANNER);
+        }
+
         viewGroup.removeAllViews();
         viewGroup.addView(mAdView);
         mAdView.loadAd(adRequest);
@@ -160,9 +169,9 @@ public class AdmodUtils {
     }
 
     // ads native
-    public void loadNativeAdsWithLayout(Activity activity, String s, ViewGroup viewGroup,  int layout) {
+    public void loadNativeAdsWithLayout(Activity activity, String s, ViewGroup viewGroup, int layout) {
 
-        if (!isShowAds){
+        if (!isShowAds) {
             viewGroup.setVisibility(View.GONE);
             return;
         }
@@ -180,7 +189,7 @@ public class AdmodUtils {
                         NativeAdView adView = (NativeAdView) activity.getLayoutInflater()
                                 .inflate(layout, null);
 
-                       NativeFunc.Companion.populateNativeAdView(nativeAd,adView,GoogleENative.UNIFIED_MEDIUM);
+                        NativeFunc.Companion.populateNativeAdView(nativeAd, adView, GoogleENative.UNIFIED_MEDIUM);
 
                         viewGroup.removeAllViews();
                         viewGroup.addView(adView);
@@ -203,7 +212,7 @@ public class AdmodUtils {
     @SuppressLint("StaticFieldLeak")
     public void loadNativeAds(Activity activity, String s, ViewGroup viewGroup, GoogleENative size) {
 
-        if (!isShowAds){
+        if (!isShowAds) {
             viewGroup.setVisibility(View.GONE);
             return;
         }
@@ -228,7 +237,7 @@ public class AdmodUtils {
                         NativeAdView adView = (NativeAdView) activity.getLayoutInflater()
                                 .inflate(id, null);
 
-                            NativeFunc.Companion.populateNativeAdView(nativeAd,adView,size);
+                        NativeFunc.Companion.populateNativeAdView(nativeAd, adView, size);
 
                         viewGroup.removeAllViews();
                         viewGroup.addView(adView);
@@ -252,7 +261,7 @@ public class AdmodUtils {
     RewardedAd mRewardedAd = null;
 
     public void loadAndShowAdRewardWithCallback(Activity activity, String admobId, RewardAdCallback adCallback2, boolean enableLoadingDialog) {
-        if (!isShowAds){
+        if (!isShowAds) {
             adCallback2.onAdClosed();
             return;
         }
@@ -420,9 +429,10 @@ public class AdmodUtils {
 
 
     }
+
     public void showAdInterstitialWithCallback(Activity activity, AdCallback adCallback, int limitTime) {
 
-        if (!isShowAds){
+        if (!isShowAds) {
             adCallback.onAdClosed();
             return;
         }
@@ -508,15 +518,16 @@ public class AdmodUtils {
             }
         }
     }
+
     public void loadAndShowAdInterstitialWithCallback(Activity activity, String admobId, int limitTime, AdCallback adCallback, boolean enableLoadingDialog) {
 
-        if (!isShowAds){
+        if (!isShowAds) {
             adCallback.onAdClosed();
             return;
         }
 
         if (AppOpenManager.getInstance().isInitialized()) {
-            if (!AppOpenManager.getInstance().isAppResumeEnabled){
+            if (!AppOpenManager.getInstance().isAppResumeEnabled) {
                 return;
             }
         }

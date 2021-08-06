@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.ads.google.admobads.admobnative.GoogleENative;
 import com.ads.google.admobads.admobnative.GoogleNativeAdAdapter;
 import com.vapp.admobexample.R;
 import com.vapp.admobexample.adapter.ClickListener;
