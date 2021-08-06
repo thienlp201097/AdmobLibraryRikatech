@@ -41,7 +41,7 @@ public class MyApplication extends AdsMultiDexApplication {
             isShowAds = true;
         }
 
-        AdmodUtils.getInstance().initAdmob(this, true, true, isShowAds);
+        AdmodUtils.getInstance().initAdmob(this, BuildConfig.DEBUG, BuildConfig.DEBUG, isShowAds);
 
         if (isShowAdsResume) {
             AppOpenManager.getInstance().init(this, getString(R.string.ads_admob_app_open));
