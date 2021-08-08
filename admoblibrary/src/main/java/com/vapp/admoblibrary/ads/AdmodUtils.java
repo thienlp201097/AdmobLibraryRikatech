@@ -38,6 +38,8 @@ import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.vapp.admoblibrary.R;
 import com.vapp.admoblibrary.ads.admobnative.NativeFunc;
+import com.vapp.admoblibrary.ads.model.AdUnitListModel;
+import com.vapp.admoblibrary.utils.Utils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -65,7 +67,7 @@ public class AdmodUtils {
     }
 
 
-    public void initAdmob(Context context, long timeout, boolean isDebug, boolean isAddDeviceTest, boolean isEnableAds) {
+    public void initAdmob(Context context, int timeout, boolean isDebug,  boolean isEnableAds) {
         if (timeout > 0) {
             timeOut = timeout;
         } else {
@@ -78,15 +80,12 @@ public class AdmodUtils {
         });
 
         initListIdTest();
-        if (isAddDeviceTest) {
-            testDevices.add(getDeviceID(context));
-        }
         RequestConfiguration requestConfiguration
                 = new RequestConfiguration.Builder()
                 .setTestDeviceIds(testDevices)
                 .build();
         MobileAds.setRequestConfiguration(requestConfiguration);
-        initAdRequest();
+        initAdRequest(timeout);
 
         if (isDebug) {
             isTesting = true;
@@ -98,9 +97,9 @@ public class AdmodUtils {
     public AdRequest adRequest;
 
     // get AdRequest
-    public void initAdRequest() {
+    public void initAdRequest(int timeOut) {
         adRequest = new AdRequest.Builder()
-                .setHttpTimeoutMillis(5000)
+                .setHttpTimeoutMillis(timeOut)
                 .build();
     }
 
@@ -130,6 +129,7 @@ public class AdmodUtils {
         testDevices.add("A99C99C378EE9BDE5D3DE404D3A4A812");
         testDevices.add("EB28F4CCC32F14DC98068A063B97E6CE");
     }
+
 
 
     //check open network

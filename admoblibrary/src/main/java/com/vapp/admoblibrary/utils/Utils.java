@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.LocaleList;
+import android.telephony.TelephonyManager;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,13 +13,16 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.vapp.admoblibrary.R;
+import com.vapp.admoblibrary.ads.model.AdUnitListModel;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
+import static android.content.Context.TELEPHONY_SERVICE;
+
 public class Utils {
-
-
-//    showDialog()
-//    dismissDialog(theme)
 
     private static volatile Utils INSTANCE;
 
@@ -29,18 +33,41 @@ public class Utils {
         }
         return INSTANCE;
     }
-
-//    public void getLocale(Activity activity){
-//        Locale current = activity.getResources().getConfiguration().locale;
-//        current.getDisplayCountry();
-//    }
-
-    private String getCurrentCountry(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
-            return LocaleList.getDefault().get(0).getCountry();
-        } else{
-            return Locale.getDefault().getCountry();
+    public List<AdUnitListModel> adUnitLists = new ArrayList<>();
+    String countryCode = "";
+    public boolean checkCountries(Context context, AdUnitListModel adUnitList){
+        countryCode =  getCurrentCountry(context);
+        boolean isShowAds = false;
+        List<String> countries = adUnitList.getCountries();
+        if(countries.size() >0) {
+            for (String item : countries) {
+                if (item.matches("(?i)(" + countryCode + ").*")) {
+                    isShowAds = true;
+                }
+            }
         }
+        else
+        {
+            isShowAds = true;
+        }
+        return  isShowAds;
+    }
+
+    public String getCurrentCountry(Context context){
+        String countryCode = "";
+
+        TelephonyManager ts = (TelephonyManager) context.getSystemService(TELEPHONY_SERVICE);
+        countryCode = ts.getNetworkCountryIso().toUpperCase();
+
+        if(countryCode.length() >= 2)
+        {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+                return LocaleList.getDefault().get(0).getCountry();
+            } else{
+                return Locale.getDefault().getCountry();
+            }
+        }
+        return countryCode;
     }
 
 
@@ -99,4 +126,34 @@ public class Utils {
         }
         transaction.commit();
     }
+
+    public  AdUnitListModel getAdUnit(String id){
+        if (adUnitLists.size() > 0){
+            for (AdUnitListModel adUnitList1 : adUnitLists){
+                if (adUnitList1.getAdUnitName().equals(id)){
+                    return adUnitList1;
+                }
+            }
+        }
+        return null;
+    }
+
+    public  AdUnitListModel getDefaultAdUnit( String id){
+        AdUnitListModel adUnitList = new AdUnitListModel();
+        adUnitList.setIsShow(true);
+        adUnitList.setIsAdmob(true);
+        adUnitList.setAdmobId(id);
+        return adUnitList;
+    }
+
+    public  AdUnitListModel getAdUnitByName( String id, String defaulID) {
+        if(getAdUnit(id)!=null){
+            return getAdUnit(id);
+        }
+        else{
+            return getDefaultAdUnit(defaulID);
+        }
+    }
+
+
 }

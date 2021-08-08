@@ -11,6 +11,7 @@ import com.vapp.admoblibrary.ads.admobnative.enumclass.GoogleEBanner;
 import com.vapp.admoblibrary.ads.admobnative.enumclass.GoogleENative;
 import com.vapp.admobexample.R;
 import com.vapp.admobexample.iap.IAPActivity;
+import com.vapp.admoblibrary.ads.model.AdUnitListModel;
 import com.vapp.admoblibrary.rate.MaybeLaterCallback;
 import com.vapp.admoblibrary.rate.RatingDialog;
 import com.vapp.admoblibrary.utils.Utils;
@@ -36,6 +37,15 @@ public class MainActivity extends AppCompatActivity{
 
         finbyid();
         showDialogRate();
+
+        // AdsConfigModel = Model call by API
+        // Utils.getInstance().adUnitLists = AdsConfigModel.getAdUnitList();
+
+        //API data sample
+        AdUnitListModel adUnitList = Utils.getInstance().getAdUnitByName("Name AdUnit", "Defaul Id Admob");
+        //check Countries (BOOL)
+        Utils.getInstance().checkCountries(this,adUnitList);
+
 
         btn_LoadInter.setOnClickListener(new View.OnClickListener() {
             @Override
