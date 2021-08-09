@@ -33,8 +33,9 @@ public class Utils {
         }
         return INSTANCE;
     }
-    public List<AdUnitListModel> adUnitLists = new ArrayList<>();
+    public static List<AdUnitListModel> adUnitLists = new ArrayList<>();
     String countryCode = "";
+
     public boolean checkCountries(Context context, AdUnitListModel adUnitList){
         countryCode =  getCurrentCountry(context);
         boolean isShowAds = false;
@@ -146,9 +147,9 @@ public class Utils {
         return adUnitList;
     }
 
-    public  AdUnitListModel getAdUnitByName( String id, String defaulID) {
-        if(getAdUnit(id)!=null){
-            return getAdUnit(id);
+    public  AdUnitListModel getAdUnitByName( String name, String defaulID) {
+        if(getAdUnit(name)!=null){
+            return getAdUnit(name);
         }
         else{
             return getDefaultAdUnit(defaulID);
