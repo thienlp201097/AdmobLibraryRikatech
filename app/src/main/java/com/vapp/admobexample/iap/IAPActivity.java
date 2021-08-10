@@ -114,21 +114,21 @@ public class IAPActivity extends AppCompatActivity {
         new Handler().postDelayed(() -> {
             if (PurchaseUtils.getInstance().isSubscriptiond(getString(R.string.premium))) {
                 tvStatus.setText("Vip");
-                AdmodUtils.getInstance().initAdmob(this, 10000,true, true, false);
+                AdmodUtils.getInstance().initAdmob(this, 10000,true,  false);
 
             }else {
                 tvStatus.setText("Free");
-                AdmodUtils.getInstance().initAdmob(this, 10000,true, true, true);
+                AdmodUtils.getInstance().initAdmob(this, 10000,true,  true);
 
             }
 
             if (PurchaseUtils.getInstance().isPurchased(getString(R.string.product_id))) {
                 tvStatusPurchases.setText("Buyed");
-                AdmodUtils.getInstance().initAdmob(this,10000, true, true, false);
+                AdmodUtils.getInstance().initAdmob(this,10000, true,  false);
 
             }else {
                 tvStatusPurchases.setText("not buy");
-                AdmodUtils.getInstance().initAdmob(this, 10000,true, true, true);
+                AdmodUtils.getInstance().initAdmob(this, 10000,true,  true);
 
             }
 

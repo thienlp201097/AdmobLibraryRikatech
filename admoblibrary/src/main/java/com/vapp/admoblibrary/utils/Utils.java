@@ -60,12 +60,14 @@ public class Utils {
         TelephonyManager ts = (TelephonyManager) context.getSystemService(TELEPHONY_SERVICE);
         countryCode = ts.getNetworkCountryIso().toUpperCase();
 
-        if(countryCode.length() >= 2)
+        if(countryCode.length() < 2)
         {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
-                return LocaleList.getDefault().get(0).getCountry();
+                countryCode =  LocaleList.getDefault().get(0).getCountry();
+                return countryCode;
             } else{
-                return Locale.getDefault().getCountry();
+                countryCode = Locale.getDefault().getCountry();
+                return countryCode;
             }
         }
         return countryCode;
