@@ -78,7 +78,7 @@ public class Utils {
         return countryCode;
     }
 
-    private static String getDeviceCountryCode(Context context) {
+    public String getDeviceCountryCode(Context context) {
         String countryCode;
 
         // try to get country code from TelephonyManager service
