@@ -33,39 +33,41 @@ public class Utils {
         }
         return INSTANCE;
     }
+
     public static List<AdUnitListModel> adUnitLists = new ArrayList<>();
     String countryCode = "";
 
-    public boolean checkCountries(Context context, AdUnitListModel adUnitList){
-        countryCode =  getCurrentCountry(context);
+    public boolean checkCountries(Context context, AdUnitListModel adUnitList) {
+        countryCode = getCurrentCountry(context);
         boolean isShowAds = false;
+        if (adUnitList.getCountries() == null) {
+            isShowAds = true;
+            return isShowAds;
+        }
         List<String> countries = adUnitList.getCountries();
-        if(countries.size() >0) {
+        if (countries.size() > 0) {
             for (String item : countries) {
                 if (item.matches("(?i)(" + countryCode + ").*")) {
                     isShowAds = true;
                 }
             }
-        }
-        else
-        {
+        } else {
             isShowAds = true;
         }
-        return  isShowAds;
+        return isShowAds;
     }
 
-    public String getCurrentCountry(Context context){
+    public String getCurrentCountry(Context context) {
         String countryCode = "";
 
         TelephonyManager ts = (TelephonyManager) context.getSystemService(TELEPHONY_SERVICE);
         countryCode = ts.getNetworkCountryIso().toUpperCase();
 
-        if(countryCode.length() < 2)
-        {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
-                countryCode =  LocaleList.getDefault().get(0).getCountry();
+        if (countryCode.length() < 2) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                countryCode = LocaleList.getDefault().get(0).getCountry();
                 return countryCode;
-            } else{
+            } else {
                 countryCode = Locale.getDefault().getCountry();
                 return countryCode;
             }
@@ -74,32 +76,32 @@ public class Utils {
     }
 
 
-   public void showMessenger(Context context, String content, int time){
-        if (time == 0){
-            Toast.makeText(context,content,Toast.LENGTH_SHORT).show();
-        }else {
-            Toast.makeText(context,content,Toast.LENGTH_SHORT).show();
+    public void showMessenger(Context context, String content, int time) {
+        if (time == 0) {
+            Toast.makeText(context, content, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, content, Toast.LENGTH_SHORT).show();
 
         }
-   }
+    }
 
-    public void showMessenger(Context context, String content){
-            Toast.makeText(context,content,Toast.LENGTH_SHORT).show();
+    public void showMessenger(Context context, String content) {
+        Toast.makeText(context, content, Toast.LENGTH_SHORT).show();
     }
 
 
-    public  void addActivity(Context context, Class activity){
-        Intent i =  new Intent(context,activity);
+    public void addActivity(Context context, Class activity) {
+        Intent i = new Intent(context, activity);
         context.startActivity(i);
     }
 
-    public  void replaceActivity(Context context, Class activity){
-        Intent i =  new Intent(context,activity);
+    public void replaceActivity(Context context, Class activity) {
+        Intent i = new Intent(context, activity);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(i);
     }
 
-    public  void addFragment(AppCompatActivity context, Fragment fragment, int contentFrame, boolean addToBackStack) {
+    public void addFragment(AppCompatActivity context, Fragment fragment, int contentFrame, boolean addToBackStack) {
         FragmentTransaction transaction = context.getSupportFragmentManager()
                 .beginTransaction();
         if (addToBackStack) {
@@ -115,7 +117,7 @@ public class Utils {
         transaction.commit();
     }
 
-    public  void replaceFragment(FragmentManager fm, Fragment fragment, int contentFrame, boolean addToBackStack) {
+    public void replaceFragment(FragmentManager fm, Fragment fragment, int contentFrame, boolean addToBackStack) {
         FragmentTransaction transaction = fm.beginTransaction();
         if (addToBackStack) {
             transaction.addToBackStack(null);
@@ -130,10 +132,10 @@ public class Utils {
         transaction.commit();
     }
 
-    public  AdUnitListModel getAdUnit(String id){
-        if (adUnitLists.size() > 0){
-            for (AdUnitListModel adUnitList1 : adUnitLists){
-                if (adUnitList1.getAdUnitName().equals(id)){
+    public AdUnitListModel getAdUnit(String id) {
+        if (adUnitLists.size() > 0) {
+            for (AdUnitListModel adUnitList1 : adUnitLists) {
+                if (adUnitList1.getAdUnitName().equals(id)) {
                     return adUnitList1;
                 }
             }
@@ -141,7 +143,7 @@ public class Utils {
         return null;
     }
 
-    public  AdUnitListModel getDefaultAdUnit( String id){
+    public AdUnitListModel getDefaultAdUnit(String id) {
         AdUnitListModel adUnitList = new AdUnitListModel();
         adUnitList.setIsShow(true);
         adUnitList.setIsAdmob(true);
@@ -149,11 +151,10 @@ public class Utils {
         return adUnitList;
     }
 
-    public  AdUnitListModel getAdUnitByName( String name, String defaulID) {
-        if(getAdUnit(name)!=null){
+    public AdUnitListModel getAdUnitByName(String name, String defaulID) {
+        if (getAdUnit(name) != null) {
             return getAdUnit(name);
-        }
-        else{
+        } else {
             return getDefaultAdUnit(defaulID);
         }
     }
