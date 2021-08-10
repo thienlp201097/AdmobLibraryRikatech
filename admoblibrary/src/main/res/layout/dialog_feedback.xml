@@ -54,25 +54,20 @@
             android:stepSize="1"
             android:theme="@style/RatingBar"
             />
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/outlinedTextField"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+        <EditText
+            android:id="@+id/body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="@dimen/_40sdp"
+            android:gravity="center|left"
+            android:paddingLeft="@dimen/_5sdp"
+            android:maxLines="20"
             android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginRight="@dimen/_10sdp"
-            app:hintEnabled="true"
-            android:hint="">
+            android:maxLength="500"
+            android:hint="(Optional) Tell others what you think"/>
 
-            <com.google.android.material.textfield.TextInputEditText
-               android:id="@+id/body"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLines="20"
-                android:maxLength="500"
-                android:hint="(Optional) Tell others what you think"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

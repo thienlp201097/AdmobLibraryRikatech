@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -73,6 +74,7 @@ public class IAReview {
 //        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         BottomSheetDialog bottomSheerDialog = new BottomSheetDialog(activity, R.style.DialogStyle);
+
         bottomSheerDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialog) {
@@ -92,11 +94,10 @@ public class IAReview {
         View parentView = activity.getLayoutInflater().inflate(R.layout.dialog_feedback,null);
         bottomSheerDialog.setContentView(parentView);
         bottomSheerDialog.show();
-        TextInputLayout outlinedTextField = parentView.findViewById(R.id.outlinedTextField);
         TextView tvcount = parentView.findViewById(R.id.count);
         ImageView imglogo = parentView.findViewById(R.id.logo);
         TextView tvAppName = parentView.findViewById(R.id.tvAppName);
-        TextInputEditText body = parentView.findViewById(R.id.body);
+        EditText body = parentView.findViewById(R.id.body);
         RatingBar dialog_rating_rating_bar = parentView.findViewById(R.id.dialog_rating_rating_bar);
         dialog_rating_rating_bar.setRating(starnumber);
 //        body.requestFocus();
