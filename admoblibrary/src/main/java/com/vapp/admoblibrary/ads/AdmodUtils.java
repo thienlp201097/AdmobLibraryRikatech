@@ -104,9 +104,10 @@ public class AdmodUtils {
     }
 
     public void initListIdTest() {
-        testDevices.add("3C94990AA9A387A256D3B2BBBFEA51EA");
-        testDevices.add("6F599887BC401CFB1C7087F15D7C0834");
-        testDevices.add("B543DCF2C7591C7FB8B52A3A1E7138F6");
+
+        testDevices.add("727D4F658B63BDFA0EFB164261AAE54");
+        testDevices.add("3FA34D6F6B2DCF88DED51A6AF263E3F0");
+        testDevices.add("482996BF6946FBE1B9FFD3975144D084");
         testDevices.add("8619926A823916A224795141B93B7E0B");
         testDevices.add("6399D5AEE5C75205B6C0F6755365CF21");
         testDevices.add("2E379568A9F147A64B0E0C9571DE812D");
@@ -129,8 +130,6 @@ public class AdmodUtils {
         testDevices.add("A99C99C378EE9BDE5D3DE404D3A4A812");
         testDevices.add("EB28F4CCC32F14DC98068A063B97E6CE");
     }
-
-
 
     //check open network
     public boolean isNetworkConnected(Context context) {
@@ -200,12 +199,15 @@ public class AdmodUtils {
                 .withAdListener(new AdListener() {
                     @Override
                     public void onAdFailedToLoad(LoadAdError adError) {
+                        Log.e("Admodfail", "onAdFailedToLoad" + adError.getMessage());
+                        Log.e("Admodfail", "errorCodeAds" + adError.getCause());
+
                     }
                 })
                 .withNativeAdOptions(new NativeAdOptions.Builder().build()).build();
 
         adLoader.loadAd(adRequest);
-        Log.e(" Admod", "loadAdNativeAds");
+        Log.e("Admod", "loadAdNativeAds");
     }
 
     // ads native
@@ -248,12 +250,15 @@ public class AdmodUtils {
                 .withAdListener(new AdListener() {
                     @Override
                     public void onAdFailedToLoad(LoadAdError adError) {
+                        Log.e("Admodfail", "onAdFailedToLoad" + adError.getMessage());
+                        Log.e("Admodfail", "errorCodeAds" + adError.getCause());
+
                     }
                 })
                 .withNativeAdOptions(new NativeAdOptions.Builder().build()).build();
 
         adLoader.loadAd(adRequest);
-        Log.e(" Admod", "loadAdNativeAds");
+        Log.e("Admod", "loadAdNativeAds");
     }
 
 
@@ -293,6 +298,9 @@ public class AdmodUtils {
                         if (AppOpenManager.getInstance().isInitialized()) {
                             AppOpenManager.getInstance().isAppResumeEnabled = true;
                         }
+                        Log.e("Admodfail", "onAdFailedToLoad" + loadAdError.getMessage());
+                        Log.e("Admodfail", "errorCodeAds" + loadAdError.getCause());
+
                     }
 
                     @Override
@@ -330,6 +338,8 @@ public class AdmodUtils {
                                     if (AppOpenManager.getInstance().isInitialized()) {
                                         AppOpenManager.getInstance().isAppResumeEnabled = true;
                                     }
+                                    Log.e("Admodfail", "onAdFailedToLoad" + adError.getMessage());
+                                    Log.e("Admodfail", "errorCodeAds" + adError.getCause());
 
                                 }
 
@@ -423,6 +433,8 @@ public class AdmodUtils {
             public void onAdFailedToLoad(@NonNull @org.jetbrains.annotations.NotNull LoadAdError loadAdError) {
                 super.onAdFailedToLoad(loadAdError);
                 mInterstitialAd = null;
+                Log.e("Admodfail", "onAdFailedToLoad" + loadAdError.getMessage());
+                Log.e("Admodfail", "errorCodeAds" + loadAdError.getCause());
 
             }
         });
@@ -444,9 +456,9 @@ public class AdmodUtils {
                 mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
                     @Override
                     public void onAdFailedToShowFullScreenContent(@NonNull @NotNull AdError adError) {
-                        Log.e(" Admod", "showAdInterstitial");
-                        Log.e(" Admod", "errorCodeAds:" + adError.getMessage());
-                        Log.e(" Admod", "errorCodeAds:" + adError.getCause());
+                        Log.e("Admodfail", "errorCodeAds:" + adError.getCause());
+                        Log.e("Admodfail", "onAdFailedToLoad" + adError.getMessage());
+
                         if (dialog != null) {
                             dialog.dismiss();
                         }
@@ -568,6 +580,9 @@ public class AdmodUtils {
                                 if (AppOpenManager.getInstance().isInitialized()) {
                                     AppOpenManager.getInstance().isAppResumeEnabled = true;
                                 }
+                                Log.e("Admodfail", "onAdFailedToLoad" + adError.getMessage());
+                                Log.e("Admodfail", "errorCodeAds" + adError.getCause());
+
                             }
 
 
@@ -637,6 +652,9 @@ public class AdmodUtils {
                     if (AppOpenManager.getInstance().isInitialized()) {
                         AppOpenManager.getInstance().isAppResumeEnabled = true;
                     }
+
+                    Log.e("Admodfail", "onAdFailedToLoad" + loadAdError.getMessage());
+                    Log.e("Admodfail", "errorCodeAds" + loadAdError.getCause());
                 }
             });
         } else {
