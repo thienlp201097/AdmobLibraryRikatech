@@ -39,6 +39,7 @@ import java.util.Locale;
 public class RatingDialog extends AppCompatDialog implements RatingBar.OnRatingBarChangeListener, View.OnClickListener {
 
     private static final String SESSION_COUNT = "session_count";
+    private static final String RATE5 = "rate_5";
     private static final String DATE_FIRST = "date_count";
     private static final String SHOW_NEVER = "show_never";
     private String MyPrefs = "RatingDialog";
@@ -134,7 +135,20 @@ public class RatingDialog extends AppCompatDialog implements RatingBar.OnRatingB
                   IAReview.getInstance().openDialogFeedback(context, builder.appName, builder.logo, builder.email, starnumber);
               }else {
                   dismiss();
-                  IAReview.getInstance().showIAReview(context);
+                  sharedpreferences = context.getSharedPreferences(MyPrefs, Context.MODE_PRIVATE);
+                  if (sharedpreferences.getBoolean(RATE5, true)) {
+                      sharedpreferences.edit().putBoolean(RATE5, false).commit();
+                      IAReview.getInstance().showIAReview(context);
+                  }else {
+                      final String appPackageName = context.getPackageName(); // getPackageName() from Context or Activity object
+                      try {
+                          context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                      } catch (android.content.ActivityNotFoundException anfe) {
+                          context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                      }
+                  }
+
+
               }
             }
         });
