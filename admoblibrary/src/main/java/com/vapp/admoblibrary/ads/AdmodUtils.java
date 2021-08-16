@@ -530,8 +530,18 @@ public class AdmodUtils {
             }
         }
     }
-
+    boolean isClicked = false;
     public void loadAndShowAdInterstitialWithCallback(Activity activity, String admobId, int limitTime, AdCallback adCallback, boolean enableLoadingDialog) {
+        if (isClicked)
+            return;
+
+        isClicked = true;
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                isClicked = false;
+            }
+        }, 2500);
 
         if (!isShowAds) {
             adCallback.onAdClosed();
