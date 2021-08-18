@@ -104,7 +104,6 @@ public class AdmodUtils {
     }
 
     public void initListIdTest() {
-
         testDevices.add("727D4F658B63BDFA0EFB164261AAE54");
         testDevices.add("3FA34D6F6B2DCF88DED51A6AF263E3F0");
         testDevices.add("482996BF6946FBE1B9FFD3975144D084");
@@ -129,6 +128,7 @@ public class AdmodUtils {
         testDevices.add("39D7026016640CEA1502836C6EF3776D");
         testDevices.add("A99C99C378EE9BDE5D3DE404D3A4A812");
         testDevices.add("EB28F4CCC32F14DC98068A063B97E6CE");
+    }
     }
 
     //check open network
