@@ -128,7 +128,7 @@ public class AdmodUtils {
         testDevices.add("39D7026016640CEA1502836C6EF3776D");
         testDevices.add("A99C99C378EE9BDE5D3DE404D3A4A812");
         testDevices.add("EB28F4CCC32F14DC98068A063B97E6CE");
-    }
+    
     }
 
     //check open network
