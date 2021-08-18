@@ -327,6 +327,9 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
         if (!isAppResumeEnabled) {
             return;
         }
+        if(currentActivity == null){
+            return;
+        }
         for (Class activity : disabledAppOpenList) {
             if (activity.getName().equals(currentActivity.getClass().getName())) {
                 Log.d(TAG, "onStart: activity is disabled");
