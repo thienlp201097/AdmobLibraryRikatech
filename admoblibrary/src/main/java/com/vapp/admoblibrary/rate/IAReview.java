@@ -32,6 +32,7 @@ import com.google.android.play.core.review.ReviewManagerFactory;
 import com.google.android.play.core.tasks.Task;
 import com.vapp.admoblibrary.R;
 import com.vapp.admoblibrary.utils.Utils;
+import com.willy.ratingbar.BaseRatingBar;
 
 public class IAReview {
     private static volatile IAReview INSTANCE;
@@ -98,8 +99,9 @@ public class IAReview {
         ImageView imglogo = parentView.findViewById(R.id.logo);
         TextView tvAppName = parentView.findViewById(R.id.tvAppName);
         EditText body = parentView.findViewById(R.id.body);
-        RatingBar dialog_rating_rating_bar = parentView.findViewById(R.id.dialog_rating_rating_bar);
+        BaseRatingBar dialog_rating_rating_bar = parentView.findViewById(R.id.dialog_rating_rating_bar);
         dialog_rating_rating_bar.setRating(starnumber);
+        dialog_rating_rating_bar.setEmptyDrawableRes(R.drawable.empty);
 //        body.requestFocus();
         body.addTextChangedListener(new TextWatcher() {
             @Override
