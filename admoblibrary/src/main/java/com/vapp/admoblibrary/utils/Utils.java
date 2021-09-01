@@ -159,7 +159,12 @@ public class Utils {
         return null;
     }
 
-
+        public boolean showAdForCountry(Context context, AdUnitListModel adModel) {
+            if (adModel.getCountries() != null) {
+                return Utils.getInstance().checkCountries(context, adModel);
+            }
+            return true;
+        }
 
     public void showMessenger(Context context, String content, int time) {
         if (time == 0) {

@@ -102,6 +102,8 @@ public class IAReview {
         BaseRatingBar dialog_rating_rating_bar = parentView.findViewById(R.id.dialog_rating_rating_bar);
         dialog_rating_rating_bar.setRating(starnumber);
         dialog_rating_rating_bar.setEmptyDrawableRes(R.drawable.empty);
+        dialog_rating_rating_bar.setFilledDrawableRes(R.drawable.filled);
+
 //        body.requestFocus();
         body.addTextChangedListener(new TextWatcher() {
             @Override
