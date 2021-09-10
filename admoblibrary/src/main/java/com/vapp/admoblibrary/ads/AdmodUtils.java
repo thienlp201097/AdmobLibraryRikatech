@@ -58,7 +58,6 @@ public class AdmodUtils {
     public boolean isTesting = false;
     public List<String> testDevices = new ArrayList<>();
     private static volatile AdmodUtils INSTANCE;
-    public AdRequest adRequest;
 
     public static synchronized AdmodUtils getInstance() {
         if (INSTANCE == null) {
@@ -95,6 +94,7 @@ public class AdmodUtils {
         }
     }
 
+    public AdRequest adRequest;
 
     // get AdRequest
     public void initAdRequest(int timeOut) {
