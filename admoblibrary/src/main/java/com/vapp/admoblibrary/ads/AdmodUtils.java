@@ -73,9 +73,17 @@ public class AdmodUtils {
         } else {
             timeOut = 10000;
         }
+
+        if (isDebug) {
+            isTesting = true;
+        } else {
+            isTesting = false;
+        }
+
         if (!isEnableAds) {
             isShowAds = false;
         }
+
         MobileAds.initialize(context, initializationStatus -> {
         });
 
@@ -87,11 +95,7 @@ public class AdmodUtils {
         MobileAds.setRequestConfiguration(requestConfiguration);
         initAdRequest(timeout);
 
-        if (isDebug) {
-            isTesting = true;
-        } else {
-            isTesting = false;
-        }
+
     }
 
     public AdRequest adRequest;
@@ -134,7 +138,6 @@ public class AdmodUtils {
     //check open network
     public boolean isNetworkConnected(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-
         return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
     }
 
@@ -530,11 +533,14 @@ public class AdmodUtils {
             }
         }
     }
+
+
+
     boolean isClicked = false;
-    public void loadAndShowAdInterstitialWithCallback(Activity activity, String admobId, int limitTime, AdCallback adCallback, boolean enableLoadingDialog) {
+    public void loadAndShowAdInterstitialWithCallback(Activity activity
+            , String admobId, int limitTime, AdCallback adCallback, boolean enableLoadingDialog) {
         if (isClicked)
             return;
-
         isClicked = true;
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -553,7 +559,6 @@ public class AdmodUtils {
                 return;
             }
         }
-
 
         long currentTime = getCurrentTime();
         if (currentTime - lastTimeShowInterstitial >= limitTime) {
@@ -582,10 +587,10 @@ public class AdmodUtils {
                         mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
                             @Override
                             public void onAdFailedToShowFullScreenContent(@NonNull @NotNull AdError adError) {
-                                adCallback.onAdClosed();
                                 if (dialog != null) {
                                     dialog.dismiss();
                                 }
+                                adCallback.onAdFail();
                                 isAdShowing = false;
                                 if (AppOpenManager.getInstance().isInitialized()) {
                                     AppOpenManager.getInstance().isAppResumeEnabled = true;
@@ -598,12 +603,11 @@ public class AdmodUtils {
 
                             @Override
                             public void onAdDismissedFullScreenContent() {
-
-                                adCallback.onAdClosed();
-
                                 if (dialog != null) {
                                     dialog.dismiss();
                                 }
+                                adCallback.onAdClosed();
+
                                 lastTimeShowInterstitial = new Date().getTime();
                                 isAdShowing = false;
                                 if (AppOpenManager.getInstance().isInitialized()) {
@@ -612,9 +616,6 @@ public class AdmodUtils {
                             }
                         });
 
-                        if (dialog != null) {
-                            dialog.dismiss();
-                        }
                         if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
                             try {
                                 if (dialog != null && dialog.isShowing())
@@ -629,12 +630,10 @@ public class AdmodUtils {
                             new Handler().postDelayed(() -> {
                                 if (AppOpenManager.getInstance().isInitialized()) {
                                     AppOpenManager.getInstance().isAppResumeEnabled = false;
-
                                 }
 
                                 mInterstitialAd.show(activity);
                             }, 800);
-
                         }
 
                     } else {

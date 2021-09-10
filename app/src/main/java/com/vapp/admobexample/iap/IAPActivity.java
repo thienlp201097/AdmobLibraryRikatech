@@ -61,6 +61,7 @@ public class IAPActivity extends AppCompatActivity {
         btnRestore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 new Handler().postDelayed(() -> {
                     if (PurchaseUtils.getInstance().restoreSubscription(getString(R.string.premium))) {
                         tvStatus.setText("Vip");

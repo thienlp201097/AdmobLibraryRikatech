@@ -49,7 +49,8 @@ public class NativeRecyclerActivity extends AppCompatActivity implements ClickLi
                         R.id.id_ad
                 ));
         recyclerView.setAdapter(googleNativeAdAdapter);
-
+        //position = position adapter not position recyclerView
+        //if adapter.notifydatasetchanged = crash -> init adapter again
     }
 
     @Override

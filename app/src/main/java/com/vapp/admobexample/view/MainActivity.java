@@ -21,7 +21,6 @@ import com.vapp.admoblibrary.ads.AdmodUtils;
 import com.vapp.admoblibrary.ads.RewardAdCallback;
 
 public class MainActivity extends AppCompatActivity{
-
     Button btn_LoadInter;
     Button btn_ShowInter;
     Button btn_LoadAndShowInter;
@@ -35,7 +34,6 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-
         finbyid();
         showDialogRate();
 
@@ -45,10 +43,12 @@ public class MainActivity extends AppCompatActivity{
         //API data sample
         AdUnitListModel adUnitList = Utils.getInstance().getAdUnitByName("Name AdUnit", "Defaul Id Admob");
         //check Countries (BOOL)
-        if (Utils.getInstance().checkCountries(this,adUnitList)){
-            //show ads
-        }
 
+//        if (Utils.getInstance().showAdForCountry(this,adUnitList)){
+//            //show ads
+//        }else{
+//            //dont show ads
+//        }
 
         btn_LoadInter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -182,6 +182,8 @@ public class MainActivity extends AppCompatActivity{
 //        android:windowSoftInputMode="adjustPan|adjustResize"
 
     }
+
+
     void finbyid(){
         btn_LoadInter = findViewById(R.id.btn_LoadInter);
         btn_ShowInter = findViewById(R.id.btn_ShowInter);
