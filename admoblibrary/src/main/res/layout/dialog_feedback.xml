@@ -67,6 +67,7 @@
             android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginRight="@dimen/_10sdp"
             android:maxLength="500"
+            android:textColor="@color/gnt_black"
             android:hint="(Optional) Tell others what you think"/>
 
         <LinearLayout
@@ -85,6 +86,8 @@
                 android:layout_weight="1"
                 android:gravity="left"
                 android:textSize="@dimen/_9sdp"
+                android:textColor="@color/gnt_gray"
+
                 android:text="Optional" />
 
             <TextView
@@ -95,6 +98,8 @@
                 android:text="0/500"
                 android:maxLength="500"
                 android:textSize="@dimen/_9sdp"
+                android:textColor="@color/gnt_gray"
+
                 android:gravity="right"
                 />
         </LinearLayout>
