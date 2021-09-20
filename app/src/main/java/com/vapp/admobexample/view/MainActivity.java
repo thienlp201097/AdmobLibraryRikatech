@@ -7,6 +7,7 @@ import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.vapp.admoblibrary.ads.NativeAdCallback;
 import com.vapp.admoblibrary.ads.admobnative.enumclass.GoogleEBanner;
 import com.vapp.admoblibrary.ads.admobnative.enumclass.GoogleENative;
 import com.vapp.admobexample.R;
@@ -142,7 +143,17 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 //        AdmodUtils.getInstance().loadNativeAdsWithLayout(MainActivity.this, getString(R.string.test_ads_admob_native_id), nativeAds, R.layout.ad_unified_medium);
-        AdmodUtils.getInstance().loadNativeAds(MainActivity.this, getString(R.string.test_ads_admob_native_id), nativeAds, GoogleENative.UNIFIED_SMALL);
+        AdmodUtils.getInstance().loadNativeAds(MainActivity.this, getString(R.string.test_ads_admob_native_id), nativeAds, GoogleENative.UNIFIED_SMALL, new NativeAdCallback() {
+            @Override
+            public void onNativeAdLoaded() {
+
+            }
+
+            @Override
+            public void onAdFail() {
+
+            }
+        });
         AdmodUtils.getInstance().loadAdBanner(MainActivity.this, getString(R.string.test_ads_admob_native_id), banner, GoogleEBanner.SIZE_SMALL);
     }
 

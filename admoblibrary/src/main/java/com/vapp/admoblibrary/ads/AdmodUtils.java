@@ -171,7 +171,7 @@ public class AdmodUtils {
     }
 
     // ads native
-    public void loadNativeAdsWithLayout(Activity activity, String s, ViewGroup viewGroup, int layout) {
+    public void loadNativeAdsWithLayout(Activity activity, String s, ViewGroup viewGroup, int layout, NativeAdCallback adCallback) {
 
         if (!isShowAds) {
             viewGroup.setVisibility(View.GONE);
@@ -188,6 +188,8 @@ public class AdmodUtils {
 
                     @Override
                     public void onNativeAdLoaded(@NonNull @NotNull NativeAd nativeAd) {
+                        adCallback.onNativeAdLoaded();
+
                         NativeAdView adView = (NativeAdView) activity.getLayoutInflater()
                                 .inflate(layout, null);
 
@@ -204,7 +206,7 @@ public class AdmodUtils {
                     public void onAdFailedToLoad(LoadAdError adError) {
                         Log.e("Admodfail", "onAdFailedToLoad" + adError.getMessage());
                         Log.e("Admodfail", "errorCodeAds" + adError.getCause());
-
+                        adCallback.onAdFail();
                     }
                 })
                 .withNativeAdOptions(new NativeAdOptions.Builder().build()).build();
@@ -215,7 +217,7 @@ public class AdmodUtils {
 
     // ads native
     @SuppressLint("StaticFieldLeak")
-    public void loadNativeAds(Activity activity, String s, ViewGroup viewGroup, GoogleENative size) {
+    public void loadNativeAds(Activity activity, String s, ViewGroup viewGroup, GoogleENative size, NativeAdCallback adCallback) {
 
         if (!isShowAds) {
             viewGroup.setVisibility(View.GONE);
@@ -232,6 +234,7 @@ public class AdmodUtils {
 
                     @Override
                     public void onNativeAdLoaded(@NonNull @NotNull NativeAd nativeAd) {
+                        adCallback.onNativeAdLoaded();
                         int id = 0;
                         if (size == GoogleENative.UNIFIED_MEDIUM) {
                             id = R.layout.ad_unified_medium;
@@ -255,7 +258,7 @@ public class AdmodUtils {
                     public void onAdFailedToLoad(LoadAdError adError) {
                         Log.e("Admodfail", "onAdFailedToLoad" + adError.getMessage());
                         Log.e("Admodfail", "errorCodeAds" + adError.getCause());
-
+                        adCallback.onAdFail();
                     }
                 })
                 .withNativeAdOptions(new NativeAdOptions.Builder().build()).build();
@@ -606,9 +609,9 @@ public class AdmodUtils {
                                 if (dialog != null) {
                                     dialog.dismiss();
                                 }
+                                lastTimeShowInterstitial = new Date().getTime();
                                 adCallback.onAdClosed();
 
-                                lastTimeShowInterstitial = new Date().getTime();
                                 isAdShowing = false;
                                 if (AppOpenManager.getInstance().isInitialized()) {
                                     AppOpenManager.getInstance().isAppResumeEnabled = true;
