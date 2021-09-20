@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import androidx.recyclerview.widget.RecyclerView
 import com.vapp.admoblibrary.R
 import com.vapp.admoblibrary.ads.AdmodUtils
+import com.vapp.admoblibrary.ads.NativeAdCallback
+import com.vapp.admoblibrary.ads.admobnative.enumclass.GoogleENative
 
 class GoogleNativeAdAdapter(private val mParam: Param) :
     GoogleRVAdapterWrapper(mParam.adapter as RecyclerView.Adapter<RecyclerView.ViewHolder>) {
@@ -61,11 +63,16 @@ class GoogleNativeAdAdapter(private val mParam: Param) :
             AdmodUtils.getInstance().loadNativeAdsWithLayout(mParam.activity!!,
                 idAdmob,
                 holder.adFrame,
-                mParam.layout)
+                mParam.layout,  object : NativeAdCallback {
+                    override fun onNativeAdLoaded() {}
+                    override fun onAdFail() {}
+                })
             adHolder.loaded = true
 
                adHolder.loaded = true
         }
+
+
     }
 
     override fun onBindViewHolder(
