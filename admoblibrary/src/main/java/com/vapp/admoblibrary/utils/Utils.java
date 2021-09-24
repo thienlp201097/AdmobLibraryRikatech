@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.LocaleList;
 import android.telephony.TelephonyManager;
@@ -41,8 +42,15 @@ public class Utils {
     String countryCode = "";
 
 
-    public void showDialogTitle(Context context, String title, String content, String lableButton, DialogType dialogType, boolean isEnableCancel, String lableCancel, DialogCallback dialogCallback) {
+    public void showProgress(Context context, String title, String hexcolor) {
+        SweetAlertDialog pDialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor(hexcolor));
+        pDialog.setTitleText(title);
+        pDialog.setCancelable(false);
+        pDialog.show();
+    }
 
+    public void showDialogTitle(Context context, String title, String content, String lableButton, DialogType dialogType, boolean isEnableCancel, String lableCancel, DialogCallback dialogCallback) {
         int type = 0;
         switch (dialogType) {
             case NORMAL_TYPE:
@@ -57,11 +65,13 @@ public class Utils {
             case WARNING_TYPE:
                 type = 3;
                 break;
+            case PROGRESS_TYPE:
+                type = 4;
             default:
                 type = 0;
         }
 
-        if (isEnableCancel){
+        if (isEnableCancel) {
             new SweetAlertDialog(context, type)
                     .setTitleText(title)
                     .setContentText(content)
@@ -82,7 +92,7 @@ public class Utils {
                         }
                     })
                     .show();
-        }else {
+        } else {
             new SweetAlertDialog(context, type)
                     .setTitleText(title)
                     .setContentText(content)
