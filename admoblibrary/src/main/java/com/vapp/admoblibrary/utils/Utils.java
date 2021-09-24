@@ -28,7 +28,7 @@ import java.util.Locale;
 import static android.content.Context.TELEPHONY_SERVICE;
 
 public class Utils {
-
+    SweetAlertDialog pDialog;
     private static volatile Utils INSTANCE;
 
     public static synchronized Utils getInstance() {
@@ -43,7 +43,7 @@ public class Utils {
 
 
     public void showProgress(Context context, String title, String hexcolor) {
-        SweetAlertDialog pDialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor(hexcolor));
         pDialog.setTitleText(title);
         pDialog.setCancelable(false);
