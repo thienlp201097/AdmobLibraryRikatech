@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".view.MainActivity">
 
+
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,93 +22,109 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <LinearLayout
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:layout_gravity="center|top"
-        android:gravity="center|top">
+        android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center"
-            android:gravity="center">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginTop="?attr/actionBarSize"
+            android:layout_gravity="center|top"
+            android:gravity="center|top">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/btn_LoadInter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="load inter"
+                    android:layout_marginRight="10dp"/>
+                <Button
+                    android:id="@+id/btn_ShowInter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="show inter"/>
+            </LinearLayout>
+
 
             <Button
-                android:id="@+id/btn_LoadInter"
+                android:id="@+id/btn_LoadAndShowInter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="load inter"
-                android:layout_marginRight="10dp"/>
+                android:text="load and show inter"
+                android:layout_marginTop="5dp"/>
+
             <Button
-                android:id="@+id/btn_ShowInter"
+                android:id="@+id/btn_LoadAndShowReward"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="show inter"/>
+                android:text="load and show reward"
+                android:layout_marginTop="5dp"/>
+
+            <Button
+                android:id="@+id/btn_LoadNative"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Native in recycleview"
+                android:layout_marginTop="5dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_marginTop="5dp">
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_IAP"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="IAP"
+                    android:textColor="@color/white"
+                    android:background="@color/teal_700"
+                    android:layout_marginRight="20dp"/>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_Rate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Rate now"
+                    android:textColor="@color/white"
+                    android:background="@color/purple_200"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/banner"
+                android:orientation="vertical"
+                android:layout_marginTop="10dp"/>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/nativeAds"
+                android:orientation="vertical"
+                android:layout_marginTop="0dp"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_Utils"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Utils Demo"
+                android:textColor="@color/white"
+                android:background="@color/gnt_gray"/>
+
         </LinearLayout>
 
 
-        <Button
-            android:id="@+id/btn_LoadAndShowInter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="load and show inter"
-            android:layout_marginTop="5dp"/>
-
-        <Button
-            android:id="@+id/btn_LoadAndShowReward"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="load and show reward"
-            android:layout_marginTop="5dp"/>
-
-        <Button
-            android:id="@+id/btn_LoadNative"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Native in recycleview"
-            android:layout_marginTop="5dp"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:layout_marginTop="5dp">
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_IAP"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="IAP"
-            android:textColor="@color/white"
-            android:background="@color/teal_700"
-            android:layout_marginRight="20dp"/>
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_Rate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Rate now"
-            android:textColor="@color/white"
-            android:background="@color/purple_200"/>
-    </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/banner"
-            android:orientation="vertical"
-            android:layout_marginTop="10dp"/>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/nativeAds"
-            android:orientation="vertical"
-            android:layout_marginTop="10dp"/>
-    </LinearLayout>
+    </ScrollView>
 
 
 

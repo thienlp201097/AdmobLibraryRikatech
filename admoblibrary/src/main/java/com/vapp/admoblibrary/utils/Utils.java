@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.cazaea.sweetalert.SweetAlertDialog;
 import com.vapp.admoblibrary.R;
 import com.vapp.admoblibrary.ads.model.AdUnitListModel;
 
@@ -29,7 +30,6 @@ public class Utils {
 
     private static volatile Utils INSTANCE;
 
-
     public static synchronized Utils getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new Utils();
@@ -39,6 +39,74 @@ public class Utils {
 
     public static List<AdUnitListModel> adUnitLists = new ArrayList<>();
     String countryCode = "";
+
+
+    public void showDialogTitle(Context context, String title, String content, String lableButton, DialogType dialogType, boolean isEnableCancel, String lableCancel, DialogCallback dialogCallback) {
+
+        int type = 0;
+        switch (dialogType) {
+            case NORMAL_TYPE:
+                type = 0;
+                break;
+            case ERROR_TYPE:
+                type = 1;
+                break;
+            case SUCCESS_TYPE:
+                type = 2;
+                break;
+            case WARNING_TYPE:
+                type = 3;
+                break;
+            default:
+                type = 0;
+        }
+
+        if (isEnableCancel){
+            new SweetAlertDialog(context, type)
+                    .setTitleText(title)
+                    .setContentText(content)
+                    .setConfirmText(lableButton)
+                    .setCancelText(lableCancel)
+                    .showCancelButton(true)
+                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            dialogCallback.cancel();
+                        }
+                    })
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            sDialog.dismissWithAnimation();
+                            dialogCallback.onClosed();
+                        }
+                    })
+                    .show();
+        }else {
+            new SweetAlertDialog(context, type)
+                    .setTitleText(title)
+                    .setContentText(content)
+                    .setConfirmText(lableButton)
+                    .showCancelButton(true)
+                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            dialogCallback.cancel();
+                        }
+                    })
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            sDialog.dismissWithAnimation();
+                            dialogCallback.onClosed();
+                        }
+                    })
+                    .show();
+        }
+
+
+    }
+
 
     public boolean checkCountries(Context context, AdUnitListModel adUnitList) {
         countryCode = getDeviceCountryCode(context);
@@ -83,7 +151,7 @@ public class Utils {
 
         // try to get country code from TelephonyManager service
         TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        if(tm != null) {
+        if (tm != null) {
             // query first getSimCountryIso()
             countryCode = tm.getSimCountryIso();
             if (countryCode != null && countryCode.length() == 2)
@@ -109,7 +177,7 @@ public class Utils {
         }
 
         if (countryCode != null && countryCode.length() == 2)
-            return  countryCode.toLowerCase();
+            return countryCode.toLowerCase();
         // general fallback to "us"
         return "us";
     }
@@ -130,24 +198,42 @@ public class Utils {
 
             // mapping just countries that actually use CDMA networks
             switch (mcc) {
-                case 330: return "PR";
-                case 310: return "US";
-                case 311: return "US";
-                case 312: return "US";
-                case 316: return "US";
-                case 283: return "AM";
-                case 460: return "CN";
-                case 455: return "MO";
-                case 414: return "MM";
-                case 619: return "SL";
-                case 450: return "KR";
-                case 634: return "SD";
-                case 434: return "UZ";
-                case 232: return "AT";
-                case 204: return "NL";
-                case 262: return "DE";
-                case 247: return "LV";
-                case 255: return "UA";
+                case 330:
+                    return "PR";
+                case 310:
+                    return "US";
+                case 311:
+                    return "US";
+                case 312:
+                    return "US";
+                case 316:
+                    return "US";
+                case 283:
+                    return "AM";
+                case 460:
+                    return "CN";
+                case 455:
+                    return "MO";
+                case 414:
+                    return "MM";
+                case 619:
+                    return "SL";
+                case 450:
+                    return "KR";
+                case 634:
+                    return "SD";
+                case 434:
+                    return "UZ";
+                case 232:
+                    return "AT";
+                case 204:
+                    return "NL";
+                case 262:
+                    return "DE";
+                case 247:
+                    return "LV";
+                case 255:
+                    return "UA";
             }
         } catch (ClassNotFoundException ignored) {
         } catch (NoSuchMethodException ignored) {
@@ -159,12 +245,12 @@ public class Utils {
         return null;
     }
 
-        public boolean showAdForCountry(Context context, AdUnitListModel adModel) {
-            if (adModel.getCountries() != null) {
-                return Utils.getInstance().checkCountries(context, adModel);
-            }
-            return true;
+    public boolean showAdForCountry(Context context, AdUnitListModel adModel) {
+        if (adModel.getCountries() != null) {
+            return Utils.getInstance().checkCountries(context, adModel);
         }
+        return true;
+    }
 
     public void showMessenger(Context context, String content, int time) {
         if (time == 0) {

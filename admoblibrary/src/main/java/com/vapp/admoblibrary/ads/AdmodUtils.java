@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.Handler;
 import android.provider.Settings;
@@ -15,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ProcessLifecycleOwner;
 
+import com.cazaea.sweetalert.SweetAlertDialog;
 import com.vapp.admoblibrary.ads.admobnative.enumclass.GoogleEBanner;
 import com.vapp.admoblibrary.ads.admobnative.enumclass.GoogleENative;
 import com.google.android.gms.ads.AdError;
@@ -50,7 +52,7 @@ import java.util.Date;
 import java.util.List;
 
 public class AdmodUtils {
-    ProgressDialog dialog;
+    SweetAlertDialog dialog;
     public long lastTimeShowInterstitial = 0;
     public long timeOut = 0;
     public boolean isAdShowing = false;
@@ -67,7 +69,7 @@ public class AdmodUtils {
     }
 
 
-    public void initAdmob(Context context, int timeout, boolean isDebug,  boolean isEnableAds) {
+    public void initAdmob(Context context, int timeout, boolean isDebug, boolean isEnableAds) {
         if (timeout > 0) {
             timeOut = timeout;
         } else {
@@ -272,8 +274,22 @@ public class AdmodUtils {
     RewardedAd mRewardedAd = null;
 
     public void loadAndShowAdRewardWithCallback(Activity activity, String admobId, RewardAdCallback adCallback2, boolean enableLoadingDialog) {
+
+        if (isClicked)
+            return;
+        isClicked = true;
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                isClicked = false;
+            }
+        }, 3500);
+
         if (!isShowAds) {
             adCallback2.onAdClosed();
+            if (dialog != null) {
+                dialog.dismiss();
+            }
             return;
         }
 
@@ -282,13 +298,13 @@ public class AdmodUtils {
             admobId = activity.getString(R.string.test_ads_admob_reward_id);
         }
         if (enableLoadingDialog) {
-            dialog = new ProgressDialog(activity, R.style.AppCompatAlertDialogStyle);
-            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            dialog.setTitle("Loading");
-            dialog.setMessage("Loading ads. Please wait...");
-            dialog.setIndeterminate(true);
-            dialog.setCanceledOnTouchOutside(false);
+
+            dialog = new SweetAlertDialog(activity, SweetAlertDialog.PROGRESS_TYPE);
+            dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+            dialog.setTitleText("Loading ads. Please wait...");
+            dialog.setCancelable(false);
             dialog.show();
+
         }
 
         RewardedAd.load(activity, admobId,
@@ -328,6 +344,9 @@ public class AdmodUtils {
                                 @Override
                                 public void onAdShowedFullScreenContent() {
                                     isAdShowing = false;
+                                    if (dialog != null) {
+                                        dialog.dismiss();
+                                    }
                                     if (AppOpenManager.getInstance().isInitialized()) {
                                         AppOpenManager.getInstance().isAppResumeEnabled = false;
                                     }
@@ -419,12 +438,10 @@ public class AdmodUtils {
         }
 
         if (enableLoadingDialog) {
-            dialog = new ProgressDialog(context, R.style.AppCompatAlertDialogStyle);
-            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            dialog.setTitle("Loading");
-            dialog.setMessage("Loading ads. Please wait...");
-            dialog.setIndeterminate(true);
-            dialog.setCanceledOnTouchOutside(false);
+            dialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+            dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+            dialog.setTitleText("Loading ads. Please wait...");
+            dialog.setCancelable(false);
             dialog.show();
         }
 
@@ -449,7 +466,6 @@ public class AdmodUtils {
     }
 
     public void showAdInterstitialWithCallback(Activity activity, AdCallback adCallback, int limitTime) {
-
         if (!isShowAds) {
             adCallback.onAdClosed();
             return;
@@ -538,8 +554,8 @@ public class AdmodUtils {
     }
 
 
-
     boolean isClicked = false;
+
     public void loadAndShowAdInterstitialWithCallback(Activity activity
             , String admobId, int limitTime, AdCallback adCallback, boolean enableLoadingDialog) {
         if (isClicked)
@@ -569,12 +585,10 @@ public class AdmodUtils {
                 admobId = activity.getString(R.string.test_ads_admob_inter_id);
             }
             if (enableLoadingDialog) {
-                dialog = new ProgressDialog(activity, R.style.AppCompatAlertDialogStyle);
-                dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                dialog.setTitle("Loading");
-                dialog.setMessage("Loading ads. Please wait...");
-                dialog.setIndeterminate(true);
-                dialog.setCanceledOnTouchOutside(false);
+                dialog = new SweetAlertDialog(activity, SweetAlertDialog.PROGRESS_TYPE);
+                dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                dialog.setTitleText("Loading ads. Please wait...");
+                dialog.setCancelable(false);
                 dialog.show();
             }
 
@@ -582,9 +596,6 @@ public class AdmodUtils {
                 @Override
                 public void onAdLoaded(@NonNull @org.jetbrains.annotations.NotNull InterstitialAd interstitialAd) {
                     super.onAdLoaded(interstitialAd);
-                    if (dialog != null) {
-                        dialog.dismiss();
-                    }
                     mInterstitialAd = interstitialAd;
                     if (mInterstitialAd != null) {
                         mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
@@ -658,8 +669,6 @@ public class AdmodUtils {
                     if (dialog != null) {
                         dialog.dismiss();
                     }
-
-
                     adCallback.onAdFail();
                     if (AppOpenManager.getInstance().isInitialized()) {
                         AppOpenManager.getInstance().isAppResumeEnabled = true;

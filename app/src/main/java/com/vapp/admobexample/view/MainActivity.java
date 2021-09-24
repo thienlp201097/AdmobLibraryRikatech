@@ -1,5 +1,6 @@
 package com.vapp.admobexample.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -7,6 +8,7 @@ import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.vapp.admobexample.utilsdemp.UtilsDemoActivity;
 import com.vapp.admoblibrary.ads.NativeAdCallback;
 import com.vapp.admoblibrary.ads.admobnative.enumclass.GoogleEBanner;
 import com.vapp.admoblibrary.ads.admobnative.enumclass.GoogleENative;
@@ -27,7 +29,7 @@ public class MainActivity extends AppCompatActivity{
     Button btn_LoadAndShowInter;
     Button btn_LoadAndShowReward;
     Button btn_LoadNative;
-    Button btn_IAP, btn_Rate;
+    Button btn_IAP, btn_Rate, btn_Utils;
     LinearLayout nativeAds;
     LinearLayout banner;
 
@@ -50,6 +52,13 @@ public class MainActivity extends AppCompatActivity{
 //        }else{
 //            //dont show ads
 //        }
+
+        btn_Utils.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, UtilsDemoActivity.class));
+            }
+        });
 
         btn_LoadInter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,6 +205,7 @@ public class MainActivity extends AppCompatActivity{
 
 
     void finbyid(){
+        btn_Utils = findViewById(R.id.btn_Utils);
         btn_LoadInter = findViewById(R.id.btn_LoadInter);
         btn_ShowInter = findViewById(R.id.btn_ShowInter);
         btn_LoadAndShowInter = findViewById(R.id.btn_LoadAndShowInter);

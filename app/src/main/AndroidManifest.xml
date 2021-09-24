@@ -40,6 +40,7 @@
         </activity>
         <activity android:name=".view.NativeRecyclerActivity" />
         <activity android:name=".iap.IAPActivity" />
+        <activity android:name=".utilsdemp.UtilsDemoActivity" />
 
 
     </application>
