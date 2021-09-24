@@ -28,7 +28,7 @@ import java.util.Locale;
 import static android.content.Context.TELEPHONY_SERVICE;
 
 public class Utils {
-    SweetAlertDialog pDialog;
+    public SweetAlertDialog pDialog;
     private static volatile Utils INSTANCE;
 
     public static synchronized Utils getInstance() {
