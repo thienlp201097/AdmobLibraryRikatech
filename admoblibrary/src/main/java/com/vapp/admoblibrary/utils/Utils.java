@@ -50,6 +50,10 @@ public class Utils {
         pDialog.show();
     }
 
+    public void dismissProgress(Context context, String title, String hexcolor) {
+        pDialog.dismissWithAnimation();
+    }
+
     public void showDialogTitle(Context context, String title, String content, String lableButton, DialogType dialogType, boolean isEnableCancel, String lableCancel, DialogCallback dialogCallback) {
         int type = 0;
         switch (dialogType) {
