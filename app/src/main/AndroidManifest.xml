@@ -41,7 +41,8 @@
         <activity android:name=".view.NativeRecyclerActivity" />
         <activity android:name=".iap.IAPActivity" />
         <activity android:name=".utilsdemp.UtilsDemoActivity" />
-
+        <meta-data android:name="com.google.android.gms.ads.flag.NATIVE_AD_DEBUGGER_ENABLED"
+            android:value="false" />
 
     </application>
 

@@ -632,8 +632,8 @@ public class AdmodUtils {
 
                         if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
                             try {
-                                if (dialog != null && dialog.isShowing())
-                                    dialog.dismiss();
+//                                if (dialog != null && dialog.isShowing())
+//                                    dialog.dismiss();
                             } catch (Exception e) {
                                 dialog = null;
                                 if (dialog != null) {
