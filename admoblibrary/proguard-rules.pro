@@ -21,3 +21,5 @@
 #-renamesourcefileattribute SourceFile
 -keep class com.android.vending.billing.**
 -keepnames class com.google.android.play.core.review.ReviewInfo
+-keep class com.vapp.admoblibrary.utils.SweetAlert.**
+

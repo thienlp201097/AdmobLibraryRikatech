@@ -16,7 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ProcessLifecycleOwner;
 
-import com.cazaea.sweetalert.SweetAlertDialog;
 import com.vapp.admoblibrary.ads.admobnative.enumclass.GoogleEBanner;
 import com.vapp.admoblibrary.ads.admobnative.enumclass.GoogleENative;
 import com.google.android.gms.ads.AdError;
@@ -41,6 +40,7 @@ import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.vapp.admoblibrary.R;
 import com.vapp.admoblibrary.ads.admobnative.NativeFunc;
 import com.vapp.admoblibrary.ads.model.AdUnitListModel;
+import com.vapp.admoblibrary.utils.SweetAlert.SweetAlertDialog;
 import com.vapp.admoblibrary.utils.Utils;
 
 import org.jetbrains.annotations.NotNull;
@@ -50,6 +50,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 
 public class AdmodUtils {
     SweetAlertDialog dialog;

@@ -15,9 +15,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.cazaea.sweetalert.SweetAlertDialog;
 import com.vapp.admoblibrary.R;
 import com.vapp.admoblibrary.ads.model.AdUnitListModel;
+import com.vapp.admoblibrary.utils.SweetAlert.SweetAlertDialog;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Locale;
 
 import static android.content.Context.TELEPHONY_SERVICE;
+
 
 public class Utils {
     public SweetAlertDialog pDialog;
