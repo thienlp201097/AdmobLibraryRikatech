@@ -169,7 +169,40 @@ public class AdmodUtils {
 
         viewGroup.removeAllViews();
         viewGroup.addView(mAdView);
+
+        mAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                Log.e(" Admod", "onAdLoaded");
+
+            }
+
+            @Override
+            public void onAdFailedToLoad(LoadAdError adError) {
+                Log.e(" Admod", "failloadbanner" + adError.getMessage());
+
+            }
+
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when an ad opens an overlay that
+                // covers the screen.
+            }
+
+            @Override
+            public void onAdClicked() {
+                // Code to be executed when the user clicks on an ad.
+            }
+
+            @Override
+            public void onAdClosed() {
+                // Code to be executed when the user is about to return
+                // to the app after tapping on an ad.
+            }
+        });
+
         mAdView.loadAd(adRequest);
+
         Log.e(" Admod", "loadAdBanner");
     }
 
