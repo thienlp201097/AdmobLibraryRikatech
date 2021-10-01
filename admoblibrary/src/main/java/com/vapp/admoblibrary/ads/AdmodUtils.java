@@ -48,6 +48,7 @@ import org.jetbrains.annotations.NotNull;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -594,6 +595,10 @@ public class AdmodUtils {
             , String admobId, int limitTime, AdCallback adCallback, boolean enableLoadingDialog) {
         if (isClicked)
             return;
+
+        Date currentTime1 = Calendar.getInstance().getTime();
+        Log.d("time---", "start" + currentTime1.toString());
+
         isClicked = true;
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -626,92 +631,109 @@ public class AdmodUtils {
                 dialog.show();
             }
 
-            InterstitialAd.load(activity, admobId, adRequest, new InterstitialAdLoadCallback() {
-                @Override
-                public void onAdLoaded(@NonNull @org.jetbrains.annotations.NotNull InterstitialAd interstitialAd) {
-                    super.onAdLoaded(interstitialAd);
-                    mInterstitialAd = interstitialAd;
-                    if (mInterstitialAd != null) {
-                        mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
-                            @Override
-                            public void onAdFailedToShowFullScreenContent(@NonNull @NotNull AdError adError) {
+            Date currentTime2 = Calendar.getInstance().getTime();
+            Log.d("time---", "load" + currentTime2.toString());
+
+            String finalAdmobId = admobId;
+            new Handler().postDelayed(new Runnable() {
+                public void run() {
+                    InterstitialAd.load(activity, finalAdmobId, adRequest, new InterstitialAdLoadCallback() {
+                        @Override
+                        public void onAdLoaded(@NonNull @org.jetbrains.annotations.NotNull InterstitialAd interstitialAd) {
+                            super.onAdLoaded(interstitialAd);
+
+                            Date currentTime3 = Calendar.getInstance().getTime();
+                            Log.d("time---", "onAdLoaded" + currentTime3.toString());
+
+                            mInterstitialAd = interstitialAd;
+                            if (mInterstitialAd != null) {
+                                mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
+                                    @Override
+                                    public void onAdFailedToShowFullScreenContent(@NonNull @NotNull AdError adError) {
+                                        if (dialog != null) {
+                                            dialog.dismiss();
+                                        }
+                                        adCallback.onAdFail();
+                                        isAdShowing = false;
+                                        if (AppOpenManager.getInstance().isInitialized()) {
+                                            AppOpenManager.getInstance().isAppResumeEnabled = true;
+                                        }
+                                        Log.e("Admodfail", "onAdFailedToLoad" + adError.getMessage());
+                                        Log.e("Admodfail", "errorCodeAds" + adError.getCause());
+
+                                    }
+
+
+                                    @Override
+                                    public void onAdDismissedFullScreenContent() {
+                                        if (dialog != null) {
+                                            dialog.dismiss();
+                                        }
+                                        lastTimeShowInterstitial = new Date().getTime();
+                                        adCallback.onAdClosed();
+
+
+
+
+                                        isAdShowing = false;
+                                        if (AppOpenManager.getInstance().isInitialized()) {
+                                            AppOpenManager.getInstance().isAppResumeEnabled = true;
+                                        }
+                                    }
+                                });
+
+                                if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+                                    try {
+//                                if (dialog != null && dialog.isShowing())
+//                                    dialog.dismiss();
+                                    } catch (Exception e) {
+                                        dialog = null;
+                                        if (dialog != null) {
+                                            dialog.dismiss();
+                                        }
+                                        e.printStackTrace();
+                                    }
+                                    new Handler().postDelayed(() -> {
+                                        if (AppOpenManager.getInstance().isInitialized()) {
+                                            AppOpenManager.getInstance().isAppResumeEnabled = false;
+                                        }
+
+                                        mInterstitialAd.show(activity);
+                                    }, 800);
+                                }
+
+                            } else {
                                 if (dialog != null) {
                                     dialog.dismiss();
                                 }
                                 adCallback.onAdFail();
-                                isAdShowing = false;
-                                if (AppOpenManager.getInstance().isInitialized()) {
-                                    AppOpenManager.getInstance().isAppResumeEnabled = true;
-                                }
-                                Log.e("Admodfail", "onAdFailedToLoad" + adError.getMessage());
-                                Log.e("Admodfail", "errorCodeAds" + adError.getCause());
-
-                            }
-
-
-                            @Override
-                            public void onAdDismissedFullScreenContent() {
-                                if (dialog != null) {
-                                    dialog.dismiss();
-                                }
-                                lastTimeShowInterstitial = new Date().getTime();
-                                adCallback.onAdClosed();
-
-                                isAdShowing = false;
                                 if (AppOpenManager.getInstance().isInitialized()) {
                                     AppOpenManager.getInstance().isAppResumeEnabled = true;
                                 }
                             }
-                        });
+                        }
 
-                        if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
-                            try {
-//                                if (dialog != null && dialog.isShowing())
-//                                    dialog.dismiss();
-                            } catch (Exception e) {
-                                dialog = null;
-                                if (dialog != null) {
-                                    dialog.dismiss();
-                                }
-                                e.printStackTrace();
+                        @Override
+                        public void onAdFailedToLoad(@NonNull @org.jetbrains.annotations.NotNull LoadAdError loadAdError) {
+                            super.onAdFailedToLoad(loadAdError);
+                            mInterstitialAd = null;
+
+                            if (dialog != null) {
+                                dialog.dismiss();
                             }
-                            new Handler().postDelayed(() -> {
-                                if (AppOpenManager.getInstance().isInitialized()) {
-                                    AppOpenManager.getInstance().isAppResumeEnabled = false;
-                                }
+                            adCallback.onAdFail();
+                            if (AppOpenManager.getInstance().isInitialized()) {
+                                AppOpenManager.getInstance().isAppResumeEnabled = true;
+                            }
 
-                                mInterstitialAd.show(activity);
-                            }, 800);
+                            Log.e("Admodfail", "onAdFailedToLoad" + loadAdError.getMessage());
+                            Log.e("Admodfail", "errorCodeAds" + loadAdError.getCause());
                         }
-
-                    } else {
-                        if (dialog != null) {
-                            dialog.dismiss();
-                        }
-                        adCallback.onAdFail();
-                        if (AppOpenManager.getInstance().isInitialized()) {
-                            AppOpenManager.getInstance().isAppResumeEnabled = true;
-                        }
-                    }
+                    });
                 }
+            }, 100);
 
-                @Override
-                public void onAdFailedToLoad(@NonNull @org.jetbrains.annotations.NotNull LoadAdError loadAdError) {
-                    super.onAdFailedToLoad(loadAdError);
-                    mInterstitialAd = null;
 
-                    if (dialog != null) {
-                        dialog.dismiss();
-                    }
-                    adCallback.onAdFail();
-                    if (AppOpenManager.getInstance().isInitialized()) {
-                        AppOpenManager.getInstance().isAppResumeEnabled = true;
-                    }
-
-                    Log.e("Admodfail", "onAdFailedToLoad" + loadAdError.getMessage());
-                    Log.e("Admodfail", "errorCodeAds" + loadAdError.getCause());
-                }
-            });
         } else {
             if (dialog != null) {
                 dialog.dismiss();

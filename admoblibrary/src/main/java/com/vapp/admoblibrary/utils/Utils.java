@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.LocaleList;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +23,8 @@ import com.vapp.admoblibrary.utils.SweetAlert.SweetAlertDialog;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -281,9 +284,12 @@ public class Utils {
     }
 
 
+
     public void addActivity(Context context, Class activity) {
         Intent i = new Intent(context, activity);
         context.startActivity(i);
+        Date currentTime3 = Calendar.getInstance().getTime();
+        Log.d("time---", "onAdClosedStart---" + currentTime3.toString());
     }
 
     public void replaceActivity(Context context, Class activity) {

@@ -2,6 +2,8 @@ package com.vapp.admobexample.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -23,7 +25,10 @@ import com.vapp.admoblibrary.ads.AdCallback;
 import com.vapp.admoblibrary.ads.AdmodUtils;
 import com.vapp.admoblibrary.ads.RewardAdCallback;
 
-public class MainActivity extends AppCompatActivity{
+import java.util.Calendar;
+import java.util.Date;
+
+public class MainActivity extends AppCompatActivity {
     Button btn_LoadInter;
     Button btn_ShowInter;
     Button btn_LoadAndShowInter;
@@ -75,14 +80,14 @@ public class MainActivity extends AppCompatActivity{
                     public void onAdClosed() {
                         //code here
 //                        Utils.getInstance().replaceActivity(MainActivity.this,OtherActivity.class);
-                        Utils.getInstance().addActivity(MainActivity.this,OtherActivity.class);
+                        Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
                     }
 
                     @Override
                     public void onAdFail() {
                         //code here
 //                        Utils.getInstance().replaceActivity(MainActivity.this,OtherActivity.class);
-                        Utils.getInstance().addActivity(MainActivity.this,OtherActivity.class);
+                        Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
                     }
                 }, 0);
             }
@@ -93,17 +98,12 @@ public class MainActivity extends AppCompatActivity{
                 AdmodUtils.getInstance().loadAndShowAdInterstitialWithCallback(MainActivity.this, getString(R.string.test_ads_admob_inter_id), 0, new AdCallback() {
                     @Override
                     public void onAdClosed() {
-                        //code here
-//                        Utils.getInstance().replaceActivity(MainActivity.this,OtherActivity.class);
-                        Utils.getInstance().addActivity(MainActivity.this,OtherActivity.class);
-
+                        Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
                     }
 
                     @Override
                     public void onAdFail() {
-                        //code here
-//                        Utils.getInstance().replaceActivity(MainActivity.this,OtherActivity.class);
-                        Utils.getInstance().addActivity(MainActivity.this,OtherActivity.class);
+                        onAdClosed();
                     }
                 }, true);
             }
@@ -114,20 +114,20 @@ public class MainActivity extends AppCompatActivity{
                 AdmodUtils.getInstance().loadAndShowAdRewardWithCallback(MainActivity.this, getString(R.string.test_ads_admob_reward_id), new RewardAdCallback() {
                     @Override
                     public void onAdClosed() {
-                        Utils.getInstance().showMessenger(MainActivity.this,"close ad");
+                        Utils.getInstance().showMessenger(MainActivity.this, "close ad");
 
                     }
 
                     @Override
                     public void onEarned() {
-                        Utils.getInstance().showMessenger(MainActivity.this,"Reward");
+                        Utils.getInstance().showMessenger(MainActivity.this, "Reward");
 
                     }
 
                     @Override
                     public void onAdFail() {
                         //code here
-                        Utils.getInstance().showMessenger(MainActivity.this,"Reward fail");
+                        Utils.getInstance().showMessenger(MainActivity.this, "Reward fail");
                     }
                 }, true);
 
@@ -172,14 +172,14 @@ public class MainActivity extends AppCompatActivity{
                 .date(1)
                 .setNameApp(getString(R.string.app_name))
                 .setIcon(R.mipmap.ic_launcher)
-                .setEmail("namdh1212@gmail.com")
+                .setEmail("vapp.helpcenter@gmail.com")
                 .isShowButtonLater(true)
                 .isClickLaterDismiss(true)
                 .setTextButtonLater("Maybe Later")
                 .setOnlickMaybeLate(new MaybeLaterCallback() {
                     @Override
                     public void onClick() {
-                        Utils.getInstance().showMessenger(MainActivity.this,"clicked Maybe Later");
+                        Utils.getInstance().showMessenger(MainActivity.this, "clicked Maybe Later");
                     }
                 })
                 .ratingButtonColor(R.color.purple_200)
@@ -204,7 +204,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
 
-    void finbyid(){
+    void finbyid() {
         btn_Utils = findViewById(R.id.btn_Utils);
         btn_LoadInter = findViewById(R.id.btn_LoadInter);
         btn_ShowInter = findViewById(R.id.btn_ShowInter);

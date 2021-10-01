@@ -1,11 +1,13 @@
 package com.vapp.admobexample;
 
 import android.os.Bundle;
+import android.os.Handler;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.vapp.admobexample.view.MainActivity;
+import com.vapp.admobexample.view.OtherActivity;
 import com.vapp.admoblibrary.utils.Utils;
 import com.vapp.admoblibrary.ads.AdCallback;
 import com.vapp.admoblibrary.ads.AdmodUtils;
@@ -24,7 +26,7 @@ public class SplashActivity extends AppCompatActivity {
 
             @Override
             public void onAdFail() {
-                Utils.getInstance().replaceActivity(SplashActivity.this,MainActivity.class);
+               onAdClosed();
             }
         },false);
     }
