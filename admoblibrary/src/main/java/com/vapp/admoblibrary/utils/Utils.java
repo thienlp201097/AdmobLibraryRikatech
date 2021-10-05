@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Handler;
 import android.os.LocaleList;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -286,16 +287,29 @@ public class Utils {
 
 
     public void addActivity(Context context, Class activity) {
-        Intent i = new Intent(context, activity);
-        context.startActivity(i);
-        Date currentTime3 = Calendar.getInstance().getTime();
-        Log.d("time---", "onAdClosedStart---" + currentTime3.toString());
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                Intent i = new Intent(context, activity);
+                context.startActivity(i);
+            }
+        }, 100);
+
+
     }
 
     public void replaceActivity(Context context, Class activity) {
-        Intent i = new Intent(context, activity);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(i);
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                Intent i = new Intent(context, activity);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(i);
+            }
+        }, 100);
+
     }
 
     public void addFragment(AppCompatActivity context, Fragment fragment, int contentFrame, boolean addToBackStack) {
