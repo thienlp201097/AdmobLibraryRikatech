@@ -294,7 +294,7 @@ public class Utils {
                 Intent i = new Intent(context, activity);
                 context.startActivity(i);
             }
-        }, 100);
+        }, 150);
 
 
     }
@@ -308,7 +308,7 @@ public class Utils {
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(i);
             }
-        }, 100);
+        }, 150);
 
     }
 
