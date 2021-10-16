@@ -159,6 +159,14 @@ public class AdmodUtils {
         testDevices.add("CE604BDCEFEE2B9125CCFFC53E96022E");
         //Redmi 9A
         testDevices.add("13D67F452A299DB825A348917D52D640");
+        //POCO X3
+        testDevices.add("7D94825002E2407B75A9D5378194CFA9");
+        //Galaxy A21S
+        testDevices.add("98EFC23E56FA228C791F8C3AFBEE44D4");
+        //Oppo CPH1825
+        testDevices.add("805702C1D9D4FD957AFE14F3D69E79F7");
+        //Xiaomi Redmi Note 7
+        testDevices.add("9C62AAC36B9F23413AF4D66FE48F9E9B");
 
     }
 
