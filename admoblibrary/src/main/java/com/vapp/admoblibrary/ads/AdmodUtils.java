@@ -76,7 +76,7 @@ public class AdmodUtils {
 
 
     public void initAdmob(Context context, int timeout, boolean isDebug, boolean isEnableAds) {
-
+        timeOut = timeout;
         if (timeOut < 5000 && timeout!= 0) {
             Toast.makeText(context,"Nên để limit time ~10000",Toast.LENGTH_LONG).show();
         }
@@ -744,6 +744,8 @@ public class AdmodUtils {
                 public void onAdLoaded(@NonNull @org.jetbrains.annotations.NotNull InterstitialAd interstitialAd) {
                     super.onAdLoaded(interstitialAd);
                     mInterstitialAd = interstitialAd;
+                    handlerTimeOut.removeCallbacksAndMessages(null);
+
                     if (mInterstitialAd != null) {
                         mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
                             @Override
@@ -768,8 +770,8 @@ public class AdmodUtils {
                                     dialog.dismiss();
                                 }
                                 lastTimeShowInterstitial = new Date().getTime();
-                                adCallback.onAdClosed();
                                 handlerTimeOut.removeCallbacksAndMessages(null);
+                                adCallback.onAdClosed();
 
                                 isAdShowing = false;
                                 if (AppOpenManager.getInstance().isInitialized()) {
