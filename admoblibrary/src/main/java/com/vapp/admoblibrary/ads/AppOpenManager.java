@@ -82,10 +82,10 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
         isInitialized = true;
         this.myApplication = application;
         initAdRequest();
-        if (AdmodUtils.getInstance().isTesting){
+        if (AdmodUtils.getInstance().isTesting) {
             this.appResumeAdId = application.getString(R.string.test_ads_admob_app_open);
 
-        }else {
+        } else {
             this.appResumeAdId = appOpenAdId;
         }
         this.myApplication.registerActivityLifecycleCallbacks(this);
@@ -188,8 +188,6 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                 myApplication, appResumeAdId, adRequest,
                 AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT, loadCallback);
     }
-
-
 
 
     private boolean wasLoadTimeLessThanNHoursAgo(long loadTime, long numHours) {
@@ -305,26 +303,30 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                 public void run() {
                     if (isSplash) {
                         splashAd.setFullScreenContentCallback(callback);
-                        if(currentActivity!=null)
+                        if (currentActivity != null)
                             splashAd.show(currentActivity);
                     } else {
                         if (appResumeAd != null)
                             appResumeAd.setFullScreenContentCallback(callback);
-                        if(currentActivity!=null)
-                        appResumeAd.show(currentActivity);
+                        if (currentActivity != null)
+                            appResumeAd.show(currentActivity);
                     }
                 }
             }, 100);
         }
     }
 
-
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     public void onResume() {
-        if(AdmodUtils.getInstance() == null || currentActivity == null){
+        if (AdmodUtils.getInstance().dialog != null) {
+            if (AdmodUtils.getInstance().dialog.isShowing()) {
+                AdmodUtils.getInstance().dialog.dismiss();
+            }
+        }
+        if (AdmodUtils.getInstance() == null || currentActivity == null) {
             return;
         }
-        if (!AdmodUtils.getInstance().isShowAds){
+        if (!AdmodUtils.getInstance().isShowAds) {
             return;
         }
         if (!isAppResumeEnabled) {
@@ -339,6 +341,5 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
         }
         showAdIfAvailable(false);
     }
-
 }
 
