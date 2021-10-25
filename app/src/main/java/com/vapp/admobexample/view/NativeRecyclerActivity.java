@@ -25,16 +25,16 @@ public class NativeRecyclerActivity extends AppCompatActivity implements ClickLi
         setContentView(R.layout.recycler_activity);
         recyclerView = findViewById(R.id.recyclerViewHome);
 
-        itemModel.add(new ItemModel("Create stylish font 1"));
-        itemModel.add(new ItemModel("Create stylish font 2"));
-        itemModel.add(new ItemModel("Create stylish font 3"));
-        itemModel.add(new ItemModel("Create stylish font 4"));
-        itemModel.add(new ItemModel("Create stylish font 5"));
-        itemModel.add(new ItemModel("Create stylish font 6"));
-        itemModel.add(new ItemModel("Create stylish font 7"));
-        itemModel.add(new ItemModel("Create stylish font 8"));
-        itemModel.add(new ItemModel("Create stylish font 9"));
-        itemModel.add(new ItemModel("Create stylish font 10"));
+        itemModel.add(new ItemModel("Create item 1"));
+        itemModel.add(new ItemModel("Create item 2"));
+        itemModel.add(new ItemModel("Create item 3"));
+        itemModel.add(new ItemModel("Create item 4"));
+        itemModel.add(new ItemModel("Create item 5"));
+        itemModel.add(new ItemModel("Create item 6"));
+        itemModel.add(new ItemModel("Create item 7"));
+        itemModel.add(new ItemModel("Create item 8"));
+        itemModel.add(new ItemModel("Create item 9"));
+        itemModel.add(new ItemModel("Create item 10"));
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         MainAdapter mainAdapter = new MainAdapter(itemModel, this::onNavigate);

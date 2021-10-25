@@ -318,11 +318,6 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     public void onResume() {
-        if (AdmodUtils.getInstance().dialog != null) {
-            if (AdmodUtils.getInstance().dialog.isShowing()) {
-                AdmodUtils.getInstance().dialog.dismiss();
-            }
-        }
         if (AdmodUtils.getInstance() == null || currentActivity == null) {
             return;
         }
@@ -340,6 +335,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
             }
         }
         showAdIfAvailable(false);
+
     }
 }
 

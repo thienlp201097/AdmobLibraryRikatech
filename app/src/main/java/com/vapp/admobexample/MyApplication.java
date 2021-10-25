@@ -26,7 +26,7 @@ public class MyApplication extends AdsMultiDexApplication {
         }
         PurchaseUtils.getInstance().isPurchased(getString(R.string.product_id));
 
-        AdmodUtils.getInstance().initAdmob(this, 20000,false, isShowAds);
+        AdmodUtils.getInstance().initAdmob(this, 10000,false, isShowAds);
         if (isShowAdsResume) {
             AppOpenManager.getInstance().init(this, getString(R.string.test_ads_admob_app_open));
             AppOpenManager.getInstance().disableAppResumeWithActivity(SplashActivity.class);

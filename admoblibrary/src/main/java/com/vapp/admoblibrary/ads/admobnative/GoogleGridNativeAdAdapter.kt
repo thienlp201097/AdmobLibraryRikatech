@@ -16,9 +16,9 @@ import com.vapp.admoblibrary.ads.AdmodUtils
 import com.vapp.admoblibrary.ads.NativeAdCallback
 import com.vapp.admoblibrary.ads.admobnative.enumclass.GoogleENative
 
-class GoogleNativeAdAdapter(private val mParam: Param) :
+class GoogleGridNativeAdAdapter(private val mParam: Param) :
     GoogleRVAdapterWrapper(mParam.adapter as RecyclerView.Adapter<RecyclerView.ViewHolder>) {
-    var isFirst = false;
+  var isFirst = false;
     private fun assertConfig() {
         if (mParam.gridLayoutManager != null) {
             val nCol = mParam.gridLayoutManager!!.spanCount
@@ -31,7 +31,6 @@ class GoogleNativeAdAdapter(private val mParam: Param) :
             }
         }
     }
-
     private fun convertAdPosition2OrgPosition(position: Int): Int {
         return position - (position + 1) / (mParam.adItemInterval + 1)
     }
@@ -56,21 +55,21 @@ class GoogleNativeAdAdapter(private val mParam: Param) :
         if (mParam.forceReloadAdOnBind || !adHolder.loaded) {
 
             var idAdmob = ""
-            if (AdmodUtils.getInstance().isTesting) {
+            if (AdmodUtils.getInstance().isTesting){
                 idAdmob = mParam.activity!!.getString(R.string.test_ads_admob_native_id);
-            } else {
+            }else{
                 idAdmob = mParam.idAdmob;
             }
             AdmodUtils.getInstance().loadNativeAdsWithLayout(mParam.activity!!,
                 idAdmob,
                 holder.adFrame,
-                mParam.layout, object : NativeAdCallback {
+                mParam.layout,  object : NativeAdCallback {
                     override fun onNativeAdLoaded() {}
                     override fun onAdFail() {}
                 })
             adHolder.loaded = true
 
-            adHolder.loaded = true
+               adHolder.loaded = true
         }
 
 
@@ -174,15 +173,7 @@ class GoogleNativeAdAdapter(private val mParam: Param) :
 //
 //    }
 
-    class Param(
-        activity: Activity,
-        mainAdapter: RecyclerView.Adapter<*>?,
-        idAdmob: String,
-        layoutCustom: Int,
-        position: Int,
-        itemContainerLayout: Int,
-        itemContainer: Int
-    ) {
+     class Param(activity: Activity, mainAdapter: RecyclerView.Adapter<*>?, idAdmob: String, layoutCustom: Int, position: Int, itemContainerLayout: Int, itemContainer: Int) {
         var gridLayoutManager: GridLayoutManager? = null
         var adapter = mainAdapter
         var forceReloadAdOnBind = false
@@ -191,7 +182,6 @@ class GoogleNativeAdAdapter(private val mParam: Param) :
         var activity = activity
         var layout = layoutCustom
         var idAdmob = idAdmob
-
         @LayoutRes
         var itemContainerLayoutRes = itemContainerLayout
 
@@ -207,8 +197,8 @@ class GoogleNativeAdAdapter(private val mParam: Param) :
             return this
         }
 
-        fun build(): GoogleNativeAdAdapter {
-            return GoogleNativeAdAdapter(mParam)
+        fun build(): GoogleGridNativeAdAdapter {
+            return GoogleGridNativeAdAdapter(mParam)
         }
 
         fun enableSpanRow(layoutManager: GridLayoutManager?): Builder {
@@ -238,17 +228,10 @@ class GoogleNativeAdAdapter(private val mParam: Param) :
                 idAdmob: String,
                 wrapped: RecyclerView.Adapter<*>?,
                 layout: Int,
-                position: Int, itemContainerLayout: Int, itemContainer: Int
+                position: Int
+                , itemContainerLayout: Int, itemContainer: Int
             ): Builder {
-                val param = Param(
-                    activity,
-                    wrapped,
-                    idAdmob,
-                    layout,
-                    position,
-                    itemContainerLayout,
-                    itemContainer
-                )
+                val param = Param(activity, wrapped, idAdmob,layout, position,itemContainerLayout,itemContainer)
                 param.activity = activity
                 param.adapter = wrapped
                 param.idAdmob = idAdmob

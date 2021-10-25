@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     Button btn_ShowInter;
     Button btn_LoadAndShowInter;
     Button btn_LoadAndShowReward;
-    Button btn_LoadNative;
+    Button btn_LoadNative, btn_LoadNativeGrid;
     Button btn_IAP, btn_Rate, btn_Utils;
     LinearLayout nativeAds;
     LinearLayout banner;
@@ -139,6 +139,15 @@ public class MainActivity extends AppCompatActivity {
                 Utils.getInstance().addActivity(MainActivity.this, NativeRecyclerActivity.class);
             }
         });
+
+        btn_LoadNativeGrid.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Utils.getInstance().addActivity(MainActivity.this, NativeGridActivity.class);
+            }
+        });
+
+
         btn_IAP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -215,6 +224,7 @@ public class MainActivity extends AppCompatActivity {
         banner = findViewById(R.id.banner);
         btn_IAP = findViewById(R.id.btn_IAP);
         btn_Rate = findViewById(R.id.btn_Rate);
+        btn_LoadNativeGrid = findViewById(R.id.btn_LoadNativeGrid);
     }
 
     @Override
