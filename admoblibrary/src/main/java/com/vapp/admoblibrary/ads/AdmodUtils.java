@@ -718,6 +718,9 @@ public class AdmodUtils {
                         public void onAdFailedToShowFullScreenContent(@NonNull @NotNull AdError adError) {
 
                             adCallback.onAdFail();
+                            if (dialog != null) {
+                                dialog.dismiss();
+                            }
                             handlerTimeOut.removeCallbacksAndMessages(null);
 
 //                          handlerTimeOut.removeCallbacksAndMessages(null);
@@ -765,6 +768,9 @@ public class AdmodUtils {
                 } else {
 
                     adCallback.onAdFail();
+                    if (dialog != null) {
+                        dialog.dismiss();
+                    }
                     handlerTimeOut.removeCallbacksAndMessages(null);
 
 //                    handlerTimeOut.removeCallbacksAndMessages(null);
@@ -778,7 +784,9 @@ public class AdmodUtils {
             public void onAdFailedToLoad(@NonNull @org.jetbrains.annotations.NotNull LoadAdError loadAdError) {
                 super.onAdFailedToLoad(loadAdError);
                 mInterstitialAd = null;
-
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
                 adCallback.onAdFail();
                 handlerTimeOut.removeCallbacksAndMessages(null);
 
