@@ -59,7 +59,7 @@ import java.util.List;
 
 
 public class AdmodUtils {
-    SweetAlertDialog dialog;
+    public SweetAlertDialog dialog;
     public long lastTimeShowInterstitial = 0;
     public long timeOut = 0;
     public boolean isAdShowing = false;
@@ -600,9 +600,7 @@ public class AdmodUtils {
                     @Override
                     public void onAdShowedFullScreenContent() {
                         super.onAdShowedFullScreenContent();
-                        if (dialog != null) {
-                            dialog.dismiss();
-                        }
+
                     }
 
                     @Override
@@ -661,15 +659,12 @@ public class AdmodUtils {
     }
 
 
-    public void loadAndShowAdInterstitialWithCallback(AppCompatActivity activity, String admobId, int limitTime, AdCallback adCallback, boolean enableLoadingDialog) {
+    public void loadAndShowAdInterstitialWithCallback(Activity activity, String admobId, int limitTime, AdCallback adCallback, boolean enableLoadingDialog) {
 
         Handler handlerTimeOut = new Handler();
         handlerTimeOut.postDelayed(new Runnable() {
             public void run() {
                 adCallback.onAdClosed();
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
                 if (AppOpenManager.getInstance().isInitialized()) {
                     AppOpenManager.getInstance().isAppResumeEnabled = true;
                 }
@@ -721,9 +716,7 @@ public class AdmodUtils {
                     mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
                         @Override
                         public void onAdFailedToShowFullScreenContent(@NonNull @NotNull AdError adError) {
-                            if (dialog != null) {
-                                dialog.dismiss();
-                            }
+
                             adCallback.onAdFail();
                             handlerTimeOut.removeCallbacksAndMessages(null);
 
@@ -738,9 +731,7 @@ public class AdmodUtils {
 
                         @Override
                         public void onAdDismissedFullScreenContent() {
-                            if (dialog != null) {
-                                dialog.dismiss();
-                            }
+
                             lastTimeShowInterstitial = new Date().getTime();
 //                            handlerTimeOut.removeCallbacksAndMessages(null);
                             adCallback.onAdClosed();
@@ -753,10 +744,11 @@ public class AdmodUtils {
                         }
                     });
 
-                    if (activity.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+
+                    if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.DESTROYED)) {
                         try {
-                            if (dialog != null && dialog.isShowing())
-                                dialog.dismiss();
+//                            if (dialog != null && dialog.isShowing())
+//                                dialog.dismiss();
                         } catch (Exception e) {
                             dialog = null;
                             if (dialog != null) {
@@ -771,9 +763,7 @@ public class AdmodUtils {
 
                     }
                 } else {
-                    if (dialog != null) {
-                        dialog.dismiss();
-                    }
+
                     adCallback.onAdFail();
                     handlerTimeOut.removeCallbacksAndMessages(null);
 
@@ -789,9 +779,6 @@ public class AdmodUtils {
                 super.onAdFailedToLoad(loadAdError);
                 mInterstitialAd = null;
 
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
                 adCallback.onAdFail();
                 handlerTimeOut.removeCallbacksAndMessages(null);
 
