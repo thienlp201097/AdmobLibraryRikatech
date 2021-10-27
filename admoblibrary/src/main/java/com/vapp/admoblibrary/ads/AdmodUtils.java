@@ -780,6 +780,7 @@ public class AdmodUtils {
                                 e.printStackTrace();
                             }
                             new Handler().postDelayed(() -> {
+                                handlerTimeOut.removeCallbacksAndMessages(null);
                                 mInterstitialAd.show(activity);
                             }, 800);
                         }
