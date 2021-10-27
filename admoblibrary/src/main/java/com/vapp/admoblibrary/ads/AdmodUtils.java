@@ -681,7 +681,6 @@ public class AdmodUtils {
             , String admobId, int limitTime, AdCallback adCallback, boolean enableLoadingDialog) {
 
 
-        Handler handlerTimeOut = new Handler();
 //        handlerTimeOut.postDelayed(new Runnable() {
 //            public void run() {
 //                adCallback.onAdClosed();
@@ -696,7 +695,6 @@ public class AdmodUtils {
 
         if (!isShowAds) {
             adCallback.onAdClosed();
-            handlerTimeOut.removeCallbacksAndMessages(null);
             return;
         }
 
@@ -706,6 +704,10 @@ public class AdmodUtils {
                     dialog.dismiss();
                 }
                 return;
+            }
+        }else {
+            if (AppOpenManager.getInstance().isInitialized()) {
+                AppOpenManager.getInstance().isAppResumeEnabled = false;
             }
         }
 
@@ -729,8 +731,6 @@ public class AdmodUtils {
                 public void onAdLoaded(@NonNull @org.jetbrains.annotations.NotNull InterstitialAd interstitialAd) {
                     super.onAdLoaded(interstitialAd);
                     mInterstitialAd = interstitialAd;
-                    handlerTimeOut.removeCallbacksAndMessages(null);
-
                     if (mInterstitialAd != null) {
                         mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
                             @Override
@@ -755,7 +755,6 @@ public class AdmodUtils {
 //                                    dialog.dismiss();
 //                                }
                                 lastTimeShowInterstitial = new Date().getTime();
-                                handlerTimeOut.removeCallbacksAndMessages(null);
                                 adCallback.onAdClosed();
 
                                 isAdShowing = false;
@@ -764,7 +763,9 @@ public class AdmodUtils {
                                 }
                             }
                         });
-
+                        if (AppOpenManager.getInstance().isInitialized()) {
+                            AppOpenManager.getInstance().isAppResumeEnabled = false;
+                        }
                         if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
                             try {
 //                                if (dialog != null && dialog.isShowing())
@@ -776,9 +777,6 @@ public class AdmodUtils {
                                 e.printStackTrace();
                             }
                             new Handler().postDelayed(() -> {
-                                if (AppOpenManager.getInstance().isInitialized()) {
-                                    AppOpenManager.getInstance().isAppResumeEnabled = false;
-                                }
                                 mInterstitialAd.show(activity);
                             }, 800);
                         }
@@ -788,7 +786,6 @@ public class AdmodUtils {
 //                            dialog.dismiss();
 //                        }
                         adCallback.onAdFail();
-                        handlerTimeOut.removeCallbacksAndMessages(null);
                         if (AppOpenManager.getInstance().isInitialized()) {
                             AppOpenManager.getInstance().isAppResumeEnabled = true;
                         }
@@ -804,7 +801,6 @@ public class AdmodUtils {
                         dialog.dismiss();
                     }
                     adCallback.onAdFail();
-                    handlerTimeOut.removeCallbacksAndMessages(null);
                     isAdShowing = false;
                     if (AppOpenManager.getInstance().isInitialized()) {
                         AppOpenManager.getInstance().isAppResumeEnabled = true;
@@ -819,7 +815,6 @@ public class AdmodUtils {
                 dialog.dismiss();
             }
             adCallback.onAdClosed();
-            handlerTimeOut.removeCallbacksAndMessages(null);
             if (AppOpenManager.getInstance().isInitialized()) {
                 AppOpenManager.getInstance().isAppResumeEnabled = true;
             }
