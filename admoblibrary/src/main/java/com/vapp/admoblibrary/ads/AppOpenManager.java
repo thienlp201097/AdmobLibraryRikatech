@@ -316,6 +316,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
         }
     }
 
+
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     public void onResume() {
         if (AdmodUtils.getInstance() == null || currentActivity == null) {
@@ -326,6 +327,10 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
         }
         if (!isAppResumeEnabled) {
             return;
+        } else {
+            if (AdmodUtils.getInstance().dialog != null) {
+                AdmodUtils.getInstance().dialog.dismiss();
+            }
         }
 
         for (Class activity : disabledAppOpenList) {
@@ -335,7 +340,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
             }
         }
         showAdIfAvailable(false);
-
     }
+
 }
 
