@@ -683,13 +683,26 @@ public class AdmodUtils {
         Handler handlerTimeOut = new Handler();
         handlerTimeOut.postDelayed(new Runnable() {
             public void run() {
-                adCallback.onAdClosed();
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
+
                 if (AppOpenManager.getInstance().isInitialized()) {
-                    AppOpenManager.getInstance().isAppResumeEnabled = true;
+                    if( AppOpenManager.getInstance().isShowingAd()){
+                        if (dialog != null) {
+                            dialog.dismiss();
+                        }
+                        if (AppOpenManager.getInstance().isInitialized()) {
+                            AppOpenManager.getInstance().isAppResumeEnabled = true;
+                        }
+                    }else {
+                        adCallback.onAdClosed();
+                        if (dialog != null) {
+                            dialog.dismiss();
+                        }
+                        if (AppOpenManager.getInstance().isInitialized()) {
+                            AppOpenManager.getInstance().isAppResumeEnabled = true;
+                        }
+                    }
                 }
+
             }
         }, timeOut);
 
@@ -745,7 +758,6 @@ public class AdmodUtils {
                                 if (AppOpenManager.getInstance().isInitialized()) {
                                     AppOpenManager.getInstance().isAppResumeEnabled = true;
                                 }
-
                                 Log.e("Admodfail", "onAdFailedToLoad" + adError.getMessage());
                                 Log.e("Admodfail", "errorCodeAds" + adError.getCause());
                             }
@@ -753,13 +765,9 @@ public class AdmodUtils {
 
                             @Override
                             public void onAdDismissedFullScreenContent() {
-//                                if (dialog != null) {
-//                                    dialog.dismiss();
-//                                }
                                 lastTimeShowInterstitial = new Date().getTime();
                                 adCallback.onAdClosed();
                                 handlerTimeOut.removeCallbacksAndMessages(null);
-
                                 isAdShowing = false;
                                 if (AppOpenManager.getInstance().isInitialized()) {
                                     AppOpenManager.getInstance().isAppResumeEnabled = true;
@@ -771,8 +779,7 @@ public class AdmodUtils {
                         }
                         if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
                             try {
-//                                if (dialog != null && dialog.isShowing())
-//                                    dialog.dismiss();
+
                             } catch (Exception e) {
                                 if (dialog != null) {
                                     dialog.dismiss();
@@ -781,10 +788,13 @@ public class AdmodUtils {
                             }
                             new Handler().postDelayed(() -> {
                                 handlerTimeOut.removeCallbacksAndMessages(null);
-                                mInterstitialAd.show(activity);
+                                if(!AppOpenManager.getInstance().isShowingAd()){
+                                    mInterstitialAd.show(activity);
+                                }else{
+                                    adCallback.onAdClosed();
+                                }
                             }, 800);
                         }
-
                     } else {
 //                        if (dialog != null) {
 //                            dialog.dismiss();
