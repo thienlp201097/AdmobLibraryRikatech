@@ -680,21 +680,22 @@ public class AdmodUtils {
     public void loadAndShowAdInterstitialWithCallback(Activity activity
             , String admobId, int limitTime, AdCallback adCallback, boolean enableLoadingDialog) {
 
-
-//        handlerTimeOut.postDelayed(new Runnable() {
-//            public void run() {
-//                adCallback.onAdClosed();
-//                if (dialog != null) {
-//                    dialog.dismiss();
-//                }
-//                if (AppOpenManager.getInstance().isInitialized()) {
-//                    AppOpenManager.getInstance().isAppResumeEnabled = true;
-//                }
-//            }
-//        }, timeOut);
+        Handler handlerTimeOut = new Handler();
+        handlerTimeOut.postDelayed(new Runnable() {
+            public void run() {
+                adCallback.onAdClosed();
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+                if (AppOpenManager.getInstance().isInitialized()) {
+                    AppOpenManager.getInstance().isAppResumeEnabled = true;
+                }
+            }
+        }, timeOut);
 
         if (!isShowAds) {
             adCallback.onAdClosed();
+            handlerTimeOut.removeCallbacksAndMessages(null);
             return;
         }
 
@@ -739,6 +740,7 @@ public class AdmodUtils {
                                     dialog.dismiss();
                                 }
                                 adCallback.onAdFail();
+                                handlerTimeOut.removeCallbacksAndMessages(null);
                                 isAdShowing = false;
                                 if (AppOpenManager.getInstance().isInitialized()) {
                                     AppOpenManager.getInstance().isAppResumeEnabled = true;
@@ -756,6 +758,7 @@ public class AdmodUtils {
 //                                }
                                 lastTimeShowInterstitial = new Date().getTime();
                                 adCallback.onAdClosed();
+                                handlerTimeOut.removeCallbacksAndMessages(null);
 
                                 isAdShowing = false;
                                 if (AppOpenManager.getInstance().isInitialized()) {
@@ -786,6 +789,8 @@ public class AdmodUtils {
 //                            dialog.dismiss();
 //                        }
                         adCallback.onAdFail();
+                        handlerTimeOut.removeCallbacksAndMessages(null);
+
                         if (AppOpenManager.getInstance().isInitialized()) {
                             AppOpenManager.getInstance().isAppResumeEnabled = true;
                         }
@@ -801,6 +806,8 @@ public class AdmodUtils {
                         dialog.dismiss();
                     }
                     adCallback.onAdFail();
+                    handlerTimeOut.removeCallbacksAndMessages(null);
+
                     isAdShowing = false;
                     if (AppOpenManager.getInstance().isInitialized()) {
                         AppOpenManager.getInstance().isAppResumeEnabled = true;
@@ -815,6 +822,8 @@ public class AdmodUtils {
                 dialog.dismiss();
             }
             adCallback.onAdClosed();
+            handlerTimeOut.removeCallbacksAndMessages(null);
+
             if (AppOpenManager.getInstance().isInitialized()) {
                 AppOpenManager.getInstance().isAppResumeEnabled = true;
             }
