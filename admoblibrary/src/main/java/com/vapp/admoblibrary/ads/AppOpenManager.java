@@ -318,14 +318,23 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     public void onResume() {
+        if(AdmodUtils.getInstance().mInterstitialAd != null){
+            AdmodUtils.getInstance().mInterstitialAd.show(currentActivity);
+            AdmodUtils.getInstance().mInterstitialAd = null;
+            return;
+        }
         if (AdmodUtils.getInstance() == null || currentActivity == null) {
             return;
         }
         if (!AdmodUtils.getInstance().isShowAds) {
             return;
         }
+
         if (!isAppResumeEnabled) {
             return;
+        }else{
+            if(AdmodUtils.getInstance().dialog != null && AdmodUtils.getInstance().dialog.isShowing())
+                AdmodUtils.getInstance().dialog.dismiss();
         }
 
         for (Class activity : disabledAppOpenList) {
