@@ -316,6 +316,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
         }
     }
 
+
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     public void onResume() {
         if(AdmodUtils.getInstance().mInterstitialAd != null){
@@ -332,7 +333,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
 
         if (!isAppResumeEnabled) {
             return;
-        }else{
+        } else {
             if(AdmodUtils.getInstance().dialog != null && AdmodUtils.getInstance().dialog.isShowing())
                 AdmodUtils.getInstance().dialog.dismiss();
         }
@@ -344,7 +345,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
             }
         }
         showAdIfAvailable(false);
-
     }
+
 }
 
