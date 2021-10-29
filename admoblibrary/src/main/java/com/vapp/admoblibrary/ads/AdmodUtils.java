@@ -59,7 +59,7 @@ import java.util.List;
 
 
 public class AdmodUtils {
-    SweetAlertDialog dialog;
+    public SweetAlertDialog dialog;
     public long lastTimeShowInterstitial = 0;
     public long timeOut = 0;
     public boolean isAdShowing = false;
@@ -714,9 +714,9 @@ public class AdmodUtils {
                     mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
                         @Override
                         public void onAdFailedToShowFullScreenContent(@NonNull @NotNull AdError adError) {
-                            if (dialog != null) {
-                                dialog.dismiss();
-                            }
+                            //if (dialog != null) {
+                            //    dialog.dismiss();
+                            //}
                             adCallback.onAdFail();
                             isAdShowing = false;
                             if (AppOpenManager.getInstance().isInitialized()) {
@@ -728,9 +728,9 @@ public class AdmodUtils {
 
                         @Override
                         public void onAdDismissedFullScreenContent() {
-                            if (dialog != null) {
-                                dialog.dismiss();
-                            }
+                            //if (dialog != null) {
+                            //    dialog.dismiss();
+                            //}
                             lastTimeShowInterstitial = new Date().getTime();
                             adCallback.onAdClosed();
                             isAdShowing = false;
@@ -741,23 +741,23 @@ public class AdmodUtils {
                     });
 
                     if (activity.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
-                        try {
-                            if (dialog != null && dialog.isShowing())
-                                dialog.dismiss();
-                        } catch (Exception e) {
-                            dialog = null;
-                            if (dialog != null) {
-                                dialog.dismiss();
-                            }
-                            e.printStackTrace();
-                            adCallback.onAdFail();
-                        }
+//                        try {
+//                            if (dialog != null && dialog.isShowing())
+//                                dialog.dismiss();
+//                        } catch (Exception e) {
+//                            dialog = null;
+//                            if (dialog != null) {
+//                                dialog.dismiss();
+//                            }
+//                            e.printStackTrace();
+//                            adCallback.onAdFail();
+//                        }
                         mInterstitialAd.show(activity);
                     }
                 } else {
-                    if (dialog != null) {
-                        dialog.dismiss();
-                    }
+                    //if (dialog != null) {
+                    //    dialog.dismiss();
+                    //}
                     adCallback.onAdFail();
                     if (AppOpenManager.getInstance().isInitialized()) {
                         AppOpenManager.getInstance().isAppResumeEnabled = true;

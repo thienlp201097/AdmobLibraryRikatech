@@ -100,6 +100,9 @@ public class MainActivity extends AppCompatActivity {
                     public void onAdClosed() {
                         if(AdmodUtils.getInstance().mInterstitialAd != null){
                         AdmodUtils.getInstance().mInterstitialAd = null;}
+                        if (AdmodUtils.getInstance().dialog != null && AdmodUtils.getInstance().dialog.isShowing()) {
+                            AdmodUtils.getInstance().dialog.dismiss();
+                        }
                         Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
                     }
 
