@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -100,9 +101,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onAdClosed() {
                         if(AdmodUtils.getInstance().mInterstitialAd != null){
                         AdmodUtils.getInstance().mInterstitialAd = null;}
-                        if (AdmodUtils.getInstance().dialog != null && AdmodUtils.getInstance().dialog.isShowing()) {
-                            AdmodUtils.getInstance().dialog.dismiss();
-                        }
+
                         Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
                     }
 

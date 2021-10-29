@@ -551,6 +551,12 @@ public class AdmodUtils {
 
     }
 
+    public void dismissAdDialog() {
+        if (AdmodUtils.getInstance().dialog != null && AdmodUtils.getInstance().dialog.isShowing()) {
+            AdmodUtils.getInstance().dialog.dismiss();
+        }
+    }
+
     public void showAdInterstitialWithCallback(Activity activity, AdCallback adCallback, int limitTime) {
         if (!isShowAds) {
             adCallback.onAdClosed();
@@ -714,25 +720,21 @@ public class AdmodUtils {
                     mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
                         @Override
                         public void onAdFailedToShowFullScreenContent(@NonNull @NotNull AdError adError) {
-                            //if (dialog != null) {
-                            //    dialog.dismiss();
-                            //}
                             adCallback.onAdFail();
                             isAdShowing = false;
                             if (AppOpenManager.getInstance().isInitialized()) {
                                 AppOpenManager.getInstance().isAppResumeEnabled = true;
                             }
+                            dismissAdDialog();
                             Log.e("Admodfail", "onAdFailedToLoad" + adError.getMessage());
                             Log.e("Admodfail", "errorCodeAds" + adError.getCause());
                         }
 
                         @Override
                         public void onAdDismissedFullScreenContent() {
-                            //if (dialog != null) {
-                            //    dialog.dismiss();
-                            //}
                             lastTimeShowInterstitial = new Date().getTime();
                             adCallback.onAdClosed();
+                            dismissAdDialog();
                             isAdShowing = false;
                             if (AppOpenManager.getInstance().isInitialized()) {
                                 AppOpenManager.getInstance().isAppResumeEnabled = true;
@@ -741,23 +743,10 @@ public class AdmodUtils {
                     });
 
                     if (activity.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
-//                        try {
-//                            if (dialog != null && dialog.isShowing())
-//                                dialog.dismiss();
-//                        } catch (Exception e) {
-//                            dialog = null;
-//                            if (dialog != null) {
-//                                dialog.dismiss();
-//                            }
-//                            e.printStackTrace();
-//                            adCallback.onAdFail();
-//                        }
                         mInterstitialAd.show(activity);
                     }
                 } else {
-                    //if (dialog != null) {
-                    //    dialog.dismiss();
-                    //}
+                    dismissAdDialog();
                     adCallback.onAdFail();
                     if (AppOpenManager.getInstance().isInitialized()) {
                         AppOpenManager.getInstance().isAppResumeEnabled = true;
@@ -769,11 +758,8 @@ public class AdmodUtils {
             public void onAdFailedToLoad(@NonNull @org.jetbrains.annotations.NotNull LoadAdError loadAdError) {
                 super.onAdFailedToLoad(loadAdError);
                 mInterstitialAd = null;
-
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
                 adCallback.onAdFail();
+                dismissAdDialog();
                 if (AppOpenManager.getInstance().isInitialized()) {
                     AppOpenManager.getInstance().isAppResumeEnabled = true;
                 }
