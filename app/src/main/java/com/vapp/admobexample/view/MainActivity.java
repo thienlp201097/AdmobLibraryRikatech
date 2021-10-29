@@ -116,12 +116,17 @@ public class MainActivity extends AppCompatActivity {
                 AdmodUtils.getInstance().loadAndShowAdRewardWithCallback(MainActivity.this, getString(R.string.test_ads_admob_reward_id), new RewardAdCallback() {
                     @Override
                     public void onAdClosed() {
-                        Utils.getInstance().showMessenger(MainActivity.this, "close ad");
-
+                        if(AdmodUtils.getInstance().mRewardedAd != null){
+                            AdmodUtils.getInstance().mRewardedAd = null;}
+                        AdmodUtils.getInstance().dismissAdDialog();
+                        //Utils.getInstance().showMessenger(MainActivity.this, "close ad");
                     }
 
                     @Override
                     public void onEarned() {
+                        if(AdmodUtils.getInstance().mRewardedAd != null){
+                            AdmodUtils.getInstance().mRewardedAd = null;}
+                        AdmodUtils.getInstance().dismissAdDialog();
                         Utils.getInstance().showMessenger(MainActivity.this, "Reward");
 
                     }

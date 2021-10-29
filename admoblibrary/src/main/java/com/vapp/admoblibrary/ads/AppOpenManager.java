@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
@@ -16,7 +17,9 @@ import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.OnUserEarnedRewardListener;
 import com.google.android.gms.ads.appopen.AppOpenAd;
+import com.google.android.gms.ads.rewarded.RewardItem;
 import com.vapp.admoblibrary.R;
 
 import java.util.ArrayList;
@@ -323,6 +326,35 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
             AdmodUtils.getInstance().mInterstitialAd.show(currentActivity);
             AdmodUtils.getInstance().mInterstitialAd = null;
             return;
+        }
+        else if(AdmodUtils.getInstance().mRewardedAd != null){
+            AdmodUtils.getInstance().mRewardedAd.show(currentActivity, new OnUserEarnedRewardListener() {
+                @Override
+                public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+                    // Handle the reward.
+                    new RewardAdCallback() {
+                        @Override
+                        public void onAdClosed() {
+
+                        }
+
+                        @Override
+                        public void onAdFail() {
+
+                        }
+
+                        @Override
+                        public void onEarned() {
+
+                        }
+                    };
+                }
+            });
+            AdmodUtils.getInstance().mRewardedAd = null;
+            return;
+        }
+        else{
+            AdmodUtils.getInstance().dismissAdDialog();
         }
         if (AdmodUtils.getInstance() == null || currentActivity == null) {
             return;
