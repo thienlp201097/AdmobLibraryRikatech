@@ -325,7 +325,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
         if(AdmodUtils.getInstance().mInterstitialAd != null && !AdmodUtils.getInstance().isAdShowing){
             AdmodUtils.getInstance().mInterstitialAd.show(currentActivity);
             AdmodUtils.getInstance().mInterstitialAd = null;
-            AdmodUtils.getInstance().isAdShowing = true;
+
             return;
         }
         else if(AdmodUtils.getInstance().mRewardedAd != null){
@@ -358,6 +358,9 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
             AdmodUtils.getInstance().dismissAdDialog();
         }
         if (AdmodUtils.getInstance() == null || currentActivity == null) {
+            return;
+        }
+        if(AdmodUtils.getInstance().isAdShowing){
             return;
         }
         if (!AdmodUtils.getInstance().isShowAds) {
