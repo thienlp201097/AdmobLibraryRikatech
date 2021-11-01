@@ -99,9 +99,6 @@ public class MainActivity extends AppCompatActivity {
                 AdmodUtils.getInstance().loadAndShowAdInterstitialWithCallback(MainActivity.this, getString(R.string.test_ads_admob_inter_id), 0, new AdCallback() {
                     @Override
                     public void onAdClosed() {
-                        if(AdmodUtils.getInstance().mInterstitialAd != null){
-                        AdmodUtils.getInstance().mInterstitialAd = null;}
-
                         Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
                     }
 

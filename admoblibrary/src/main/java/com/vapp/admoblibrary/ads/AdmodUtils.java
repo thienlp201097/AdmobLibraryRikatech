@@ -335,6 +335,7 @@ public class AdmodUtils {
 
     public void loadAndShowAdRewardWithCallback(Activity activity, String admobId, RewardAdCallback adCallback2, boolean enableLoadingDialog) {
         AdmodUtils.getInstance().mInterstitialAd = null;
+        AdmodUtils.getInstance().isShowAds = true;
         if (!isShowAds) {
             adCallback2.onAdClosed();
             return;
@@ -370,6 +371,7 @@ public class AdmodUtils {
                         if (AppOpenManager.getInstance().isInitialized()) {
                             AppOpenManager.getInstance().isAppResumeEnabled = true;
                         }
+                        AdmodUtils.getInstance().isShowAds = false;
                         Log.e("Admodfail", "onAdFailedToLoad" + loadAdError.getMessage());
                         Log.e("Admodfail", "errorCodeAds" + loadAdError.getCause());
 
@@ -378,7 +380,6 @@ public class AdmodUtils {
                     @Override
                     public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
                         mRewardedAd = rewardedAd;
-
                         isAdShowing = false;
                         if (AppOpenManager.getInstance().isInitialized()) {
                             AppOpenManager.getInstance().isAppResumeEnabled = false;
@@ -389,6 +390,7 @@ public class AdmodUtils {
                                 @Override
                                 public void onAdShowedFullScreenContent() {
                                     isAdShowing = false;
+                                    AdmodUtils.getInstance().isShowAds = false;
                                     if (AppOpenManager.getInstance().isInitialized()) {
                                         AppOpenManager.getInstance().isAppResumeEnabled = false;
                                     }
@@ -400,6 +402,7 @@ public class AdmodUtils {
                                     adCallback2.onAdFail();
                                     mRewardedAd = null;
                                     dismissAdDialog();
+                                    AdmodUtils.getInstance().isShowAds = false;
                                     if (AppOpenManager.getInstance().isInitialized()) {
                                         AppOpenManager.getInstance().isAppResumeEnabled = true;
                                     }
@@ -413,6 +416,7 @@ public class AdmodUtils {
                                     // Called when ad is dismissed.
                                     // Set the ad reference to null so you don't show the ad a second time.
                                     mRewardedAd = null;
+                                    AdmodUtils.getInstance().isShowAds = false;
                                     adCallback2.onAdClosed();
                                     if (AppOpenManager.getInstance().isInitialized()) {
                                         AppOpenManager.getInstance().isAppResumeEnabled = true;
@@ -430,12 +434,14 @@ public class AdmodUtils {
                                     @Override
                                     public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
                                         // Handle the reward.
+                                        AdmodUtils.getInstance().isShowAds = false;
                                         adCallback2.onEarned();
                                     }
                                 });
                             }
 
                         } else {
+                            AdmodUtils.getInstance().isShowAds = false;
                             adCallback2.onAdFail();
                             dismissAdDialog();
                             if (AppOpenManager.getInstance().isInitialized()) {
@@ -612,6 +618,7 @@ public class AdmodUtils {
 
     public void loadAndShowAdInterstitialWithCallback(AppCompatActivity activity, String admobId, int limitTime, AdCallback adCallback, boolean enableLoadingDialog) {
         AdmodUtils.getInstance().mRewardedAd = null;
+        AdmodUtils.getInstance().isShowAds = true;
 //        Handler handlerTimeOut = new Handler();
 //        handlerTimeOut.postDelayed(new Runnable() {
 //            public void run() {
@@ -675,7 +682,9 @@ public class AdmodUtils {
                             if (AppOpenManager.getInstance().isInitialized()) {
                                 AppOpenManager.getInstance().isAppResumeEnabled = true;
                             }
-                            //dismissAdDialog();
+                            AdmodUtils.getInstance().isShowAds = false;
+                            if(AdmodUtils.getInstance().mInterstitialAd != null){
+                                AdmodUtils.getInstance().mInterstitialAd = null;}
                             Log.e("Admodfail", "onAdFailedToLoad" + adError.getMessage());
                             Log.e("Admodfail", "errorCodeAds" + adError.getCause());
                         }
@@ -684,8 +693,11 @@ public class AdmodUtils {
                         public void onAdDismissedFullScreenContent() {
                             lastTimeShowInterstitial = new Date().getTime();
                             adCallback.onAdClosed();
-                            //dismissAdDialog();
+                            AdmodUtils.getInstance().isShowAds = false;
+                            if(AdmodUtils.getInstance().mInterstitialAd != null){
+                                AdmodUtils.getInstance().mInterstitialAd = null;}
                             isAdShowing = false;
+                            AdmodUtils.getInstance().isShowAds = false;
                             if (AppOpenManager.getInstance().isInitialized()) {
                                 AppOpenManager.getInstance().isAppResumeEnabled = true;
                             }
@@ -694,10 +706,12 @@ public class AdmodUtils {
 
                     if (activity.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
                         mInterstitialAd.show(activity);
+                        AdmodUtils.getInstance().isShowAds = true;
                     }
                 } else {
                     dismissAdDialog();
                     adCallback.onAdFail();
+                    AdmodUtils.getInstance().isShowAds = false;
                     if (AppOpenManager.getInstance().isInitialized()) {
                         AppOpenManager.getInstance().isAppResumeEnabled = true;
                     }
@@ -709,7 +723,7 @@ public class AdmodUtils {
                 super.onAdFailedToLoad(loadAdError);
                 mInterstitialAd = null;
 
-
+                AdmodUtils.getInstance().isShowAds = false;
                 adCallback.onAdFail();
                 dismissAdDialog();
                 if (AppOpenManager.getInstance().isInitialized()) {
