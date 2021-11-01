@@ -322,7 +322,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     public void onResume() {
-        if(AdmodUtils.getInstance().mInterstitialAd != null){
+        if(AdmodUtils.getInstance().mInterstitialAd != null && !AdmodUtils.getInstance().isShowAds){
             AdmodUtils.getInstance().mInterstitialAd.show(currentActivity);
             AdmodUtils.getInstance().mInterstitialAd = null;
             AdmodUtils.getInstance().isShowAds = true;
