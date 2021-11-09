@@ -2,7 +2,12 @@ package com.vapp.admoblibrary.iap;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
@@ -10,16 +15,18 @@ import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.anjlab.android.iab.v3.BillingProcessor;
+import com.anjlab.android.iab.v3.PurchaseInfo;
 import com.anjlab.android.iab.v3.SkuDetails;
-import com.anjlab.android.iab.v3.TransactionDetails;
+
+import com.vapp.admoblibrary.R;
 import com.vapp.admoblibrary.utils.Utils;
 
 import java.util.List;
 
 public class PurchaseUtils {
     public static BillingProcessor bp;
-    public static TransactionDetails purchaseTransactionDetails = null;
-
+    public static PurchaseInfo purchaseTransactionDetails = null;
+    public static SkuDetailsModel detailsModel;
     private static volatile PurchaseUtils INSTANCE;
 
 
@@ -32,12 +39,12 @@ public class PurchaseUtils {
 
     public void initBilling(Context context, String play_console_license) {
             bp = new BillingProcessor(context, play_console_license, new BillingProcessor.IBillingHandler() {
-            @Override
-            public void onProductPurchased(String productId, TransactionDetails details) {
-              //  Utils.getInstance().showMessenger(context,"onProductPurchased");
-            }
+                @Override
+                public void onProductPurchased(@NonNull String productId, @Nullable PurchaseInfo details) {
 
-            @Override
+                }
+
+                @Override
             public void onPurchaseHistoryRestored() {
                // Utils.getInstance().showMessenger(context,"onPurchaseHistoryRestored");
 
@@ -104,15 +111,25 @@ public class PurchaseUtils {
 
     private  boolean hasSubscription() {
         if (purchaseTransactionDetails != null) {
-            return purchaseTransactionDetails.purchaseInfo != null;
+            return purchaseTransactionDetails.purchaseData != null;
         }
         return false;
     }
 
 
     public  boolean isSubscriptiond(String idSubscribe) {
-        bp.loadOwnedPurchasesFromGoogle();
-        purchaseTransactionDetails = bp.getSubscriptionTransactionDetails(idSubscribe);
+        bp.loadOwnedPurchasesFromGoogleAsync(new BillingProcessor.IPurchasesResponseListener() {
+            @Override
+            public void onPurchasesSuccess() {
+
+            }
+
+            @Override
+            public void onPurchasesError() {
+
+            }
+        });
+        purchaseTransactionDetails = bp.getSubscriptionPurchaseInfo(idSubscribe);
         if (hasSubscription()) {
             return  true;
         } else {
@@ -121,8 +138,18 @@ public class PurchaseUtils {
     }
 
     public  boolean isPurchased(String idSubscribe) {
-        bp.loadOwnedPurchasesFromGoogle();
-        purchaseTransactionDetails = bp.getPurchaseTransactionDetails(idSubscribe);
+        bp.loadOwnedPurchasesFromGoogleAsync(new BillingProcessor.IPurchasesResponseListener() {
+            @Override
+            public void onPurchasesSuccess() {
+
+            }
+
+            @Override
+            public void onPurchasesError() {
+
+            }
+        });
+        purchaseTransactionDetails = bp.getPurchaseInfo(idSubscribe);
         if (hasSubscription()) {
             return  true;
         } else {
@@ -147,39 +174,110 @@ public class PurchaseUtils {
         }
     }
 
-    public SkuDetailsModel getDetailSubscribe(Context activity, String idSubscribe) {
-        bp.loadOwnedPurchasesFromGoogle();
-        SkuDetails subs = bp.getSubscriptionListingDetails(idSubscribe);
-        SkuDetailsModel detailsModel = new SkuDetailsModel(subs.productId, subs.title, subs.description, subs.isSubscription, subs.currency, subs.priceValue, subs.subscriptionPeriod, subs.subscriptionFreeTrialPeriod, subs.haveTrialPeriod, subs.introductoryPriceValue, subs.introductoryPricePeriod, subs.haveIntroductoryPeriod, subs.introductoryPriceCycles);
-        return detailsModel;
+    public void getDetailSubscribe(Context activity, String idSubscribe, PurchaseCallback callback) {
+        bp.loadOwnedPurchasesFromGoogleAsync(new BillingProcessor.IPurchasesResponseListener() {
+            @Override
+            public void onPurchasesSuccess() {
+                //Load success
+                bp.getSubscriptionListingDetailsAsync(idSubscribe, new BillingProcessor.ISkuDetailsResponseListener()
+                {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
+                    @Override
+                    public void onSkuDetailsResponse(@Nullable final List<SkuDetails> products) {
+                        if (products != null) {
+                            if(products.size()>0)
+                            {
+                                Log.d("onSkuDetailsCallBack","Succsess");
+                                callback.onSkuDetailsResponse(new SkuDetailsModel(products.get(0).productId, products.get(0).title, products.get(0).description, products.get(0).isSubscription, products.get(0).currency, products.get(0).priceValue, products.get(0).subscriptionPeriod, products.get(0).subscriptionFreeTrialPeriod, products.get(0).haveTrialPeriod, products.get(0).introductoryPriceValue, products.get(0).introductoryPricePeriod, products.get(0).haveIntroductoryPeriod, products.get(0).introductoryPriceCycles));
+                            }
+                        }
+                        else{
+                            callback.onSkuDetailsError("Product list cannot be null");
+                        }
+                    }
+
+                    @Override
+                    public void onSkuDetailsError(String string) {
+                        callback.onSkuDetailsError(string);
+                        Log.d("onSkuDetailsCallBack","Fails");
+                    }
+                });
+
+            }
+
+            @Override
+            public void onPurchasesError() {
+                //Load fails
+                detailsModel = null;
+            }
+        });
     }
 
 
-    public SkuDetailsModel getDetailPurchase(Activity activity, String idSubscribe) {
-        bp.loadOwnedPurchasesFromGoogle();
-        SkuDetails subs = bp.getPurchaseListingDetails(idSubscribe);
-        SkuDetailsModel detailsModel = new SkuDetailsModel(subs.productId, subs.title, subs.description, subs.isSubscription, subs.currency, subs.priceValue, subs.subscriptionPeriod, subs.subscriptionFreeTrialPeriod, subs.haveTrialPeriod, subs.introductoryPriceValue, subs.introductoryPricePeriod, subs.haveIntroductoryPeriod, subs.introductoryPriceCycles);
-        return detailsModel;
+    public void getDetailPurchase(Activity activity, String idSubscribe,PurchaseCallback callback) {
+        bp.loadOwnedPurchasesFromGoogleAsync(new BillingProcessor.IPurchasesResponseListener() {
+            @Override
+            public void onPurchasesSuccess() {
+                bp.getPurchaseListingDetailsAsync(idSubscribe, new BillingProcessor.ISkuDetailsResponseListener() {
+                    @Override
+                    public void onSkuDetailsResponse(@Nullable List<SkuDetails> products) {
+
+                        SkuDetailsModel detailsModel = null;
+                        if (products != null) {
+                            detailsModel = new SkuDetailsModel(products.get(0).productId, products.get(0).title, products.get(0).description, products.get(0).isSubscription, products.get(0).currency, products.get(0).priceValue, products.get(0).subscriptionPeriod, products.get(0).subscriptionFreeTrialPeriod, products.get(0).haveTrialPeriod, products.get(0).introductoryPriceValue, products.get(0).introductoryPricePeriod, products.get(0).haveIntroductoryPeriod, products.get(0).introductoryPriceCycles);
+                            callback.onSkuDetailsResponse(detailsModel);
+                        }
+                        else{
+                            callback.onSkuDetailsError("products cannot be null");
+                        }
+                    }
+
+                    @Override
+                    public void onSkuDetailsError(String error) {
+                        callback.onSkuDetailsError(error);
+                    }
+                });
+            }
+
+            @Override
+            public void onPurchasesError() {
+                callback.onSkuDetailsError(activity.getString(R.string.error_getting_sku_model));
+            }
+        });
     }
 
 
-    public boolean restoreSubscription(String idSubscribeOrPurchases){
-        bp.loadOwnedPurchasesFromGoogle();
-        purchaseTransactionDetails = bp.getSubscriptionTransactionDetails(idSubscribeOrPurchases);
-        if (hasSubscription()) {
-            return  true;
-        } else {
-            return false;
-        }
+    public void restoreSubscription(String idSubscribeOrPurchases,PurchaseCheckCallback callback){
+        bp.loadOwnedPurchasesFromGoogleAsync(new BillingProcessor.IPurchasesResponseListener() {
+            void checkSubscription(){
+                purchaseTransactionDetails = bp.getSubscriptionPurchaseInfo(idSubscribeOrPurchases);
+                if (hasSubscription()) {
+                    callback.onQueryComplete(true);
+                } else {
+                    callback.onQueryComplete(false);
+                }
+            }
+            @Override
+            public void onPurchasesSuccess() {
+                checkSubscription();
+            }
+
+            @Override
+            public void onPurchasesError() {
+                checkSubscription();
+            }
+        });
     }
 
+    @Deprecated
     public boolean restorePurchase(String idSubscribeOrPurchases){
-        bp.loadOwnedPurchasesFromGoogle();
-        purchaseTransactionDetails = bp.getPurchaseTransactionDetails(idSubscribeOrPurchases);
-        if (isPurchased(idSubscribeOrPurchases)) {
-            return  true;
-        } else {
-            return false;
-        }
+//        bp.loadOwnedPurchasesFromGoogle();
+//        purchaseTransactionDetails = bp.getPurchaseTransactionDetails(idSubscribeOrPurchases);
+//        if (isPurchased(idSubscribeOrPurchases)) {
+//            return  true;
+//        } else {
+//            return false;
+//        }
+        return false;
     }
 }

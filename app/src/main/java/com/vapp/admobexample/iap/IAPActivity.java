@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.vapp.admobexample.R;
+import com.vapp.admoblibrary.iap.PurchaseCallback;
 import com.vapp.admoblibrary.utils.Utils;
 import com.vapp.admoblibrary.ads.AdmodUtils;
 import com.vapp.admoblibrary.iap.PurchaseUtils;
@@ -50,26 +51,30 @@ public class IAPActivity extends AppCompatActivity {
                 PurchaseUtils.getInstance().subscribeById(IAPActivity.this,getString(R.string.premium));
             }
         });
-        btnDetail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        btnDetail.setOnClickListener(v -> PurchaseUtils.getInstance().getDetailSubscribe(IAPActivity.this, getString(R.string.premium), new PurchaseCallback() {
 
-               SkuDetailsModel skuDetailsModel = PurchaseUtils.getInstance().getDetailSubscribe(IAPActivity.this,getString(R.string.premium));
-                Utils.getInstance().showMessenger(IAPActivity.this,skuDetailsModel.getPriceValue().toString() + " " + skuDetailsModel.getCurrency());
+           @Override
+           public void onSkuDetailsResponse(SkuDetailsModel detailsModel) {
+               Utils.getInstance().showMessenger(IAPActivity.this,detailsModel.getPriceValue().toString() + " " + detailsModel.getCurrency());
+
+           }
+
+            @Override
+            public void onSkuDetailsError(String error) {
+
             }
-        });
+       }));
         btnRestore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                new Handler().postDelayed(() -> {
-                    if (PurchaseUtils.getInstance().restoreSubscription(getString(R.string.premium))) {
+                PurchaseUtils.getInstance().restoreSubscription(getString(R.string.premium),isPurchased -> {
+                    if(isPurchased){
                         tvStatus.setText("Vip");
-
-                    }else {
+                    }
+                    else{
                         tvStatus.setText("Free");
                     }
-                }, 1000);
+                });
             }
         });
 
@@ -80,13 +85,18 @@ public class IAPActivity extends AppCompatActivity {
                 PurchaseUtils.getInstance().purchaseById(IAPActivity.this,getString(R.string.product_id));
             }
         });
-        btnDetailPurchases.setOnClickListener(new View.OnClickListener() {
+        btnDetailPurchases.setOnClickListener(v -> PurchaseUtils.getInstance().getDetailPurchase(IAPActivity.this, getString(R.string.product_id), new PurchaseCallback() {
             @Override
-            public void onClick(View v) {
-                SkuDetailsModel skuDetailsModel = PurchaseUtils.getInstance().getDetailPurchase(IAPActivity.this,getString(R.string.product_id));
-                Utils.getInstance().showMessenger(IAPActivity.this,skuDetailsModel.getPriceValue().toString() + " " + skuDetailsModel.getCurrency());
+            public void onSkuDetailsResponse(SkuDetailsModel model) {
+                Utils.getInstance().showMessenger(IAPActivity.this,model.getPriceValue().toString() + " " + model.getCurrency());
+
             }
-        });
+
+            @Override
+            public void onSkuDetailsError(String error) {
+                Utils.getInstance().showMessenger(IAPActivity.this,error);
+            }
+        }));
         btnRestorePurchases.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

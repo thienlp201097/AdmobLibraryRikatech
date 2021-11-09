@@ -1,6 +1,6 @@
 package com.vapp.admoblibrary.iap;
 
 public interface PurchaseCallback {
-    void onAdClosed();
-    void onAdFail();
+    void onSkuDetailsResponse(SkuDetailsModel model);
+    void onSkuDetailsError(String error);
 }
