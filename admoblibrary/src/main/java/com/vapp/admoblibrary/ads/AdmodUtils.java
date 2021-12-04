@@ -61,15 +61,24 @@ import java.util.List;
 
 
 public class AdmodUtils {
+    //Dialog loading
     public SweetAlertDialog dialog;
+    // Biến check lần cuối hiển thị quảng cáo
     public long lastTimeShowInterstitial = 0;
+    // Timeout init admob
     public long timeOut = 0;
+    //Check quảng cáo đang show hay không
     public boolean isAdShowing = false;
+    //Ẩn hiện quảng cáo
     public boolean isShowAds = true;
+    //Dùng ID Test để hiển thị quảng cáo
     public boolean isTesting = false;
+    //List device test
     public List<String> testDevices = new ArrayList<>();
+    //INSTANCE AdmodUtils
     private static volatile AdmodUtils INSTANCE;
-
+    //Reward Ads
+    public RewardedAd mRewardedAd = null;
     public static synchronized AdmodUtils getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new AdmodUtils();
@@ -77,7 +86,7 @@ public class AdmodUtils {
         return INSTANCE;
     }
 
-
+    //Hàm Khởi tạo admob
     public void initAdmob(Context context, int timeout, boolean isDebug, boolean isEnableAds) {
         timeOut = timeout;
         if (timeOut < 5000 && timeout != 0) {
@@ -245,12 +254,9 @@ public class AdmodUtils {
         Display display = context.getWindowManager().getDefaultDisplay();
         DisplayMetrics outMetrics = new DisplayMetrics();
         display.getMetrics(outMetrics);
-
         float widthPixels = outMetrics.widthPixels;
         float density = outMetrics.density;
-
         int adWidth = (int) (widthPixels / density);
-
         // Step 3 - Get adaptive ad size and return for setting on the ad view.
         return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, adWidth);
     }
@@ -352,8 +358,7 @@ public class AdmodUtils {
     }
 
 
-    //reward
-    public RewardedAd mRewardedAd = null;
+
 
     public void loadAndShowAdRewardWithCallback(Activity activity, String admobId, RewardAdCallback adCallback2, boolean enableLoadingDialog) {
         AdmodUtils.getInstance().mInterstitialAd = null;
@@ -703,7 +708,7 @@ public class AdmodUtils {
                             if (AppOpenManager.getInstance().isInitialized()) {
                                 AppOpenManager.getInstance().isAppResumeEnabled = true;
                             }
-                            AdmodUtils.getInstance().isShowAds = false;
+                            AdmodUtils.getInstance().isAdShowing = false;
                             if(AdmodUtils.getInstance().mInterstitialAd != null){
                                 AdmodUtils.getInstance().mInterstitialAd = null;}
                             Log.e("Admodfail", "onAdFailedToLoad" + adError.getMessage());
