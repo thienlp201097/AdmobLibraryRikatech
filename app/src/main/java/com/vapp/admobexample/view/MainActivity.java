@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     Button btn_LoadNative, btn_LoadNativeGrid;
     Button btn_IAP, btn_Rate, btn_Utils;
     LinearLayout nativeAds;
-    LinearLayout banner;
+    FrameLayout banner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        AdmodUtils.getInstance().loadAdBanner(MainActivity.this, getString(R.string.test_ads_admob_native_id), banner, GoogleEBanner.SIZE_SMALL);
+        AdmodUtils.getInstance().loadAdBanner(MainActivity.this, getString(R.string.test_ads_admob_banner_id), banner);
     }
 
     private void showDialogRate() {
