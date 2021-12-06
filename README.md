@@ -1,5 +1,5 @@
 # Admob Utils Library
-
+[![](https://jitpack.io/v/dktlib/AdmobUtilsLibrary.svg)](https://jitpack.io/#dktlib/AdmobUtilsLibrary)
 - Adding the library to your project:
 Add the following in your root build.gradle at the end of repositories:
 ```bash
