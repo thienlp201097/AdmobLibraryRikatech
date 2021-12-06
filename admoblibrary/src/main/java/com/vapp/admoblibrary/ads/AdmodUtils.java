@@ -342,17 +342,8 @@ public class AdmodUtils {
                                 .inflate(id, null);
 
                         NativeFunc.Companion.populateNativeAdView(nativeAd, adView, size);
-                        CardView cardView = new CardView(activity);
-                        cardView.setRadius(8);
-                        LinearLayout.LayoutParams cardViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                        cardView.setLayoutParams(cardViewParams);
-                        ViewGroup.MarginLayoutParams cardViewMarginParams = (ViewGroup.MarginLayoutParams) cardView.getLayoutParams();
-                        cardViewMarginParams.setMargins(8, 8, 8, 8);
-                        cardView.requestLayout();  //Dont forget this line
-                        cardView.requestLayout();
-                        cardView.addView(adView);
                         viewGroup.removeAllViews();
-                        viewGroup.addView(cardView);
+                        viewGroup.addView(adView);
                         viewGroup.setVisibility(View.VISIBLE);
                     }
 
