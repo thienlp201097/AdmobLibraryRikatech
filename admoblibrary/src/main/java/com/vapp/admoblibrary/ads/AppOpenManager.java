@@ -355,9 +355,9 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
             AdmodUtils.getInstance().mRewardedAd = null;
             return;
         }
-        else{
-            AdmodUtils.getInstance().dismissAdDialog();
-        }
+//        else{
+//            AdmodUtils.getInstance().dismissAdDialog();
+//        }
         if (AdmodUtils.getInstance() == null || currentActivity == null) {
             return;
         }
