@@ -7,13 +7,6 @@
     android:layout_height="wrap_content"
     android:background="@android:color/transparent"
     >
-    <androidx.cardview.widget.CardView
-        android:background="@android:color/transparent"
-        app:cardCornerRadius="10dp"
-        android:elevation="8dp"
-        app:cardUseCompatPadding="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:padding="8dp"
@@ -156,5 +149,4 @@
                 app:layout_constraintStart_toStartOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
 </com.google.android.gms.ads.nativead.NativeAdView>
