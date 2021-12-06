@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_border_ads"
+    android:background="@drawable/gnt_outline_shape"
     >
 
         <androidx.constraintlayout.widget.ConstraintLayout
