@@ -413,15 +413,12 @@ public class AdmodUtils {
                     @Override
                     public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
                         mRewardedAd = rewardedAd;
-                        if (AppOpenManager.getInstance().isInitialized()) {
-                            AppOpenManager.getInstance().isAppResumeEnabled = false;
-                        }
 
                         if (mRewardedAd != null) {
                             mRewardedAd.setFullScreenContentCallback(new FullScreenContentCallback() {
                                 @Override
                                 public void onAdShowedFullScreenContent() {
-                                    isAdShowing = false;
+                                    isAdShowing = true;
                                     if (AppOpenManager.getInstance().isInitialized()) {
                                         AppOpenManager.getInstance().isAppResumeEnabled = false;
                                     }
@@ -465,8 +462,6 @@ public class AdmodUtils {
                                 mRewardedAd.show(activity, new OnUserEarnedRewardListener() {
                                     @Override
                                     public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
-                                        // Handle the reward.
-                                        AdmodUtils.getInstance().isAdShowing = false;
                                         adCallback2.onEarned();
                                     }
                                 });
