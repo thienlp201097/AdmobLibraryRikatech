@@ -427,11 +427,11 @@ public class AdmodUtils {
                                 @Override
                                 public void onAdFailedToShowFullScreenContent(AdError adError) {
                                     // Called when ad fails to show.
-                                    adCallback2.onAdFail();
-                                    mRewardedAd = null;
-                                    dismissAdDialog();
                                     if(adError.getCode() != 1){
                                         AdmodUtils.getInstance().isAdShowing = false;
+                                        adCallback2.onAdFail();
+                                        mRewardedAd = null;
+                                        dismissAdDialog();
                                     }
                                     if (AppOpenManager.getInstance().isInitialized()) {
                                         AppOpenManager.getInstance().isAppResumeEnabled = true;

@@ -118,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
                             AdmodUtils.getInstance().mRewardedAd = null;}
                         AdmodUtils.getInstance().dismissAdDialog();
                         //Utils.getInstance().showMessenger(MainActivity.this, "close ad");
+                        startActivity(new Intent(MainActivity.this,OtherActivity.class));
                     }
 
                     @Override
