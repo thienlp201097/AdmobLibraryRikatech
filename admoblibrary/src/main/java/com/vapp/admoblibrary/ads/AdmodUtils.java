@@ -430,7 +430,9 @@ public class AdmodUtils {
                                     adCallback2.onAdFail();
                                     mRewardedAd = null;
                                     dismissAdDialog();
-                                    AdmodUtils.getInstance().isAdShowing = false;
+                                    if(adError.getCode() != 1){
+                                        AdmodUtils.getInstance().isAdShowing = false;
+                                    }
                                     if (AppOpenManager.getInstance().isInitialized()) {
                                         AppOpenManager.getInstance().isAppResumeEnabled = true;
                                     }
