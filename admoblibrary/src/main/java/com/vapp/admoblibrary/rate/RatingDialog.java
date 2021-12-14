@@ -40,6 +40,7 @@ public class RatingDialog extends AppCompatDialog implements RatingBar.OnRatingB
 
     private static final String SESSION_COUNT = "session_count";
     private static final String RATE5 = "rate_5";
+    private static final String RATED = "rated";
     private static final String DATE_FIRST = "date_count";
     private static final String SHOW_NEVER = "show_never";
     private String MyPrefs = "RatingDialog";
@@ -146,6 +147,7 @@ public class RatingDialog extends AppCompatDialog implements RatingBar.OnRatingB
                       } catch (android.content.ActivityNotFoundException anfe) {
                           context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
                       }
+                      sharedpreferences.edit().putBoolean(RATED, true).commit();
                   }
 
 
@@ -343,8 +345,9 @@ public class RatingDialog extends AppCompatDialog implements RatingBar.OnRatingB
 
     @Override
     public void show() {
-
-        if (checkIfSessionMatches(session)) {
+        sharedpreferences = context.getSharedPreferences(MyPrefs, Context.MODE_PRIVATE);
+        boolean isRated = sharedpreferences.getBoolean(RATED, false);
+        if (checkIfSessionMatches(session)&&(!isRated)) {
             super.show();
         }
     }
