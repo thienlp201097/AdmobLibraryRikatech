@@ -22,6 +22,7 @@ import androidx.cardview.widget.CardView;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ProcessLifecycleOwner;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.vapp.admoblibrary.BuildConfig;
 import com.vapp.admoblibrary.ads.admobnative.enumclass.GoogleEBanner;
 import com.vapp.admoblibrary.ads.admobnative.enumclass.GoogleENative;
@@ -192,7 +193,6 @@ public class AdmodUtils {
 
 
     public void loadAdBanner(Activity context, String bannerId, ViewGroup viewGroup) {
-
         if (!isShowAds) {
             viewGroup.setVisibility(View.GONE);
             return;
@@ -216,19 +216,25 @@ public class AdmodUtils {
 
         mAdView.setAdSize(adSize);
         viewGroup.removeAllViews();
-        viewGroup.addView(mAdView);
+        View tagView = context.getLayoutInflater().inflate(R.layout.layoutbanner_loading, null, false);
+        viewGroup.addView(tagView,0);
+        viewGroup.addView(mAdView,1);
+        ShimmerFrameLayout shimmerFrameLayout = tagView.findViewById(R.id.shimmer_view_container);
+        shimmerFrameLayout.startShimmerAnimation();
 
 
         mAdView.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
-
-                Log.e(" Admod", "onAdLoaded");
+                shimmerFrameLayout.stopShimmerAnimation();
+                viewGroup.removeView(tagView);
             }
 
             @Override
             public void onAdFailedToLoad(LoadAdError adError) {
                 Log.e(" Admod", "failloadbanner" + adError.getMessage());
+                shimmerFrameLayout.stopShimmerAnimation();
+                viewGroup.removeView(tagView);
             }
 
             @Override
@@ -314,7 +320,16 @@ public class AdmodUtils {
     // ads native
     @SuppressLint("StaticFieldLeak")
     public void loadNativeAds(Activity activity, String s, ViewGroup viewGroup, GoogleENative size, NativeAdCallback adCallback) {
-
+        View tagView;
+        if (size == GoogleENative.UNIFIED_MEDIUM) {
+            tagView = activity.getLayoutInflater().inflate(R.layout.layoutnative_loading_medium, null, false);
+        }
+        else{
+            tagView = activity.getLayoutInflater().inflate(R.layout.layoutnative_loading_small, null, false);
+        }
+        viewGroup.addView(tagView,0);
+        ShimmerFrameLayout shimmerFrameLayout = tagView.findViewById(R.id.shimmer_view_container);
+        shimmerFrameLayout.startShimmerAnimation();
         if (!isShowAds) {
             viewGroup.setVisibility(View.GONE);
             return;
@@ -342,6 +357,7 @@ public class AdmodUtils {
                                 .inflate(id, null);
 
                         NativeFunc.Companion.populateNativeAdView(nativeAd, adView, size);
+                        shimmerFrameLayout.stopShimmerAnimation();
                         viewGroup.removeAllViews();
                         viewGroup.addView(adView);
                         viewGroup.setVisibility(View.VISIBLE);
@@ -353,6 +369,8 @@ public class AdmodUtils {
                     public void onAdFailedToLoad(LoadAdError adError) {
                         Log.e("Admodfail", "onAdFailedToLoad" + adError.getMessage());
                         Log.e("Admodfail", "errorCodeAds" + adError.getCause());
+                        shimmerFrameLayout.stopShimmerAnimation();
+                        viewGroup.removeAllViews();
                         adCallback.onAdFail();
                     }
                 })
