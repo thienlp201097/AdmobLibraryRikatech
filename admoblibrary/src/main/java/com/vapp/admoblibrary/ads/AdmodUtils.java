@@ -758,7 +758,7 @@ public class AdmodUtils {
                             AppOpenManager.getInstance().isAppResumeEnabled = true;
                         }
                     }
-                }, 900);
+                }, 1100);
 
             }
 
