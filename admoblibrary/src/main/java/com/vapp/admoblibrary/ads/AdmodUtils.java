@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -714,48 +715,51 @@ public class AdmodUtils {
             @Override
             public void onAdLoaded(@NonNull @org.jetbrains.annotations.NotNull InterstitialAd interstitialAd) {
                 super.onAdLoaded(interstitialAd);
-                mInterstitialAd = interstitialAd;
-                if (mInterstitialAd != null) {
-                    mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
-                        @Override
-                        public void onAdFailedToShowFullScreenContent(@NonNull @NotNull AdError adError) {
-                            adCallback.onAdFail();
-                            isAdShowing = false;
-                            if (AppOpenManager.getInstance().isInitialized()) {
-                                AppOpenManager.getInstance().isAppResumeEnabled = true;
+                new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                    mInterstitialAd = interstitialAd;
+                    if (mInterstitialAd != null) {
+                        mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
+                            @Override
+                            public void onAdFailedToShowFullScreenContent(@NonNull @NotNull AdError adError) {
+                                adCallback.onAdFail();
+                                isAdShowing = false;
+                                if (AppOpenManager.getInstance().isInitialized()) {
+                                    AppOpenManager.getInstance().isAppResumeEnabled = true;
+                                }
+                                AdmodUtils.getInstance().isAdShowing = false;
+                                if(AdmodUtils.getInstance().mInterstitialAd != null){
+                                    AdmodUtils.getInstance().mInterstitialAd = null;}
+                                Log.e("Admodfail", "onAdFailedToLoad" + adError.getMessage());
+                                Log.e("Admodfail", "errorCodeAds" + adError.getCause());
                             }
-                            AdmodUtils.getInstance().isAdShowing = false;
-                            if(AdmodUtils.getInstance().mInterstitialAd != null){
-                                AdmodUtils.getInstance().mInterstitialAd = null;}
-                            Log.e("Admodfail", "onAdFailedToLoad" + adError.getMessage());
-                            Log.e("Admodfail", "errorCodeAds" + adError.getCause());
-                        }
 
-                        @Override
-                        public void onAdDismissedFullScreenContent() {
-                            lastTimeShowInterstitial = new Date().getTime();
-                            adCallback.onAdClosed();
-                            if(AdmodUtils.getInstance().mInterstitialAd != null){
-                                AdmodUtils.getInstance().mInterstitialAd = null;}
-                            isAdShowing = false;
-                            if (AppOpenManager.getInstance().isInitialized()) {
-                                AppOpenManager.getInstance().isAppResumeEnabled = true;
+                            @Override
+                            public void onAdDismissedFullScreenContent() {
+                                lastTimeShowInterstitial = new Date().getTime();
+                                adCallback.onAdClosed();
+                                if(AdmodUtils.getInstance().mInterstitialAd != null){
+                                    AdmodUtils.getInstance().mInterstitialAd = null;}
+                                isAdShowing = false;
+                                if (AppOpenManager.getInstance().isInitialized()) {
+                                    AppOpenManager.getInstance().isAppResumeEnabled = true;
+                                }
                             }
-                        }
-                    });
+                        });
 
-                    if (activity.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
-                        mInterstitialAd.show(activity);
-                        AdmodUtils.getInstance().isAdShowing = true;
+                        if (activity.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+                            mInterstitialAd.show(activity);
+                            AdmodUtils.getInstance().isAdShowing = true;
+                        }
+                    } else {
+                        dismissAdDialog();
+                        adCallback.onAdFail();
+                        AdmodUtils.getInstance().isAdShowing = false;
+                        if (AppOpenManager.getInstance().isInitialized()) {
+                            AppOpenManager.getInstance().isAppResumeEnabled = true;
+                        }
                     }
-                } else {
-                    dismissAdDialog();
-                    adCallback.onAdFail();
-                    AdmodUtils.getInstance().isAdShowing = false;
-                    if (AppOpenManager.getInstance().isInitialized()) {
-                        AppOpenManager.getInstance().isAppResumeEnabled = true;
-                    }
-                }
+                }, 900);
+
             }
 
             @Override
