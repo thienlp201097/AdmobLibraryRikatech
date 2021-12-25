@@ -348,7 +348,7 @@ public class RatingDialog extends AppCompatDialog implements RatingBar.OnRatingB
     public void show() {
         sharedpreferences = context.getSharedPreferences(MyPrefs, Context.MODE_PRIVATE);
         boolean isRated = sharedpreferences.getBoolean(RATED, false);
-        if (checkIfSessionMatches(session)&&(!isRated)&&ignoreRated) {
+        if ((checkIfSessionMatches(session)&&(!isRated))||ignoreRated) {
             super.show();
         }
     }
