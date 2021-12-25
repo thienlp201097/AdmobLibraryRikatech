@@ -221,6 +221,7 @@ public class MainActivity extends AppCompatActivity {
                         Utils.getInstance().showMessenger(MainActivity.this, "clicked Maybe Later");
                     }
                 })
+                .ignoreRated(true)
                 .ratingButtonColor(R.color.purple_200)
                 .build();
 
