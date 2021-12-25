@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.vapp.admobexample.utilsdemp.UtilsDemoActivity;
+import com.vapp.admoblibrary.ads.AdLoadCallback;
 import com.vapp.admoblibrary.ads.NativeAdCallback;
 import com.vapp.admoblibrary.ads.admobnative.enumclass.GoogleEBanner;
 import com.vapp.admoblibrary.ads.admobnative.enumclass.GoogleENative;
@@ -67,32 +68,53 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, UtilsDemoActivity.class));
             }
         });
-
         btn_LoadInter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AdmodUtils.getInstance().loadAdInterstitial(MainActivity.this, getString(R.string.test_ads_admob_inter_id), false);
+                AdmodUtils.getInstance().loadAdInterstitial(MainActivity.this, getString(R.string.test_ads_admob_inter_id), new AdLoadCallback() {
+                    @Override
+                    public void onAdLoaded() {
+
+                    }
+
+                    @Override
+                    public void onAdFail() {
+
+                    }
+                });
 
             }
         });
         btn_ShowInter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AdmodUtils.getInstance().showAdInterstitialWithCallback(MainActivity.this, new AdCallback() {
-                    @Override
-                    public void onAdClosed() {
-                        //code here
-//                        Utils.getInstance().replaceActivity(MainActivity.this,OtherActivity.class);
-                        Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
-                    }
+                if(AdmodUtils.getInstance().mInterstitialAd != null) {
+                    AdmodUtils.getInstance().showAdInterstitialWithCallback(AdmodUtils.getInstance().mInterstitialAd,getString(R.string.test_ads_admob_inter_id), MainActivity.this, new AdCallback() {
+                        @Override
+                        public void onAdClosed() {
+                            AdmodUtils.getInstance().loadAdInterstitial(MainActivity.this, getString(R.string.test_ads_admob_inter_id), new AdLoadCallback() {
+                                @Override
+                                public void onAdFail() {
 
-                    @Override
-                    public void onAdFail() {
-                        //code here
-//                        Utils.getInstance().replaceActivity(MainActivity.this,OtherActivity.class);
-                        Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
-                    }
-                }, 0);
+                                }
+
+                                @Override
+                                public void onAdLoaded() {
+
+                                }
+                            });
+                            Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
+                        }
+
+                        @Override
+                        public void onAdFail() {
+                            Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
+                        }
+                    });
+                }
+                else{
+                    Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
+                }
             }
         });
         btn_LoadAndShowInter.setOnClickListener(new View.OnClickListener() {

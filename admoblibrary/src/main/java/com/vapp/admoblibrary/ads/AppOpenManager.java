@@ -323,38 +323,38 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     public void onResume() {
-        if(AdmodUtils.getInstance().mInterstitialAd != null && !AdmodUtils.getInstance().isAdShowing){
-            AdmodUtils.getInstance().mInterstitialAd.show(currentActivity);
-            AdmodUtils.getInstance().mInterstitialAd = null;
-            AdmodUtils.getInstance().isAdShowing = true;
-            return;
-        }
-        else if(AdmodUtils.getInstance().mRewardedAd != null){
-            AdmodUtils.getInstance().mRewardedAd.show(currentActivity, new OnUserEarnedRewardListener() {
-                @Override
-                public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
-                    // Handle the reward.
-                    new RewardAdCallback() {
-                        @Override
-                        public void onAdClosed() {
-
-                        }
-
-                        @Override
-                        public void onAdFail() {
-
-                        }
-
-                        @Override
-                        public void onEarned() {
-
-                        }
-                    };
-                }
-            });
-            AdmodUtils.getInstance().mRewardedAd = null;
-            return;
-        }
+//        if(AdmodUtils.getInstance().mInterstitialAd != null && !AdmodUtils.getInstance().isAdShowing){
+//            AdmodUtils.getInstance().mInterstitialAd.show(currentActivity);
+//            AdmodUtils.getInstance().mInterstitialAd = null;
+//            AdmodUtils.getInstance().isAdShowing = true;
+//            return;
+//        }
+//        else if(AdmodUtils.getInstance().mRewardedAd != null){
+//            AdmodUtils.getInstance().mRewardedAd.show(currentActivity, new OnUserEarnedRewardListener() {
+//                @Override
+//                public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+//                    // Handle the reward.
+//                    new RewardAdCallback() {
+//                        @Override
+//                        public void onAdClosed() {
+//
+//                        }
+//
+//                        @Override
+//                        public void onAdFail() {
+//
+//                        }
+//
+//                        @Override
+//                        public void onEarned() {
+//
+//                        }
+//                    };
+//                }
+//            });
+//            AdmodUtils.getInstance().mRewardedAd = null;
+//            return;
+//        }
 //        else{
 //            AdmodUtils.getInstance().dismissAdDialog();
 //        }

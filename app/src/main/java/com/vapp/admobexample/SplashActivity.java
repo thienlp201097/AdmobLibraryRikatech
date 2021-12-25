@@ -2,12 +2,15 @@ package com.vapp.admobexample;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 
 import com.vapp.admobexample.view.MainActivity;
 import com.vapp.admobexample.view.OtherActivity;
+import com.vapp.admoblibrary.ads.AdLoadCallback;
 import com.vapp.admoblibrary.utils.Utils;
 import com.vapp.admoblibrary.ads.AdCallback;
 import com.vapp.admoblibrary.ads.AdmodUtils;
@@ -17,17 +20,38 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
-
-        AdmodUtils.getInstance().loadAndShowAdInterstitialWithCallback(this, getString(R.string.test_ads_admob_inter_id), 0, new AdCallback() {
+        AppCompatButton btn_next = findViewById(R.id.btn_next);
+        btn_next.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onAdClosed() {
-                Utils.getInstance().replaceActivity(SplashActivity.this, MainActivity.class);
-            }
+            public void onClick(View view) {
+                if(AdmodUtils.getInstance().mInterstitialAd != null) {
+                    AdmodUtils.getInstance().showAdInterstitialWithCallback(AdmodUtils.getInstance().mInterstitialAd,getString(R.string.test_ads_admob_inter_id), SplashActivity.this, new AdCallback() {
+                        @Override
+                        public void onAdClosed() {
+                            Utils.getInstance().replaceActivity(SplashActivity.this, MainActivity.class);
+                        }
 
+                        @Override
+                        public void onAdFail() {
+                            Utils.getInstance().replaceActivity(SplashActivity.this, MainActivity.class);
+                        }
+                    });
+                } else{
+                    Utils.getInstance().replaceActivity(SplashActivity.this, OtherActivity.class);
+                }
+            }
+        });
+
+        AdmodUtils.getInstance().loadAdInterstitial(this, getString(R.string.test_ads_admob_inter_id), new AdLoadCallback() {
             @Override
             public void onAdFail() {
-               onAdClosed();
+                btn_next.setVisibility(View.VISIBLE);
             }
-        },false);
+
+            @Override
+            public void onAdLoaded() {
+                btn_next.setVisibility(View.VISIBLE);
+            }
+        });
     }
 }
