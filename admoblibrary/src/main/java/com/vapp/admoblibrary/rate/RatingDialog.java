@@ -53,10 +53,10 @@ public class RatingDialog extends AppCompatDialog implements RatingBar.OnRatingB
     private LinearLayout ratingButtons;
     Button btnRate;
     TextView btnLate;
-
     private float threshold;
     private int session;
     private int date;
+    private boolean ignoreRated = false;
     private boolean thresholdPassed = true;
     public int starnumber = 0;
 
@@ -68,6 +68,7 @@ public class RatingDialog extends AppCompatDialog implements RatingBar.OnRatingB
         this.session = builder.session;
         this.threshold = builder.threshold;
         this.date = builder.date;
+        this.ignoreRated = builder.ignoreRated;
     }
 
 
@@ -347,7 +348,7 @@ public class RatingDialog extends AppCompatDialog implements RatingBar.OnRatingB
     public void show() {
         sharedpreferences = context.getSharedPreferences(MyPrefs, Context.MODE_PRIVATE);
         boolean isRated = sharedpreferences.getBoolean(RATED, false);
-        if (checkIfSessionMatches(session)&&(!isRated)) {
+        if (checkIfSessionMatches(session)&&(!isRated)&&ignoreRated) {
             super.show();
         }
     }
@@ -453,6 +454,7 @@ public class RatingDialog extends AppCompatDialog implements RatingBar.OnRatingB
         private int session = 1;
         private float threshold = 1;
         private int date = 1;
+        private boolean ignoreRated = false;
         public interface RatingThresholdClearedListener {
             void onThresholdCleared(RatingDialog ratingDialog, float rating, boolean thresholdCleared);
         }
@@ -505,6 +507,10 @@ public class RatingDialog extends AppCompatDialog implements RatingBar.OnRatingB
             return this;
         }
 
+        public Builder ignoreRated(boolean ignoreRated) {
+            this.ignoreRated = ignoreRated;
+            return this;
+        }
         /*public Builder icon(int icon) {
             this.icon = icon;
             return this;
