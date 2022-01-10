@@ -570,17 +570,17 @@ public class AdmodUtils {
                             adCallback.onAdFail();
                             isAdShowing = false;
                             mInterstitialAd = null;
-                            loadAdInterstitial(activity, admobId, new AdLoadCallback() {
-                                @Override
-                                public void onAdFail() {
-                                    Log.d("TAG", "Ad loaded again fails");
-                                }
-
-                                @Override
-                                public void onAdLoaded() {
-                                    Log.d("TAG", "Ad loaded again success");
-                                }
-                            });
+//                            loadAdInterstitial(activity, admobId, new AdLoadCallback() {
+//                                @Override
+//                                public void onAdFail() {
+//                                    Log.d("TAG", "Ad loaded again fails");
+//                                }
+//
+//                                @Override
+//                                public void onAdLoaded() {
+//                                    Log.d("TAG", "Ad loaded again success");
+//                                }
+//                            });
                             Log.d("TAG", "The ad failed to show.");
                         }
 
@@ -589,17 +589,17 @@ public class AdmodUtils {
                             mInterstitialAd = null;
                             isAdShowing = true;
                             Log.d("TAG", "The ad was shown.");
-                            loadAdInterstitial(activity, admobId, new AdLoadCallback() {
-                                @Override
-                                public void onAdFail() {
-                                    Log.d("TAG", "Ad loaded again fails");
-                                }
-
-                                @Override
-                                public void onAdLoaded() {
-                                    Log.d("TAG", "Ad loaded again success");
-                                }
-                            });
+//                            loadAdInterstitial(activity, admobId, new AdLoadCallback() {
+//                                @Override
+//                                public void onAdFail() {
+//                                    Log.d("TAG", "Ad loaded again fails");
+//                                }
+//
+//                                @Override
+//                                public void onAdLoaded() {
+//                                    Log.d("TAG", "Ad loaded again success");
+//                                }
+//                            });
                         }
                     });
         } else {
