@@ -1,4 +1,5 @@
-# Admob Utils Library
+# Admob Utils Library (Download example to copy code, README too long do not update)
+
 [![](https://jitpack.io/v/dktlib/AdmobUtilsLibrary.svg)](https://jitpack.io/#dktlib/AdmobUtilsLibrary)
 - Adding the library to your project:
 Add the following in your root build.gradle at the end of repositories:
@@ -13,9 +14,7 @@ allprojects {
 Implement library in your app level build.gradle:
 ```bash
 dependencies {
-    implementation 'com.github.Namdh1212:AdmobUtilsLibrary:{version}'
-    //multidex
-    implementation "androidx.multidex:multidex:2.0.1"
+    implementation 'com.github.dktlib:AdmobUtilsLibrary:{version}'
 }
 ```
 ```bash
