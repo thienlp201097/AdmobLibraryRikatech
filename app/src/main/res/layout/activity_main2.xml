@@ -61,6 +61,26 @@
                 android:text="load and show inter"
                 android:layout_marginTop="5dp"/>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/btn_LoadInterReward"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="load inter Reward"
+                    android:layout_marginRight="10dp"/>
+                <Button
+                    android:id="@+id/btn_ShowInterReward"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="show inter Reward"/>
+            </LinearLayout>
+
             <Button
                 android:id="@+id/btn_LoadAndShowReward"
                 android:layout_width="wrap_content"

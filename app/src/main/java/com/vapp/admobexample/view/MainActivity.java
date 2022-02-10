@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.vapp.admobexample.SplashActivity;
 import com.vapp.admobexample.utilsdemp.UtilsDemoActivity;
 import com.vapp.admoblibrary.ads.AdLoadCallback;
 import com.vapp.admoblibrary.ads.NativeAdCallback;
@@ -33,10 +34,9 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
-    Button btn_LoadInter;
-    Button btn_ShowInter;
-    Button btn_LoadAndShowInter;
-    Button btn_LoadAndShowReward;
+    Button btn_LoadInter, btn_ShowInter;
+    Button btn_LoadAndShowInter, btn_LoadAndShowReward;
+    Button btn_LoadInterReward, btn_ShowInterReward;
     Button btn_LoadNative, btn_LoadNativeGrid;
     Button btn_IAP, btn_Rate, btn_Utils;
     LinearLayout nativeAds;
@@ -88,8 +88,8 @@ public class MainActivity extends AppCompatActivity {
         btn_ShowInter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(AdmodUtils.getInstance().mInterstitialAd != null) {
-                    AdmodUtils.getInstance().showAdInterstitialWithCallback(AdmodUtils.getInstance().mInterstitialAd,getString(R.string.test_ads_admob_inter_id), MainActivity.this, new AdCallback() {
+                if (AdmodUtils.getInstance().mInterstitialAd != null) {
+                    AdmodUtils.getInstance().showAdInterstitialWithCallback(AdmodUtils.getInstance().mInterstitialAd, MainActivity.this, new AdCallback() {
                         @Override
                         public void onAdClosed() {
                             AdmodUtils.getInstance().loadAdInterstitial(MainActivity.this, getString(R.string.test_ads_admob_inter_id), new AdLoadCallback() {
@@ -111,8 +111,7 @@ public class MainActivity extends AppCompatActivity {
                             Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
                         }
                     });
-                }
-                else{
+                } else {
                     Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
                 }
             }
@@ -127,7 +126,9 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onAdFail() {onAdClosed();}
+                    public void onAdFail() {
+                        onAdClosed();
+                    }
                 }, true);
             }
         });
@@ -137,17 +138,19 @@ public class MainActivity extends AppCompatActivity {
                 AdmodUtils.getInstance().loadAndShowAdRewardWithCallback(MainActivity.this, getString(R.string.test_ads_admob_reward_id), new RewardAdCallback() {
                     @Override
                     public void onAdClosed() {
-                        if(AdmodUtils.getInstance().mRewardedAd != null){
-                            AdmodUtils.getInstance().mRewardedAd = null;}
+                        if (AdmodUtils.getInstance().mRewardedAd != null) {
+                            AdmodUtils.getInstance().mRewardedAd = null;
+                        }
                         AdmodUtils.getInstance().dismissAdDialog();
                         //Utils.getInstance().showMessenger(MainActivity.this, "close ad");
-                        startActivity(new Intent(MainActivity.this,OtherActivity.class));
+                        startActivity(new Intent(MainActivity.this, OtherActivity.class));
                     }
 
                     @Override
                     public void onEarned() {
-                        if(AdmodUtils.getInstance().mRewardedAd != null){
-                            AdmodUtils.getInstance().mRewardedAd = null;}
+                        if (AdmodUtils.getInstance().mRewardedAd != null) {
+                            AdmodUtils.getInstance().mRewardedAd = null;
+                        }
                         AdmodUtils.getInstance().dismissAdDialog();
                         Utils.getInstance().showMessenger(MainActivity.this, "Reward");
 
@@ -168,14 +171,61 @@ public class MainActivity extends AppCompatActivity {
                 Utils.getInstance().addActivity(MainActivity.this, NativeRecyclerActivity.class);
             }
         });
-
         btn_LoadNativeGrid.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Utils.getInstance().addActivity(MainActivity.this, NativeGridActivity.class);
             }
         });
+        btn_LoadInterReward.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AdmodUtils.getInstance().loadAdInterstitialReward(MainActivity.this, getString(R.string.test_ads_admob_inter_reward_id), new AdLoadCallback() {
+                    @Override
+                    public void onAdFail() {
+                        Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
+                        Utils.getInstance().showMessenger(MainActivity.this,"onAdFail");
 
+                    }
+
+                    @Override
+                    public void onAdLoaded() {
+                        Utils.getInstance().showMessenger(MainActivity.this,"show popup");
+                        //show dialog
+                    }
+                });
+            }
+
+        });
+
+        btn_ShowInterReward.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (AdmodUtils.getInstance().mInterstitialRewardAd != null) {
+                    AdmodUtils.getInstance().showAdInterstitialRewardWithCallback(AdmodUtils.getInstance().mInterstitialRewardAd, MainActivity.this, new RewardAdCallback() {
+                        @Override
+                        public void onAdClosed() {
+                            Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
+                        }
+
+                        @Override
+                        public void onAdFail() {
+                            Utils.getInstance().showMessenger(MainActivity.this,"onAdFail");
+                            Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
+                        }
+
+                        @Override
+                        public void onEarned() {
+                            Utils.getInstance().showMessenger(MainActivity.this,"onEarned");
+                            //bool true
+                        }
+                    });
+                } else {
+                    Utils.getInstance().replaceActivity(MainActivity.this, OtherActivity.class);
+
+                }
+            }
+        });
 
         btn_IAP.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -202,7 +252,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        //AdmodUtils.getInstance().loadAdBanner(MainActivity.this, getString(R.string.test_ads_admob_banner_id), banner);
+        AdmodUtils.getInstance().loadAdBanner(MainActivity.this, getString(R.string.test_ads_admob_banner_id), banner);
     }
 
     private void showDialogRate() {
@@ -243,7 +293,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
     void finbyid() {
         btn_Utils = findViewById(R.id.btn_Utils);
         btn_LoadInter = findViewById(R.id.btn_LoadInter);
@@ -256,6 +305,9 @@ public class MainActivity extends AppCompatActivity {
         btn_IAP = findViewById(R.id.btn_IAP);
         btn_Rate = findViewById(R.id.btn_Rate);
         btn_LoadNativeGrid = findViewById(R.id.btn_LoadNativeGrid);
+
+        btn_LoadInterReward = findViewById(R.id.btn_LoadInterReward);
+        btn_ShowInterReward = findViewById(R.id.btn_ShowInterReward);
     }
 
     @Override

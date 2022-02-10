@@ -25,7 +25,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(AdmodUtils.getInstance().mInterstitialAd != null) {
-                    AdmodUtils.getInstance().showAdInterstitialWithCallback(AdmodUtils.getInstance().mInterstitialAd,getString(R.string.test_ads_admob_inter_id), SplashActivity.this, new AdCallback() {
+                    AdmodUtils.getInstance().showAdInterstitialWithCallback(AdmodUtils.getInstance().mInterstitialAd, SplashActivity.this, new AdCallback() {
                         @Override
                         public void onAdClosed() {
                             Utils.getInstance().replaceActivity(SplashActivity.this, MainActivity.class);
@@ -37,7 +37,7 @@ public class SplashActivity extends AppCompatActivity {
                         }
                     });
                 } else{
-                    Utils.getInstance().replaceActivity(SplashActivity.this, OtherActivity.class);
+                    Utils.getInstance().replaceActivity(SplashActivity.this, MainActivity.class);
                 }
             }
         });
