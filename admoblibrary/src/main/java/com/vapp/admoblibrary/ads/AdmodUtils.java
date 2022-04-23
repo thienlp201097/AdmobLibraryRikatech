@@ -693,6 +693,63 @@ public class AdmodUtils {
             // Toast.makeText(activity, "Ad did not load", Toast.LENGTH_SHORT).show();
         }
     }
+    public void showAdInterstitialWithCallback(InterstitialAd kInterstitialAd,String admobId, Activity activity, AdCallback adCallback) {
+        if (!isShowAds) {
+            adCallback.onAdClosed();
+            return;
+        }
+        if (kInterstitialAd != null) {
+            kInterstitialAd.show(activity);
+            kInterstitialAd.setFullScreenContentCallback(
+                    new FullScreenContentCallback() {
+                        @Override
+                        public void onAdDismissedFullScreenContent() {
+                            adCallback.onAdClosed();
+                            isAdShowing = false;
+                            Log.d("TAG", "The ad was dismissed.");
+                        }
+
+                        @Override
+                        public void onAdFailedToShowFullScreenContent(AdError adError) {
+                            adCallback.onAdFail();
+                            isAdShowing = false;
+                            mInterstitialAd = null;
+                            loadAdInterstitial(activity, admobId, new AdLoadCallback() {
+                                @Override
+                                public void onAdFail() {
+                                    Log.d("TAG", "Ad loaded again fails");
+                                }
+
+                                @Override
+                                public void onAdLoaded() {
+                                    Log.d("TAG", "Ad loaded again success");
+                                }
+                            });
+                            Log.d("TAG", "The ad failed to show.");
+                        }
+
+                        @Override
+                        public void onAdShowedFullScreenContent() {
+                            mInterstitialAd = null;
+                            isAdShowing = true;
+                            Log.d("TAG", "The ad was shown.");
+//                            loadAdInterstitial(activity, admobId, new AdLoadCallback() {
+//                                @Override
+//                                public void onAdFail() {
+//                                    Log.d("TAG", "Ad loaded again fails");
+//                                }
+//
+//                                @Override
+//                                public void onAdLoaded() {
+//                                    Log.d("TAG", "Ad loaded again success");
+//                                }
+//                            });
+                        }
+                    });
+        } else {
+            // Toast.makeText(activity, "Ad did not load", Toast.LENGTH_SHORT).show();
+        }
+    }
 
 
     public void dismissAdDialog() {

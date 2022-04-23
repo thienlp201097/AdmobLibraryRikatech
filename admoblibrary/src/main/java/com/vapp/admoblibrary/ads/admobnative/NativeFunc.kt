@@ -24,10 +24,6 @@ class NativeFunc {
                 return
             }
 
-            if (nativeAd.body == null || nativeAd.callToAction == null) {
-                return
-            }
-
             adView.findViewById<MediaView>(R.id.ad_media)?.let {
                 adView.mediaView = it
             }
@@ -61,9 +57,11 @@ class NativeFunc {
                 adView.bodyView.visibility = View.VISIBLE
                 (adView.bodyView as TextView).text = nativeAd.body
             }
-            if (nativeAd.callToAction != null) {
-//                adView.callToActionView.visibility = View.INVISIBLE
-//                adView.callToActionView.visibility = View.VISIBLE
+            if (nativeAd.callToAction == null) {
+                adView.callToActionView.visibility = View.INVISIBLE
+
+            }else{
+                adView.callToActionView.visibility = View.VISIBLE
                 (adView.callToActionView as Button).text = nativeAd.callToAction
             }
 

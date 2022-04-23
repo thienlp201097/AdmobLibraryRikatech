@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.codemybrainsout.ratingdialog.MaybeLaterCallback;
+import com.codemybrainsout.ratingdialog.RatingDialog;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.vapp.admobexample.SplashActivity;
 import com.vapp.admobexample.utilsdemp.UtilsDemoActivity;
@@ -23,8 +25,6 @@ import com.vapp.admobexample.R;
 import com.vapp.admobexample.iap.IAPActivity;
 import com.vapp.admoblibrary.ads.model.AdUnitListModel;
 import com.vapp.admoblibrary.ads.model.AdsConfigModel;
-import com.vapp.admoblibrary.rate.MaybeLaterCallback;
-import com.vapp.admoblibrary.rate.RatingDialog;
 import com.vapp.admoblibrary.utils.Utils;
 import com.vapp.admoblibrary.ads.AdCallback;
 import com.vapp.admoblibrary.ads.AdmodUtils;
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (AdmodUtils.getInstance().mInterstitialAd != null) {
-                    AdmodUtils.getInstance().showAdInterstitialWithCallback(AdmodUtils.getInstance().mInterstitialAd, MainActivity.this, new AdCallback() {
+                    AdmodUtils.getInstance().showAdInterstitialWithCallback(AdmodUtils.getInstance().mInterstitialAd,getString(R.string.test_ads_admob_inter_id), MainActivity.this, new AdCallback() {
                         @Override
                         public void onAdClosed() {
                             AdmodUtils.getInstance().loadAdInterstitial(MainActivity.this, getString(R.string.test_ads_admob_inter_id), new AdLoadCallback() {

@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.screenrecorder.videorecorder.free.lite"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 8
         versionName "1.0"
@@ -53,6 +53,7 @@ dependencies {
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    implementation 'com.github.dktlib:smart-app-rate:1.3'
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':admoblibrary')  // tên của mdule
     def multidex_version = "2.0.1"
