@@ -89,20 +89,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (AdmodUtils.getInstance().mInterstitialAd != null) {
-                    AdmodUtils.getInstance().showAdInterstitialWithCallback(AdmodUtils.getInstance().mInterstitialAd,getString(R.string.test_ads_admob_inter_id), MainActivity.this, new AdCallback() {
+                    AdmodUtils.getInstance().showAdInterstitialWithCallback(AdmodUtils.getInstance().mInterstitialAd, getString(R.string.test_ads_admob_inter_id), MainActivity.this, new AdCallback() {
                         @Override
                         public void onAdClosed() {
-                            AdmodUtils.getInstance().loadAdInterstitial(MainActivity.this, getString(R.string.test_ads_admob_inter_id), new AdLoadCallback() {
-                                @Override
-                                public void onAdFail() {
-
-                                }
-
-                                @Override
-                                public void onAdLoaded() {
-
-                                }
-                            });
                             Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
                         }
 
@@ -113,6 +102,29 @@ public class MainActivity extends AppCompatActivity {
                     });
                 } else {
                     Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
+                    AdmodUtils.getInstance().showAdInterstitialWithCallback(AdmodUtils.getInstance().mInterstitialAd, getString(R.string.test_ads_admob_inter_id), MainActivity.this, new AdCallback() {
+                        @Override
+                        public void onAdClosed() {
+                            AdmodUtils.getInstance().loadAdInterstitial(MainActivity.this, getString(R.string.test_ads_admob_inter_id), new AdLoadCallback() {
+                                @Override
+                                public void onAdFail() {
+
+                                }
+
+
+                                @Override
+                                public void onAdLoaded() {
+
+                                }
+
+
+                            });
+                        }
+
+                        @Override
+                        public void onAdFail() {
+                        }
+                    });
                 }
             }
         });
@@ -184,13 +196,13 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onAdFail() {
                         Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
-                        Utils.getInstance().showMessenger(MainActivity.this,"onAdFail");
+                        Utils.getInstance().showMessenger(MainActivity.this, "onAdFail");
 
                     }
 
                     @Override
                     public void onAdLoaded() {
-                        Utils.getInstance().showMessenger(MainActivity.this,"show popup");
+                        Utils.getInstance().showMessenger(MainActivity.this, "show popup");
                         //show dialog
                     }
                 });
@@ -210,13 +222,13 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         public void onAdFail() {
-                            Utils.getInstance().showMessenger(MainActivity.this,"onAdFail");
+                            Utils.getInstance().showMessenger(MainActivity.this, "onAdFail");
                             Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
                         }
 
                         @Override
                         public void onEarned() {
-                            Utils.getInstance().showMessenger(MainActivity.this,"onEarned");
+                            Utils.getInstance().showMessenger(MainActivity.this, "onEarned");
                             //bool true
                         }
                     });

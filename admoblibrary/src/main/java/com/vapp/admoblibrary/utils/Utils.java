@@ -287,28 +287,14 @@ public class Utils {
 
 
     public void addActivity(Context context, Class activity) {
-
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            public void run() {
-                Intent i = new Intent(context, activity);
-                context.startActivity(i);
-            }
-        }, 150);
-
-
+        Intent i = new Intent(context, activity);
+        context.startActivity(i);
     }
 
     public void replaceActivity(Context context, Class activity) {
-
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            public void run() {
-                Intent i = new Intent(context, activity);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(i);
-            }
-        }, 150);
+        Intent i = new Intent(context, activity);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(i);
 
     }
 

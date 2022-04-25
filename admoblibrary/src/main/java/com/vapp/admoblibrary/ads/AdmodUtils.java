@@ -195,15 +195,16 @@ public class AdmodUtils {
         return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
     }
 
-    public void loadAdBanner(Activity context, String bannerId, ViewGroup viewGroup) {
-        if (!isShowAds) {
+    public void loadAdBanner(Activity activity, String bannerId, ViewGroup viewGroup) {
+
+        if (!isShowAds|| !isNetworkConnected(activity)) {
             viewGroup.setVisibility(View.GONE);
             return;
         }
 
-        AdView mAdView = new AdView(context);
+        AdView mAdView = new AdView(activity);
         if (isTesting) {
-            bannerId = context.getString(R.string.test_ads_admob_banner_id);
+            bannerId = activity.getString(R.string.test_ads_admob_banner_id);
         }
         mAdView.setAdUnitId(bannerId);
 //        if (size == GoogleEBanner.SIZE_SMALL) {
@@ -215,11 +216,11 @@ public class AdmodUtils {
 //        } else {
 //            mAdView.setAdSize(AdSize.SMART_BANNER);
 //        }
-        AdSize adSize = getAdSize(context);
+        AdSize adSize = getAdSize(activity);
 
         mAdView.setAdSize(adSize);
         viewGroup.removeAllViews();
-        View tagView = context.getLayoutInflater().inflate(R.layout.layoutbanner_loading, null, false);
+        View tagView = activity.getLayoutInflater().inflate(R.layout.layoutbanner_loading, null, false);
         viewGroup.addView(tagView, 0);
         viewGroup.addView(mAdView, 1);
         ShimmerFrameLayout shimmerFrameLayout = tagView.findViewById(R.id.shimmer_view_container);
@@ -277,7 +278,7 @@ public class AdmodUtils {
     // ads native
     public void loadNativeAdsWithLayout(Activity activity, String s, ViewGroup viewGroup, int layout, NativeAdCallback adCallback) {
 
-        if (!isShowAds) {
+        if (!isShowAds|| !isNetworkConnected(activity)) {
             viewGroup.setVisibility(View.GONE);
             return;
         }
@@ -693,18 +694,23 @@ public class AdmodUtils {
             // Toast.makeText(activity, "Ad did not load", Toast.LENGTH_SHORT).show();
         }
     }
-    public void showAdInterstitialWithCallback(InterstitialAd kInterstitialAd,String admobId, Activity activity, AdCallback adCallback) {
+    public void showAdInterstitialWithCallback(InterstitialAd kInterstitialAd,String admobId,Activity activity,AdCallback adCallback) {
         if (!isShowAds) {
             adCallback.onAdClosed();
             return;
         }
+        if (kInterstitialAd == null) {
+            if (adCallback != null) {
+                adCallback.onAdClosed();
+            }
+            return;
+        }
         if (kInterstitialAd != null) {
-            kInterstitialAd.show(activity);
+
             kInterstitialAd.setFullScreenContentCallback(
                     new FullScreenContentCallback() {
                         @Override
                         public void onAdDismissedFullScreenContent() {
-                            adCallback.onAdClosed();
                             isAdShowing = false;
                             Log.d("TAG", "The ad was dismissed.");
                         }
@@ -733,23 +739,45 @@ public class AdmodUtils {
                             mInterstitialAd = null;
                             isAdShowing = true;
                             Log.d("TAG", "The ad was shown.");
-//                            loadAdInterstitial(activity, admobId, new AdLoadCallback() {
-//                                @Override
-//                                public void onAdFail() {
-//                                    Log.d("TAG", "Ad loaded again fails");
-//                                }
-//
-//                                @Override
-//                                public void onAdLoaded() {
-//                                    Log.d("TAG", "Ad loaded again success");
-//                                }
-//                            });
+                            loadAdInterstitial(activity, admobId, new AdLoadCallback() {
+                                @Override
+                                public void onAdFail() {
+                                    Log.d("TAG", "Ad loaded again fails");
+                                }
+
+                                @Override
+                                public void onAdLoaded() {
+                                    Log.d("TAG", "Ad loaded again success");
+                                }
+                            });
                         }
                     });
+            showInterstitialAd(activity,kInterstitialAd,adCallback);
         } else {
-            // Toast.makeText(activity, "Ad did not load", Toast.LENGTH_SHORT).show();
+            if(adCallback != null){
+                adCallback.onAdClosed();
+            }
+            //Toast.makeText(activity, "Ad did not load", Toast.LENGTH_SHORT).show();
         }
     }
+    private void showInterstitialAd(Context context, InterstitialAd mInterstitialAd, AdCallback callback) {
+        if (mInterstitialAd != null) {
+            if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+                if (callback != null) {
+                    callback.onAdClosed();
+
+                }
+                mInterstitialAd.show((Activity) context);
+
+            }
+        } else if (callback != null) {
+            if (dialog != null) {
+                dialog.dismiss();
+            }
+            callback.onAdClosed();
+        }
+    }
+
 
 
     public void dismissAdDialog() {
