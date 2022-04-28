@@ -550,7 +550,7 @@ public class AdmodUtils {
             }
         });
     }
-    public void showAdInterstitialRewardWithCallback(RewardedInterstitialAd kInterstitialRewardAd,  Activity activity, RewardAdCallback adCallback) {
+    public void showAdInterstitialRewardWithCallback(RewardedInterstitialAd kInterstitialRewardAd,  AppCompatActivity activity, RewardAdCallback adCallback) {
         if (!isShowAds) {
             adCallback.onAdClosed();
             return;
@@ -637,7 +637,7 @@ public class AdmodUtils {
             }
         });
     }
-    public void showAdInterstitialWithCallback(InterstitialAd kInterstitialAd, Activity activity, AdCallbackNew adCallback) {
+    public void showAdInterstitialWithCallback(InterstitialAd kInterstitialAd, AppCompatActivity activity, AdCallbackNew adCallback) {
         if (!isShowAds) {
             adCallback.onAdClosed();
             return;
@@ -673,7 +673,7 @@ public class AdmodUtils {
             adCallback.onAdFail();
         }
     }
-    public void showAdInterstitialWithCallback(InterstitialAd kInterstitialAd,String admobId,Activity activity,AdCallbackNew adCallback) {
+    public void showAdInterstitialWithCallback(InterstitialAd kInterstitialAd,String admobId,AppCompatActivity activity,AdCallbackNew adCallback) {
         if (!isShowAds) {
             adCallback.onAdClosed();
             return;
@@ -734,8 +734,8 @@ public class AdmodUtils {
     }
 
 
-    private void showInterstitialAd(Activity activity, InterstitialAd mInterstitialAd, AdCallbackNew callback) {
-        if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED) && mInterstitialAd != null) {
+    private void showInterstitialAd(AppCompatActivity activity, InterstitialAd mInterstitialAd, AdCallbackNew callback) {
+        if (activity.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED) && mInterstitialAd != null) {
             if (callback != null) {
                 callback.onAdClosed();
             }
