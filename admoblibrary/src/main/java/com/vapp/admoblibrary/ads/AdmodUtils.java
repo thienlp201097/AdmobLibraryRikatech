@@ -85,6 +85,7 @@ public class AdmodUtils {
     private static volatile AdmodUtils INSTANCE;
     //Reward Ads
     public RewardedAd mRewardedAd = null;
+    public InterstitialAd mInterstitialAd;
 
     public static synchronized AdmodUtils getInstance() {
         if (INSTANCE == null) {
@@ -590,7 +591,6 @@ public class AdmodUtils {
         }
     }
 
-    public InterstitialAd mInterstitialAd;
     public void loadAdInterstitial(Context activity, String admobId, AdLoadCallback adLoadCallback) {
         if (!isShowAds) {
             return;
@@ -658,17 +658,7 @@ public class AdmodUtils {
                             adCallback.onAdFail();
                             isAdShowing = false;
                             mInterstitialAd = null;
-//                            loadAdInterstitial(activity, admobId, new AdLoadCallback() {
-//                                @Override
-//                                public void onAdFail() {
-//                                    Log.d("TAG", "Ad loaded again fails");
-//                                }
-//
-//                                @Override
-//                                public void onAdLoaded() {
-//                                    Log.d("TAG", "Ad loaded again success");
-//                                }
-//                            });
+
                             Log.d("TAG", "The ad failed to show.");
                         }
 
@@ -677,21 +667,10 @@ public class AdmodUtils {
                             mInterstitialAd = null;
                             isAdShowing = true;
                             Log.d("TAG", "The ad was shown.");
-//                            loadAdInterstitial(activity, admobId, new AdLoadCallback() {
-//                                @Override
-//                                public void onAdFail() {
-//                                    Log.d("TAG", "Ad loaded again fails");
-//                                }
-//
-//                                @Override
-//                                public void onAdLoaded() {
-//                                    Log.d("TAG", "Ad loaded again success");
-//                                }
-//                            });
                         }
                     });
         } else {
-            // Toast.makeText(activity, "Ad did not load", Toast.LENGTH_SHORT).show();
+            adCallback.onAdFail();
         }
     }
     public void showAdInterstitialWithCallback(InterstitialAd kInterstitialAd,String admobId,Activity activity,AdCallback adCallback) {
@@ -701,17 +680,16 @@ public class AdmodUtils {
         }
         if (kInterstitialAd == null) {
             if (adCallback != null) {
-                adCallback.onAdClosed();
+                adCallback.onAdFail();
             }
             return;
         }
-        if (kInterstitialAd != null) {
-
             kInterstitialAd.setFullScreenContentCallback(
                     new FullScreenContentCallback() {
                         @Override
                         public void onAdDismissedFullScreenContent() {
                             isAdShowing = false;
+                            adCallback.onAdClosed();
                             Log.d("TAG", "The ad was dismissed.");
                         }
 
@@ -753,32 +731,22 @@ public class AdmodUtils {
                         }
                     });
             showInterstitialAd(activity,kInterstitialAd,adCallback);
+    }
+
+
+    private void showInterstitialAd(Activity activity, InterstitialAd mInterstitialAd, AdCallback callback) {
+        if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED) && mInterstitialAd != null) {
+            mInterstitialAd.show(activity);
+            AdmodUtils.getInstance().isAdShowing = true;
         } else {
-            if(adCallback != null){
-                adCallback.onAdClosed();
+            callback.onAdFail();
+            dismissAdDialog();
+            AdmodUtils.getInstance().isAdShowing = false;
+            if (AppOpenManager.getInstance().isInitialized()) {
+                AppOpenManager.getInstance().isAppResumeEnabled = true;
             }
-            //Toast.makeText(activity, "Ad did not load", Toast.LENGTH_SHORT).show();
         }
     }
-    private void showInterstitialAd(Context context, InterstitialAd mInterstitialAd, AdCallback callback) {
-        if (mInterstitialAd != null) {
-            if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
-                if (callback != null) {
-                    callback.onAdClosed();
-
-                }
-                mInterstitialAd.show((Activity) context);
-
-            }
-        } else if (callback != null) {
-            if (dialog != null) {
-                dialog.dismiss();
-            }
-            callback.onAdClosed();
-        }
-    }
-
-
 
     public void dismissAdDialog() {
         if (AdmodUtils.getInstance().dialog != null && AdmodUtils.getInstance().dialog.isShowing()) {
