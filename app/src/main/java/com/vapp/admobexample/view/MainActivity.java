@@ -17,6 +17,7 @@ import com.codemybrainsout.ratingdialog.RatingDialog;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.vapp.admobexample.SplashActivity;
 import com.vapp.admobexample.utilsdemp.UtilsDemoActivity;
+import com.vapp.admoblibrary.ads.AdCallbackNew;
 import com.vapp.admoblibrary.ads.AdLoadCallback;
 import com.vapp.admoblibrary.ads.NativeAdCallback;
 import com.vapp.admoblibrary.ads.admobnative.enumclass.GoogleEBanner;
@@ -89,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (AdmodUtils.getInstance().mInterstitialAd != null) {
-                    AdmodUtils.getInstance().showAdInterstitialWithCallback(AdmodUtils.getInstance().mInterstitialAd, getString(R.string.test_ads_admob_inter_id), MainActivity.this, new AdCallback() {
+                    AdmodUtils.getInstance().showAdInterstitialWithCallback(AdmodUtils.getInstance().mInterstitialAd, getString(R.string.test_ads_admob_inter_id), MainActivity.this, new AdCallbackNew() {
                         @Override
                         public void onAdClosed() {
                             Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
@@ -98,6 +99,11 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onAdFail() {
                             Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
+                        }
+
+                        @Override
+                        public void onEventClickAdClosed() {
+
                         }
                     });
                 } else {

@@ -533,7 +533,7 @@ public class AdmodUtils {
                 mInterstitialRewardAd = interstitialRewardAd;
                 adLoadCallback.onAdLoaded();
                 Log.i("adLog", "onAdLoaded");
-               // Toast.makeText(activity, "success load ads", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(activity, "success load ads", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -587,7 +587,7 @@ public class AdmodUtils {
                         }
                     });
         } else {
-           // Toast.makeText(activity, "Ad did not load", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(activity, "Ad did not load", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -637,18 +637,17 @@ public class AdmodUtils {
             }
         });
     }
-    public void showAdInterstitialWithCallback(InterstitialAd kInterstitialAd, Activity activity, AdCallback adCallback) {
+    public void showAdInterstitialWithCallback(InterstitialAd kInterstitialAd, Activity activity, AdCallbackNew adCallback) {
         if (!isShowAds) {
             adCallback.onAdClosed();
             return;
         }
         if (kInterstitialAd != null) {
-            kInterstitialAd.show(activity);
             kInterstitialAd.setFullScreenContentCallback(
                     new FullScreenContentCallback() {
                         @Override
                         public void onAdDismissedFullScreenContent() {
-                            adCallback.onAdClosed();
+                            adCallback.onEventClickAdClosed();
                             isAdShowing = false;
                             Log.d("TAG", "The ad was dismissed.");
                         }
@@ -669,11 +668,12 @@ public class AdmodUtils {
                             Log.d("TAG", "The ad was shown.");
                         }
                     });
+            showInterstitialAd(activity,kInterstitialAd,adCallback);
         } else {
             adCallback.onAdFail();
         }
     }
-    public void showAdInterstitialWithCallback(InterstitialAd kInterstitialAd,String admobId,Activity activity,AdCallback adCallback) {
+    public void showAdInterstitialWithCallback(InterstitialAd kInterstitialAd,String admobId,Activity activity,AdCallbackNew adCallback) {
         if (!isShowAds) {
             adCallback.onAdClosed();
             return;
@@ -684,58 +684,61 @@ public class AdmodUtils {
             }
             return;
         }
-            kInterstitialAd.setFullScreenContentCallback(
-                    new FullScreenContentCallback() {
-                        @Override
-                        public void onAdDismissedFullScreenContent() {
-                            isAdShowing = false;
-                            adCallback.onAdClosed();
-                            Log.d("TAG", "The ad was dismissed.");
-                        }
+        kInterstitialAd.setFullScreenContentCallback(
+                new FullScreenContentCallback() {
+                    @Override
+                    public void onAdDismissedFullScreenContent() {
+                        isAdShowing = false;
+                        adCallback.onEventClickAdClosed();
+                        Log.d("TAG", "The ad was dismissed.");
+                    }
 
-                        @Override
-                        public void onAdFailedToShowFullScreenContent(AdError adError) {
-                            adCallback.onAdFail();
-                            isAdShowing = false;
-                            mInterstitialAd = null;
-                            loadAdInterstitial(activity, admobId, new AdLoadCallback() {
-                                @Override
-                                public void onAdFail() {
-                                    Log.d("TAG", "Ad loaded again fails");
-                                }
+                    @Override
+                    public void onAdFailedToShowFullScreenContent(AdError adError) {
+                        adCallback.onAdFail();
+                        isAdShowing = false;
+                        mInterstitialAd = null;
+                        loadAdInterstitial(activity, admobId, new AdLoadCallback() {
+                            @Override
+                            public void onAdFail() {
+                                Log.d("TAG", "Ad loaded again fails");
+                            }
 
-                                @Override
-                                public void onAdLoaded() {
-                                    Log.d("TAG", "Ad loaded again success");
-                                }
-                            });
-                            Log.d("TAG", "The ad failed to show.");
-                        }
+                            @Override
+                            public void onAdLoaded() {
+                                Log.d("TAG", "Ad loaded again success");
+                            }
+                        });
+                        Log.d("TAG", "The ad failed to show.");
+                    }
 
-                        @Override
-                        public void onAdShowedFullScreenContent() {
-                            mInterstitialAd = null;
-                            isAdShowing = true;
-                            Log.d("TAG", "The ad was shown.");
-                            loadAdInterstitial(activity, admobId, new AdLoadCallback() {
-                                @Override
-                                public void onAdFail() {
-                                    Log.d("TAG", "Ad loaded again fails");
-                                }
+                    @Override
+                    public void onAdShowedFullScreenContent() {
+                        mInterstitialAd = null;
+                        isAdShowing = true;
+                        Log.d("TAG", "The ad was shown.");
+                        loadAdInterstitial(activity, admobId, new AdLoadCallback() {
+                            @Override
+                            public void onAdFail() {
+                                Log.d("TAG", "Ad loaded again fails");
+                            }
 
-                                @Override
-                                public void onAdLoaded() {
-                                    Log.d("TAG", "Ad loaded again success");
-                                }
-                            });
-                        }
-                    });
-            showInterstitialAd(activity,kInterstitialAd,adCallback);
+                            @Override
+                            public void onAdLoaded() {
+                                Log.d("TAG", "Ad loaded again success");
+                            }
+                        });
+                    }
+                });
+        showInterstitialAd(activity,kInterstitialAd,adCallback);
     }
 
 
-    private void showInterstitialAd(Activity activity, InterstitialAd mInterstitialAd, AdCallback callback) {
+    private void showInterstitialAd(Activity activity, InterstitialAd mInterstitialAd, AdCallbackNew callback) {
         if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED) && mInterstitialAd != null) {
+            if (callback != null) {
+                callback.onAdClosed();
+            }
             mInterstitialAd.show(activity);
             AdmodUtils.getInstance().isAdShowing = true;
         } else {
