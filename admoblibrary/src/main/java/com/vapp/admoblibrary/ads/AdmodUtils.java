@@ -87,6 +87,9 @@ public class AdmodUtils {
     public RewardedAd mRewardedAd = null;
     public InterstitialAd mInterstitialAd;
 
+    //id thật
+    public String idIntersitialReal;
+
     public static synchronized AdmodUtils getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new AdmodUtils();
@@ -613,8 +616,8 @@ public class AdmodUtils {
                 });
             }
         }
-
-        InterstitialAd.load(activity, admobId, adRequest, new InterstitialAdLoadCallback() {
+        idIntersitialReal = admobId;
+        InterstitialAd.load(activity, idIntersitialReal, adRequest, new InterstitialAdLoadCallback() {
             @Override
             public void onAdLoaded(@NonNull @org.jetbrains.annotations.NotNull InterstitialAd interstitialAd) {
                 mInterstitialAd = interstitialAd;
@@ -637,7 +640,7 @@ public class AdmodUtils {
             }
         });
     }
-    public void showAdInterstitialWithCallback(InterstitialAd kInterstitialAd, Activity activity, AdCallbackNew adCallback) {
+    public void showAdInterstitialWithCallbackNotLoad(InterstitialAd kInterstitialAd, Activity activity, AdCallbackNew adCallback) {
         if (!isShowAds) {
             adCallback.onAdClosed();
             return;
@@ -673,7 +676,7 @@ public class AdmodUtils {
             adCallback.onAdFail();
         }
     }
-    public void showAdInterstitialWithCallback(InterstitialAd kInterstitialAd,String admobId,Activity activity,AdCallbackNew adCallback) {
+    public void showAdInterstitialWithCallback(InterstitialAd kInterstitialAd,Activity activity,AdCallbackNew adCallback) {
         if (!isShowAds) {
             adCallback.onAdClosed();
             return;
@@ -698,7 +701,7 @@ public class AdmodUtils {
                         adCallback.onAdFail();
                         isAdShowing = false;
                         mInterstitialAd = null;
-                        loadAdInterstitial(activity, admobId, new AdLoadCallback() {
+                        loadAdInterstitial(activity, idIntersitialReal, new AdLoadCallback() {
                             @Override
                             public void onAdFail() {
                                 Log.d("TAG", "Ad loaded again fails");
@@ -717,7 +720,7 @@ public class AdmodUtils {
                         mInterstitialAd = null;
                         isAdShowing = true;
                         Log.d("TAG", "The ad was shown.");
-                        loadAdInterstitial(activity, admobId, new AdLoadCallback() {
+                        loadAdInterstitial(activity, idIntersitialReal, new AdLoadCallback() {
                             @Override
                             public void onAdFail() {
                                 Log.d("TAG", "Ad loaded again fails");

@@ -26,7 +26,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(AdmodUtils.getInstance().mInterstitialAd != null) {
-                    AdmodUtils.getInstance().showAdInterstitialWithCallback(AdmodUtils.getInstance().mInterstitialAd, SplashActivity.this, new AdCallbackNew() {
+                    AdmodUtils.getInstance().showAdInterstitialWithCallbackNotLoad(AdmodUtils.getInstance().mInterstitialAd, SplashActivity.this, new AdCallbackNew() {
                         @Override
                         public void onAdClosed() {
                             Utils.getInstance().replaceActivity(SplashActivity.this, MainActivity.class);
