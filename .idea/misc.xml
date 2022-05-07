@@ -31,6 +31,8 @@
         <entry key="..\:/vapp/AdmobUtilsLibrary/app/src/main/res/layout/activity_main2.xml" value="0.259375" />
         <entry key="..\:/vapp/AdmobUtilsLibrary/app/src/main/res/layout/data_placeholder_layout.xml" value="0.259375" />
         <entry key="..\:/vapp/AdmobUtilsLibrary/app/src/main/res/layout/layoutbanner_loading.xml" value="0.259375" />
+        <entry key="admoblibrary/src/main/res/drawable/bg_border_ads.xml" value="0.2705" />
+        <entry key="admoblibrary/src/main/res/layout/ad_unified_medium.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/activity_main2.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/splash.xml" value="0.37604166666666666" />
       </map>

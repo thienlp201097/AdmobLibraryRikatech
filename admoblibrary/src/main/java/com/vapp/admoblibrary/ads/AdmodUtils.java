@@ -72,7 +72,7 @@ public class AdmodUtils {
     // Biến check lần cuối hiển thị quảng cáo
     public long lastTimeShowInterstitial = 0;
     // Timeout init admob
-    public long timeOut = 0;
+    public int timeOut = 0;
     //Check quảng cáo đang show hay không
     public boolean isAdShowing = false;
     //Ẩn hiện quảng cáo
@@ -616,6 +616,9 @@ public class AdmodUtils {
                 });
             }
         }
+        if(adRequest == null){
+            initAdRequest(timeOut);
+        }
         idIntersitialReal = admobId;
         InterstitialAd.load(activity, idIntersitialReal, adRequest, new InterstitialAdLoadCallback() {
             @Override
@@ -781,6 +784,7 @@ public class AdmodUtils {
 //            handlerTimeOut.removeCallbacksAndMessages(null);
             return;
         }
+
         if (AppOpenManager.getInstance().isInitialized()) {
             if (!AppOpenManager.getInstance().isAppResumeEnabled) {
                 return;
