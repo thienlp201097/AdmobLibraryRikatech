@@ -116,9 +116,7 @@ public class AdmodUtils {
             isTesting = false;
         }
 
-        if (!isEnableAds) {
-            isShowAds = false;
-        }
+        isShowAds = isEnableAds;
 
         MobileAds.initialize(context, initializationStatus -> {
         });
@@ -336,7 +334,7 @@ public class AdmodUtils {
         viewGroup.addView(tagView, 0);
         ShimmerFrameLayout shimmerFrameLayout = tagView.findViewById(R.id.shimmer_view_container);
         shimmerFrameLayout.startShimmerAnimation();
-        if (!isShowAds) {
+        if (!isShowAds || !isNetworkConnected(activity)) {
             viewGroup.setVisibility(View.GONE);
             return;
         }
@@ -507,7 +505,7 @@ public class AdmodUtils {
     //Interstitial Reward ads
     public RewardedInterstitialAd mInterstitialRewardAd;
     public void loadAdInterstitialReward(Context activity, String admobId, AdLoadCallback adLoadCallback) {
-        if (!isShowAds) {
+        if (!isShowAds|| !isNetworkConnected(activity)) {
             return;
         }
         if (isTesting) {
@@ -554,7 +552,7 @@ public class AdmodUtils {
         });
     }
     public void showAdInterstitialRewardWithCallback(RewardedInterstitialAd kInterstitialRewardAd,  Activity activity, RewardAdCallback adCallback) {
-        if (!isShowAds) {
+        if (!isShowAds|| !isNetworkConnected(activity)) {
             adCallback.onAdClosed();
             return;
         }
@@ -595,7 +593,8 @@ public class AdmodUtils {
     }
 
     public void loadAdInterstitial(Context activity, String admobId, AdLoadCallback adLoadCallback) {
-        if (!isShowAds) {
+        if (!isShowAds|| !isNetworkConnected(activity)) {
+            adLoadCallback.onAdFail();
             return;
         }
         if (isTesting) {
@@ -644,7 +643,7 @@ public class AdmodUtils {
         });
     }
     public void showAdInterstitialWithCallbackNotLoad(InterstitialAd kInterstitialAd, Activity activity, AdCallbackNew adCallback) {
-        if (!isShowAds) {
+        if (!isShowAds|| !isNetworkConnected(activity)) {
             adCallback.onAdClosed();
             return;
         }
@@ -680,7 +679,8 @@ public class AdmodUtils {
         }
     }
     public void showAdInterstitialWithCallback(InterstitialAd kInterstitialAd,Activity activity,AdCallbackNew adCallback) {
-        if (!isShowAds) {
+
+      if (!isShowAds||!isNetworkConnected(activity)) {
             adCallback.onAdClosed();
             return;
         }
