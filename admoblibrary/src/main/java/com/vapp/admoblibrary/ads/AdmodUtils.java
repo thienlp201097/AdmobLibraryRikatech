@@ -131,7 +131,6 @@ public class AdmodUtils {
 
 
     }
-
     public AdRequest adRequest;
 
     // get AdRequest
@@ -196,7 +195,6 @@ public class AdmodUtils {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
     }
-
     public void loadAdBanner(Activity activity, String bannerId, ViewGroup viewGroup) {
 
         if (!isShowAds|| !isNetworkConnected(activity)) {
@@ -276,7 +274,6 @@ public class AdmodUtils {
         // Step 3 - Get adaptive ad size and return for setting on the ad view.
         return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, adWidth);
     }
-
     // ads native
     public void loadNativeAdsWithLayout(Activity activity, String s, ViewGroup viewGroup, int layout, NativeAdCallback adCallback) {
 
@@ -321,7 +318,6 @@ public class AdmodUtils {
         }
         Log.e("Admod", "loadAdNativeAds");
     }
-
     // ads native
     @SuppressLint("StaticFieldLeak")
     public void loadNativeAds(Activity activity, String s, ViewGroup viewGroup, GoogleENative size, NativeAdCallback adCallback) {
@@ -385,8 +381,6 @@ public class AdmodUtils {
         }
         Log.e("Admod", "loadAdNativeAds");
     }
-
-
     public void loadAndShowAdRewardWithCallback(Activity activity, String admobId, RewardAdCallback adCallback2, boolean enableLoadingDialog) {
         AdmodUtils.getInstance().mInterstitialAd = null;
         AdmodUtils.getInstance().isAdShowing = false;
@@ -501,7 +495,6 @@ public class AdmodUtils {
                     }
                 });
     }
-
     //Interstitial Reward ads
     public RewardedInterstitialAd mInterstitialRewardAd;
     public void loadAdInterstitialReward(Context activity, String admobId, AdLoadCallback adLoadCallback) {
@@ -591,7 +584,6 @@ public class AdmodUtils {
             // Toast.makeText(activity, "Ad did not load", Toast.LENGTH_SHORT).show();
         }
     }
-
     public void loadAdInterstitial(Context activity, String admobId, AdLoadCallback adLoadCallback) {
         if (!isShowAds|| !isNetworkConnected(activity)) {
             adLoadCallback.onAdFail();
@@ -645,6 +637,12 @@ public class AdmodUtils {
     public void showAdInterstitialWithCallbackNotLoad(InterstitialAd kInterstitialAd, Activity activity, AdCallbackNew adCallback) {
         if (!isShowAds|| !isNetworkConnected(activity)) {
             adCallback.onAdClosed();
+            return;
+        }
+        if (kInterstitialAd == null) {
+            if (adCallback != null) {
+                adCallback.onAdFail();
+            }
             return;
         }
         if (kInterstitialAd != null) {
@@ -741,8 +739,6 @@ public class AdmodUtils {
                 });
         showInterstitialAd(activity,kInterstitialAd,adCallback);
     }
-
-
     private void showInterstitialAd(Activity activity, InterstitialAd mInterstitialAd, AdCallbackNew callback) {
         if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED) && mInterstitialAd != null) {
             if (callback != null) {
@@ -759,7 +755,6 @@ public class AdmodUtils {
             }
         }
     }
-
     public void dismissAdDialog() {
         if (AdmodUtils.getInstance().dialog != null && AdmodUtils.getInstance().dialog.isShowing()) {
             AdmodUtils.getInstance().dialog.dismiss();
@@ -897,7 +892,6 @@ public class AdmodUtils {
     private long getCurrentTime() {
         return System.currentTimeMillis();
     }
-
     public String getDeviceID(Context context) {
         String android_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
         String deviceId = md5(android_id).toUpperCase();
