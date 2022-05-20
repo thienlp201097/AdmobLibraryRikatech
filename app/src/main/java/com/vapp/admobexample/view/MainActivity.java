@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onAdFail() {
 
                     }
-                });
+                },false);
 
             }
         });
@@ -103,6 +103,11 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         public void onEventClickAdClosed() {
+
+                        }
+
+                        @Override
+                        public void onAdShowed() {
 
                         }
                     });

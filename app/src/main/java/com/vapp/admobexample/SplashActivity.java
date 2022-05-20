@@ -2,6 +2,7 @@ package com.vapp.admobexample;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -39,6 +40,12 @@ public class SplashActivity extends AppCompatActivity {
 
                         @Override
                         public void onEventClickAdClosed() {
+                            Log.e("===splash","onEventClickAdClosed");
+                        }
+
+                        @Override
+                        public void onAdShowed() {
+                            Log.e("===splash","onAdShowed");
 
                         }
                     });
@@ -58,6 +65,6 @@ public class SplashActivity extends AppCompatActivity {
             public void onAdLoaded() {
                 btn_next.setVisibility(View.VISIBLE);
             }
-        });
+        },false);
     }
 }

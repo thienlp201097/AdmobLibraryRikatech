@@ -584,11 +584,36 @@ public class AdmodUtils {
             // Toast.makeText(activity, "Ad did not load", Toast.LENGTH_SHORT).show();
         }
     }
-    public void loadAdInterstitial(Context activity, String admobId, AdLoadCallback adLoadCallback) {
+    public void loadAdInterstitial(Context activity, String admobId, AdLoadCallback adLoadCallback, boolean enableLoadingDialog) {
+
+        AdmodUtils.getInstance().mInterstitialAd = null;
+        AdmodUtils.getInstance().isAdShowing = false;
+
         if (!isShowAds|| !isNetworkConnected(activity)) {
             adLoadCallback.onAdFail();
             return;
         }
+
+
+        if (AppOpenManager.getInstance().isInitialized()) {
+            if (!AppOpenManager.getInstance().isAppResumeEnabled) {
+                return;
+            } else {
+                isAdShowing = false;
+                if (AppOpenManager.getInstance().isInitialized()) {
+                    AppOpenManager.getInstance().isAppResumeEnabled = false;
+                }
+            }
+        }
+
+        if (enableLoadingDialog) {
+            dialog = new SweetAlertDialog(activity, SweetAlertDialog.PROGRESS_TYPE);
+            dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+            dialog.setTitleText("Loading ads. Please wait...");
+            dialog.setCancelable(false);
+            dialog.show();
+        }
+
         if (isTesting) {
             admobId = activity.getString(R.string.test_ads_admob_inter_id);
         } else {
@@ -645,13 +670,19 @@ public class AdmodUtils {
             }
             return;
         }
-        if (kInterstitialAd != null) {
             kInterstitialAd.setFullScreenContentCallback(
                     new FullScreenContentCallback() {
                         @Override
                         public void onAdDismissedFullScreenContent() {
+
                             adCallback.onEventClickAdClosed();
                             isAdShowing = false;
+                            if (AdmodUtils.getInstance().mInterstitialAd != null) {
+                                AdmodUtils.getInstance().mInterstitialAd = null;
+                            }
+                            if (AppOpenManager.getInstance().isInitialized()) {
+                                AppOpenManager.getInstance().isAppResumeEnabled = true;
+                            }
                             Log.d("TAG", "The ad was dismissed.");
                         }
 
@@ -659,9 +690,15 @@ public class AdmodUtils {
                         public void onAdFailedToShowFullScreenContent(AdError adError) {
                             adCallback.onAdFail();
                             isAdShowing = false;
-                            mInterstitialAd = null;
-
-                            Log.d("TAG", "The ad failed to show.");
+                            if (AppOpenManager.getInstance().isInitialized()) {
+                                AppOpenManager.getInstance().isAppResumeEnabled = true;
+                            }
+                            AdmodUtils.getInstance().isAdShowing = false;
+                            if (AdmodUtils.getInstance().mInterstitialAd != null) {
+                                AdmodUtils.getInstance().mInterstitialAd = null;
+                            }
+                            Log.e("Admodfail", "onAdFailedToLoad" + adError.getMessage());
+                            Log.e("Admodfail", "errorCodeAds" + adError.getCause());
                         }
 
                         @Override
@@ -669,13 +706,10 @@ public class AdmodUtils {
                             mInterstitialAd = null;
                             isAdShowing = true;
                             adCallback.onAdShowed();
-                            Log.d("TAG", "The ad was shown.");
+
                         }
                     });
             showInterstitialAd(activity,kInterstitialAd,adCallback);
-        } else {
-            adCallback.onAdFail();
-        }
     }
     public void showAdInterstitialWithCallback(InterstitialAd kInterstitialAd,Activity activity,AdCallbackNew adCallback) {
 
@@ -713,7 +747,7 @@ public class AdmodUtils {
                             public void onAdLoaded() {
                                 Log.d("TAG", "Ad loaded again success");
                             }
-                        });
+                        },false);
                         Log.d("TAG", "The ad failed to show.");
                     }
 
@@ -734,7 +768,7 @@ public class AdmodUtils {
                             public void onAdLoaded() {
                                 Log.d("TAG", "Ad loaded again success");
                             }
-                        });
+                        },false);
                     }
                 });
         showInterstitialAd(activity,kInterstitialAd,adCallback);
@@ -762,7 +796,7 @@ public class AdmodUtils {
     }
 
     public void loadAndShowAdInterstitialWithCallback(AppCompatActivity activity, String admobId, int limitTime, AdCallback adCallback, boolean enableLoadingDialog) {
-        AdmodUtils.getInstance().mRewardedAd = null;
+        AdmodUtils.getInstance().mInterstitialAd = null;
         AdmodUtils.getInstance().isAdShowing = false;
 
         if (!isShowAds|| !isNetworkConnected(activity)) {
