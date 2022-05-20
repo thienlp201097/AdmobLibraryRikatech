@@ -670,6 +670,7 @@ public class AdmodUtils {
                         public void onAdShowedFullScreenContent() {
                             mInterstitialAd = null;
                             isAdShowing = true;
+                            adCallback.onAdShowed();
                             Log.d("TAG", "The ad was shown.");
                         }
                     });
@@ -722,6 +723,8 @@ public class AdmodUtils {
                     public void onAdShowedFullScreenContent() {
                         mInterstitialAd = null;
                         isAdShowing = true;
+                        adCallback.onAdShowed();
+
                         Log.d("TAG", "The ad was shown.");
                         loadAdInterstitial(activity, idIntersitialReal, new AdLoadCallback() {
                             @Override
@@ -766,18 +769,6 @@ public class AdmodUtils {
     public void loadAndShowAdInterstitialWithCallback(AppCompatActivity activity, String admobId, int limitTime, AdCallback adCallback, boolean enableLoadingDialog) {
         AdmodUtils.getInstance().mRewardedAd = null;
         AdmodUtils.getInstance().isAdShowing = false;
-//        Handler handlerTimeOut = new Handler();
-//        handlerTimeOut.postDelayed(new Runnable() {
-//            public void run() {
-//                adCallback.onAdClosed();
-//                if (dialog != null) {
-//                    dialog.dismiss();
-//                }
-//                if (AppOpenManager.getInstance().isInitialized()) {
-//                    AppOpenManager.getInstance().isAppResumeEnabled = true;
-//                }
-//            }
-//        }, timeOut);
 
         if (!isShowAds|| !isNetworkConnected(activity)) {
             adCallback.onAdClosed();
