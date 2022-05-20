@@ -207,15 +207,6 @@ public class AdmodUtils {
             bannerId = activity.getString(R.string.test_ads_admob_banner_id);
         }
         mAdView.setAdUnitId(bannerId);
-//        if (size == GoogleEBanner.SIZE_SMALL) {
-//            mAdView.setAdSize(AdSize.BANNER);
-//        } else if (size == GoogleEBanner.SIZE_MEDIUM) {
-//            mAdView.setAdSize(AdSize.LARGE_BANNER);
-//        } else if (size == GoogleEBanner.SIZE_FULL) {
-//            mAdView.setAdSize(AdSize.FULL_BANNER);
-//        } else {
-//            mAdView.setAdSize(AdSize.SMART_BANNER);
-//        }
         AdSize adSize = getAdSize(activity);
 
         mAdView.setAdSize(adSize);
@@ -656,6 +647,14 @@ public class AdmodUtils {
 //                        activity, "onAdFailedToLoad() with error: " + error, Toast.LENGTH_SHORT)
 //                        .show();
                 adLoadCallback.onAdFail();
+                isAdShowing = false;
+                if (AppOpenManager.getInstance().isInitialized()) {
+                    AppOpenManager.getInstance().isAppResumeEnabled = true;
+                }
+                AdmodUtils.getInstance().isAdShowing = false;
+                if (AdmodUtils.getInstance().mInterstitialAd != null) {
+                    AdmodUtils.getInstance().mInterstitialAd = null;
+                }
             }
         });
     }
@@ -670,6 +669,8 @@ public class AdmodUtils {
             }
             return;
         }
+
+
             kInterstitialAd.setFullScreenContentCallback(
                     new FullScreenContentCallback() {
                         @Override
@@ -789,12 +790,6 @@ public class AdmodUtils {
             }
         }
     }
-    public void dismissAdDialog() {
-        if (AdmodUtils.getInstance().dialog != null && AdmodUtils.getInstance().dialog.isShowing()) {
-            AdmodUtils.getInstance().dialog.dismiss();
-        }
-    }
-
     public void loadAndShowAdInterstitialWithCallback(AppCompatActivity activity, String admobId, int limitTime, AdCallback adCallback, boolean enableLoadingDialog) {
         AdmodUtils.getInstance().mInterstitialAd = null;
         AdmodUtils.getInstance().isAdShowing = false;
@@ -905,7 +900,11 @@ public class AdmodUtils {
         });
 
     }
-
+    public void dismissAdDialog() {
+        if (AdmodUtils.getInstance().dialog != null && AdmodUtils.getInstance().dialog.isShowing()) {
+            AdmodUtils.getInstance().dialog.dismiss();
+        }
+    }
     private void checkIdTest(Activity activity, String admobId) {
         if (admobId.equals(activity.getString(R.string.test_ads_admob_inter_id)) && !BuildConfig.DEBUG) {
             if (dialog != null) {
@@ -931,7 +930,6 @@ public class AdmodUtils {
         String deviceId = md5(android_id).toUpperCase();
         return deviceId;
     }
-
     public String md5(String s) {
         try {
             // Create MD5 Hash
