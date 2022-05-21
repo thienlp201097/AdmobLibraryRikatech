@@ -786,11 +786,12 @@ public class AdmodUtils {
     private void showInterstitialAd(Activity activity, InterstitialAd mInterstitialAd, AdCallbackNew callback) {
         if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED) && mInterstitialAd != null) {
 
-            mInterstitialAd.show(activity);
             AdmodUtils.getInstance().isAdShowing = true;
             if (callback != null) {
                 callback.onAdClosed();
             }
+            mInterstitialAd.show(activity);
+
         } else {
             AdmodUtils.getInstance().isAdShowing = false;
             if (AppOpenManager.getInstance().isInitialized()) {
