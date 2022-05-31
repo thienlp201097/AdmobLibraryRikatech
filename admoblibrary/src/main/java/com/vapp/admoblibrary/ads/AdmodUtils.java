@@ -805,6 +805,9 @@ public class AdmodUtils {
         AdmodUtils.getInstance().mInterstitialAd = null;
         AdmodUtils.getInstance().isAdShowing = false;
 
+        if(adRequest == null){
+            initAdRequest(timeOut);
+        }
         if (!isShowAds|| !isNetworkConnected(activity)) {
             adCallback.onAdClosed();
 //            handlerTimeOut.removeCallbacksAndMessages(null);
