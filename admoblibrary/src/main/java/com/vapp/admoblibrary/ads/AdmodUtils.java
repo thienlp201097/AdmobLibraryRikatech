@@ -379,7 +379,9 @@ public class AdmodUtils {
             adCallback2.onAdClosed();
             return;
         }
-
+        if(adRequest == null){
+            initAdRequest(timeOut);
+        }
 
         if (isTesting) {
             admobId = activity.getString(R.string.test_ads_admob_reward_id);
@@ -397,6 +399,7 @@ public class AdmodUtils {
         if (AppOpenManager.getInstance().isInitialized()) {
             AppOpenManager.getInstance().isAppResumeEnabled = false;
         }
+
 
         RewardedAd.load(activity, admobId,
                 adRequest, new RewardedAdLoadCallback() {
@@ -459,20 +462,25 @@ public class AdmodUtils {
                                 }
                             });
 
-
                             if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
                                 if (AppOpenManager.getInstance().isInitialized()) {
                                     AppOpenManager.getInstance().isAppResumeEnabled = false;
 
                                 }
-                                isAdShowing = true;
                                 mRewardedAd.show(activity, new OnUserEarnedRewardListener() {
                                     @Override
                                     public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
                                         adCallback2.onEarned();
                                     }
                                 });
-
+                                isAdShowing = true;
+                            }else{
+                                mRewardedAd = null;
+                                dismissAdDialog();
+                                AdmodUtils.getInstance().isAdShowing = false;
+                                if (AppOpenManager.getInstance().isInitialized()) {
+                                    AppOpenManager.getInstance().isAppResumeEnabled = true;
+                                }
                             }
 
                         } else {
