@@ -13,7 +13,7 @@ android {
         targetSdkVersion 30
         versionCode 8
         versionName "1.0"
-        multiDexEnabled true
+        multiDexEnabled false
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 

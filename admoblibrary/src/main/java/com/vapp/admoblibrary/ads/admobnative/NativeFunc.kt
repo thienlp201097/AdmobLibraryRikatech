@@ -44,7 +44,7 @@ class NativeFunc {
             }
             if (nativeAd.mediaContent != null) {
                 if (size == GoogleENative.UNIFIED_MEDIUM) {
-                    adView.mediaView.setMediaContent(nativeAd.mediaContent)
+                    adView.mediaView!!.setMediaContent(nativeAd.mediaContent!!)
                 }
             }
 
@@ -52,28 +52,28 @@ class NativeFunc {
                 (adView.headlineView as TextView).text = nativeAd.headline
             }
             if (nativeAd.body == null) {
-                adView.bodyView.visibility = View.INVISIBLE
+                adView.bodyView!!.visibility = View.INVISIBLE
             } else {
-                adView.bodyView.visibility = View.VISIBLE
+                adView.bodyView!!.visibility = View.VISIBLE
                 (adView.bodyView as TextView).text = nativeAd.body
             }
             if (nativeAd.callToAction == null) {
-                adView.callToActionView.visibility = View.INVISIBLE
+                adView.callToActionView!!.visibility = View.INVISIBLE
 
             }else{
-                adView.callToActionView.visibility = View.VISIBLE
+                adView.callToActionView!!.visibility = View.VISIBLE
                 (adView.callToActionView as Button).text = nativeAd.callToAction
             }
 
 
             if (adView.iconView != null) {
                 if (nativeAd.icon == null) {
-                    adView.iconView.visibility = View.GONE
+                    adView!!.iconView!!.visibility = View.GONE
                 } else {
                     (adView.iconView as ImageView).setImageDrawable(
-                        nativeAd.icon.drawable
+                        nativeAd!!.icon!!.drawable
                     )
-                    adView.iconView.visibility = View.VISIBLE
+                    adView!!.iconView!!.visibility = View.VISIBLE
                 }
             }
 
@@ -83,7 +83,7 @@ class NativeFunc {
 
             adView.setNativeAd(nativeAd)
 
-            val vc = nativeAd.mediaContent.videoController
+            val vc = nativeAd.mediaContent!!.videoController
             if (vc.hasVideoContent()) {
                 vc.videoLifecycleCallbacks = object : VideoController.VideoLifecycleCallbacks() {
                     override fun onVideoEnd() {
