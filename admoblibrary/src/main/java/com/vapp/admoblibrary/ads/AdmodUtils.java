@@ -911,11 +911,11 @@ public class AdmodUtils {
             public void onAdFailedToLoad(@NonNull @org.jetbrains.annotations.NotNull LoadAdError loadAdError) {
                 super.onAdFailedToLoad(loadAdError);
                 mInterstitialAd = null;
+                adCallback.onAdFail();
                 if (AppOpenManager.getInstance().isInitialized()) {
                     AppOpenManager.getInstance().isAppResumeEnabled = true;
                 }
                 AdmodUtils.getInstance().isAdShowing = false;
-                adCallback.onAdFail();
                 dismissAdDialog();
 
             }
