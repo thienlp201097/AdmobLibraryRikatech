@@ -923,7 +923,7 @@ public class AdmodUtils {
 
     }
 
-    public void loadAndShowAdInterstitialWithCallbackMultiAds(AppCompatActivity activity, String admobId, AdCallback adCallback, boolean enableLoadingDialog) {
+    public void loadAndShowAdInterstitialWithCallbackMultiAds(AppCompatActivity activity, String admobId,String admobId2,String admobId3, AdCallback adCallback, boolean enableLoadingDialog) {
         AdmodUtils.getInstance().mInterstitialAd = null;
         AdmodUtils.getInstance().isAdShowing = false;
 
@@ -961,7 +961,9 @@ public class AdmodUtils {
             checkIdTest(activity, admobId);
         }
 
-        String finalAdmobId = admobId;
+        String finalAdmobId2 = admobId2;
+        String finalAdmobId3 = admobId3;
+
         InterstitialAd.load(activity, admobId, adRequest, new InterstitialAdLoadCallback() {
             @Override
             public void onAdLoaded(@NonNull @org.jetbrains.annotations.NotNull InterstitialAd interstitialAd) {
@@ -1026,13 +1028,13 @@ public class AdmodUtils {
             public void onAdFailedToLoad(@NonNull @org.jetbrains.annotations.NotNull LoadAdError loadAdError) {
                 super.onAdFailedToLoad(loadAdError);
                 mInterstitialAd = null;
-                loadAndShowAdInterstitialWithCallback2(activity, finalAdmobId, adCallback, enableLoadingDialog);
+                loadAndShowAdInterstitialWithCallback2(activity, finalAdmobId2, finalAdmobId3, adCallback);
             }
         });
 
     }
 
-    public void loadAndShowAdInterstitialWithCallback2(AppCompatActivity activity, String admobId,  AdCallback adCallback, boolean enableLoadingDialog) {
+    public void loadAndShowAdInterstitialWithCallback2(AppCompatActivity activity, String admobId, String admobId3,  AdCallback adCallback) {
         AdmodUtils.getInstance().mInterstitialAd = null;
         AdmodUtils.getInstance().isAdShowing = false;
 
@@ -1062,7 +1064,7 @@ public class AdmodUtils {
             checkIdTest(activity, admobId);
         }
 
-        String finalAdmobId = admobId;
+        String finalAdmobId = admobId3;
         InterstitialAd.load(activity, admobId, adRequest, new InterstitialAdLoadCallback() {
             @Override
             public void onAdLoaded(@NonNull @org.jetbrains.annotations.NotNull InterstitialAd interstitialAd) {
@@ -1127,13 +1129,13 @@ public class AdmodUtils {
             public void onAdFailedToLoad(@NonNull @org.jetbrains.annotations.NotNull LoadAdError loadAdError) {
                 super.onAdFailedToLoad(loadAdError);
                 mInterstitialAd = null;
-                loadAndShowAdInterstitialWithCallback3(activity, finalAdmobId, adCallback, enableLoadingDialog);
+                loadAndShowAdInterstitialWithCallback3(activity, finalAdmobId, adCallback);
 
             }
         });
 
     }
-    public void loadAndShowAdInterstitialWithCallback3(AppCompatActivity activity, String admobId,  AdCallback adCallback, boolean enableLoadingDialog) {
+    public void loadAndShowAdInterstitialWithCallback3(AppCompatActivity activity, String admobId,  AdCallback adCallback) {
         AdmodUtils.getInstance().mInterstitialAd = null;
         AdmodUtils.getInstance().isAdShowing = false;
 
