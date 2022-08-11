@@ -1028,6 +1028,9 @@ public class AdmodUtils {
             public void onAdFailedToLoad(@NonNull @org.jetbrains.annotations.NotNull LoadAdError loadAdError) {
                 super.onAdFailedToLoad(loadAdError);
                 mInterstitialAd = null;
+                if (AppOpenManager.getInstance().isInitialized()) {
+                    AppOpenManager.getInstance().isAppResumeEnabled = true;
+                }
                 loadAndShowAdInterstitialWithCallback2(activity, finalAdmobId2, finalAdmobId3, adCallback);
             }
         });
@@ -1129,6 +1132,9 @@ public class AdmodUtils {
             public void onAdFailedToLoad(@NonNull @org.jetbrains.annotations.NotNull LoadAdError loadAdError) {
                 super.onAdFailedToLoad(loadAdError);
                 mInterstitialAd = null;
+                if (AppOpenManager.getInstance().isInitialized()) {
+                    AppOpenManager.getInstance().isAppResumeEnabled = true;
+                }
                 loadAndShowAdInterstitialWithCallback3(activity, finalAdmobId, adCallback);
 
             }
