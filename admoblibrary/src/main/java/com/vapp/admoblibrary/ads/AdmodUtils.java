@@ -929,7 +929,7 @@ public class AdmodUtils {
         if(adRequest == null){
             initAdRequest(timeOut);
         }
-        if (!isShowAds) {
+        if (!isShowAds|| !isNetworkConnected(activity)) {
             adCallback.onAdClosed();
 //            handlerTimeOut.removeCallbacksAndMessages(null);
             return;
@@ -1047,7 +1047,7 @@ public class AdmodUtils {
         if(adRequest == null){
             initAdRequest(timeOut);
         }
-        if (!isShowAds) {
+        if (!isShowAds|| !isNetworkConnected(activity)) {
             adCallback.onAdClosed();
 //            handlerTimeOut.removeCallbacksAndMessages(null);
             return;
@@ -1156,7 +1156,7 @@ public class AdmodUtils {
         if(adRequest == null){
             initAdRequest(timeOut);
         }
-        if (!isShowAds) {
+        if (!isShowAds|| !isNetworkConnected(activity)) {
             adCallback.onAdClosed();
 //            handlerTimeOut.removeCallbacksAndMessages(null);
             return;
