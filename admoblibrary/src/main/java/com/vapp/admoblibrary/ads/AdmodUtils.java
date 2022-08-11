@@ -926,11 +926,11 @@ public class AdmodUtils {
     public void loadAndShowAdInterstitialWithCallbackMultiAds(AppCompatActivity activity, String admobId,String admobId2,String admobId3, AdCallback adCallback, boolean enableLoadingDialog) {
         AdmodUtils.getInstance().mInterstitialAd = null;
         AdmodUtils.getInstance().isAdShowing = false;
-
+        Toast.makeText(activity, "load 1", Toast.LENGTH_SHORT).show();
         if(adRequest == null){
             initAdRequest(timeOut);
         }
-        if (!isShowAds|| !isNetworkConnected(activity)) {
+        if (!isShowAds) {
             adCallback.onAdClosed();
 //            handlerTimeOut.removeCallbacksAndMessages(null);
             return;
@@ -938,6 +938,8 @@ public class AdmodUtils {
 
         if (AppOpenManager.getInstance().isInitialized()) {
             if (!AppOpenManager.getInstance().isAppResumeEnabled) {
+                Toast.makeText(activity, "return 1", Toast.LENGTH_SHORT).show();
+
                 return;
             } else {
                 isAdShowing = false;
@@ -968,6 +970,8 @@ public class AdmodUtils {
             @Override
             public void onAdLoaded(@NonNull @org.jetbrains.annotations.NotNull InterstitialAd interstitialAd) {
                 super.onAdLoaded(interstitialAd);
+                Toast.makeText(activity, "onAdLoaded 1", Toast.LENGTH_SHORT).show();
+
                 new Handler(Looper.getMainLooper()).postDelayed(() -> {
                     mInterstitialAd = interstitialAd;
                     if (mInterstitialAd != null) {
@@ -1027,6 +1031,8 @@ public class AdmodUtils {
             @Override
             public void onAdFailedToLoad(@NonNull @org.jetbrains.annotations.NotNull LoadAdError loadAdError) {
                 super.onAdFailedToLoad(loadAdError);
+                Toast.makeText(activity, "onAdFailedToLoad 1", Toast.LENGTH_SHORT).show();
+
                 mInterstitialAd = null;
                 if (AppOpenManager.getInstance().isInitialized()) {
                     AppOpenManager.getInstance().isAppResumeEnabled = true;
@@ -1041,10 +1047,12 @@ public class AdmodUtils {
         AdmodUtils.getInstance().mInterstitialAd = null;
         AdmodUtils.getInstance().isAdShowing = false;
 
+        Toast.makeText(activity, "load 2", Toast.LENGTH_SHORT).show();
+
         if(adRequest == null){
             initAdRequest(timeOut);
         }
-        if (!isShowAds|| !isNetworkConnected(activity)) {
+        if (!isShowAds) {
             adCallback.onAdClosed();
 //            handlerTimeOut.removeCallbacksAndMessages(null);
             return;
@@ -1052,6 +1060,8 @@ public class AdmodUtils {
 
         if (AppOpenManager.getInstance().isInitialized()) {
             if (!AppOpenManager.getInstance().isAppResumeEnabled) {
+                Toast.makeText(activity, "return 2", Toast.LENGTH_SHORT).show();
+
                 return;
             } else {
                 isAdShowing = false;
@@ -1072,6 +1082,8 @@ public class AdmodUtils {
             @Override
             public void onAdLoaded(@NonNull @org.jetbrains.annotations.NotNull InterstitialAd interstitialAd) {
                 super.onAdLoaded(interstitialAd);
+                Toast.makeText(activity, "onAdLoaded 2", Toast.LENGTH_SHORT).show();
+
                 new Handler(Looper.getMainLooper()).postDelayed(() -> {
                     mInterstitialAd = interstitialAd;
                     if (mInterstitialAd != null) {
@@ -1131,6 +1143,10 @@ public class AdmodUtils {
             @Override
             public void onAdFailedToLoad(@NonNull @org.jetbrains.annotations.NotNull LoadAdError loadAdError) {
                 super.onAdFailedToLoad(loadAdError);
+
+                Toast.makeText(activity, "onAdFailedToLoad 2", Toast.LENGTH_SHORT).show();
+
+
                 mInterstitialAd = null;
                 if (AppOpenManager.getInstance().isInitialized()) {
                     AppOpenManager.getInstance().isAppResumeEnabled = true;
@@ -1145,10 +1161,12 @@ public class AdmodUtils {
         AdmodUtils.getInstance().mInterstitialAd = null;
         AdmodUtils.getInstance().isAdShowing = false;
 
+        Toast.makeText(activity, "load 3", Toast.LENGTH_SHORT).show();
+
         if(adRequest == null){
             initAdRequest(timeOut);
         }
-        if (!isShowAds|| !isNetworkConnected(activity)) {
+        if (!isShowAds) {
             adCallback.onAdClosed();
 //            handlerTimeOut.removeCallbacksAndMessages(null);
             return;
@@ -1156,6 +1174,8 @@ public class AdmodUtils {
 
         if (AppOpenManager.getInstance().isInitialized()) {
             if (!AppOpenManager.getInstance().isAppResumeEnabled) {
+                Toast.makeText(activity, "return 3", Toast.LENGTH_SHORT).show();
+
                 return;
             } else {
                 isAdShowing = false;
@@ -1175,6 +1195,10 @@ public class AdmodUtils {
             @Override
             public void onAdLoaded(@NonNull @org.jetbrains.annotations.NotNull InterstitialAd interstitialAd) {
                 super.onAdLoaded(interstitialAd);
+
+                Toast.makeText(activity, "onAdLoaded 3", Toast.LENGTH_SHORT).show();
+
+
                 new Handler(Looper.getMainLooper()).postDelayed(() -> {
                     mInterstitialAd = interstitialAd;
                     if (mInterstitialAd != null) {
@@ -1234,6 +1258,10 @@ public class AdmodUtils {
             @Override
             public void onAdFailedToLoad(@NonNull @org.jetbrains.annotations.NotNull LoadAdError loadAdError) {
                 super.onAdFailedToLoad(loadAdError);
+
+                Toast.makeText(activity, "onAdFailedToLoad 3", Toast.LENGTH_SHORT).show();
+
+
                 mInterstitialAd = null;
                 if (AppOpenManager.getInstance().isInitialized()) {
                     AppOpenManager.getInstance().isAppResumeEnabled = true;

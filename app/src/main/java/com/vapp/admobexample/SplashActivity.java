@@ -24,10 +24,21 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
         AppCompatButton btn_next = findViewById(R.id.btn_next);
-        btn_next.setOnClickListener(new View.OnClickListener() {
+        AdmodUtils.getInstance().loadAndShowAdInterstitialWithCallbackMultiAds(this, "", "", "", new AdCallback() {
             @Override
-            public void onClick(View view) {
-                AppOpenManager.getInstance().showAdIfAvailable(false);
+            public void onAdClosed() {
+
+            }
+
+            @Override
+            public void onAdFail() {
+
+            }
+        },true);
+//        btn_next.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                AppOpenManager.getInstance().showAdIfAvailable(false);
 //                if(AdmodUtils.getInstance().mInterstitialAd != null) {
 //                    AdmodUtils.getInstance().showAdInterstitialWithCallbackNotLoad(AdmodUtils.getInstance().mInterstitialAd, SplashActivity.this, new AdCallbackNew() {
 //                        @Override
@@ -55,7 +66,7 @@ public class SplashActivity extends AppCompatActivity {
 //                    Utils.getInstance().replaceActivity(SplashActivity.this, MainActivity.class);
 //                }
             }
-        });
+        }
 
 //        AdmodUtils.getInstance().loadAdInterstitial(this, getString(R.string.test_ads_admob_inter_id), new AdLoadCallback() {
 //            @Override
@@ -68,5 +79,4 @@ public class SplashActivity extends AppCompatActivity {
 //                btn_next.setVisibility(View.VISIBLE);
 //            }
 //        },false);
-    }
-}
+
