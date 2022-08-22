@@ -1039,7 +1039,7 @@ public class AdmodUtils {
 
     }
 
-    public void loadAndShowAdInterstitialWithCallback2(AppCompatActivity activity, String admobId, String admobId3,  AdCallback adCallback) {
+    private void loadAndShowAdInterstitialWithCallback2(AppCompatActivity activity, String admobId, String admobId3,  AdCallback adCallback) {
         AdmodUtils.getInstance().mInterstitialAd = null;
         AdmodUtils.getInstance().isAdShowing = false;
 
@@ -1148,7 +1148,7 @@ public class AdmodUtils {
         });
 
     }
-    public void loadAndShowAdInterstitialWithCallback3(AppCompatActivity activity, String admobId,  AdCallback adCallback) {
+    private void loadAndShowAdInterstitialWithCallback3(AppCompatActivity activity, String admobId,  AdCallback adCallback) {
         AdmodUtils.getInstance().mInterstitialAd = null;
         AdmodUtils.getInstance().isAdShowing = false;
 

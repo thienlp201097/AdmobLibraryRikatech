@@ -28,13 +28,15 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onAdClosed() {
 
+                Utils.getInstance().replaceActivity(SplashActivity.this, MainActivity.class);
             }
 
             @Override
             public void onAdFail() {
+                Utils.getInstance().replaceActivity(SplashActivity.this, MainActivity.class);
 
             }
-        },true);
+        },false);
 //        btn_next.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
