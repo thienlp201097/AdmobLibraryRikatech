@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.vapp.admoblibrary.ads.AdmodUtils;
 import com.vapp.admoblibrary.ads.NativeAdCallback;
+import com.vapp.admoblibrary.ads.admobnative.enumclass.GoogleENative;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -108,7 +109,7 @@ public class SectionedGridRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
                     mContext,
                     admobid,
                     ((SectionViewHolder)sectionViewHolder).ads,
-                    layoutCustom,
+                    layoutCustom, GoogleENative.UNIFIED_MEDIUM,
                     new NativeAdCallback() {
                         @Override
                         public void onNativeAdLoaded() {

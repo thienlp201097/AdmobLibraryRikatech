@@ -64,7 +64,7 @@ class GoogleNativeAdAdapter(private val mParam: Param) :
             AdmodUtils.getInstance().loadNativeAdsWithLayout(mParam.activity!!,
                 idAdmob,
                 holder.adFrame,
-                mParam.layout, object : NativeAdCallback {
+                mParam.layout, GoogleENative.UNIFIED_MEDIUM,object : NativeAdCallback {
                     override fun onNativeAdLoaded() {}
                     override fun onAdFail() {}
                 })
