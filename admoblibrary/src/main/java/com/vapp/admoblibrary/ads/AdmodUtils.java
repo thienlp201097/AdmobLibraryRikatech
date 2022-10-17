@@ -1278,20 +1278,20 @@ public class AdmodUtils {
         }
     }
     private void checkIdTest(Activity activity, String admobId) {
-        if (admobId.equals(activity.getString(R.string.test_ads_admob_inter_id)) && !BuildConfig.DEBUG) {
-            if (dialog != null) {
-                dialog.dismiss();
-            }
-            Utils.getInstance().showDialogTitle(activity, "Warning", "Build bản release nhưng đang để id test ads", "Đã biết", DialogType.WARNING_TYPE, false, "", new DialogCallback() {
-                @Override
-                public void onClosed() {
-                }
-
-                @Override
-                public void cancel() {
-                }
-            });
-        }
+//        if (admobId.equals(activity.getString(R.string.test_ads_admob_inter_id)) && !BuildConfig.DEBUG) {
+//            if (dialog != null) {
+//                dialog.dismiss();
+//            }
+//            Utils.getInstance().showDialogTitle(activity, "Warning", "Build bản release nhưng đang để id test ads", "Đã biết", DialogType.WARNING_TYPE, false, "", new DialogCallback() {
+//                @Override
+//                public void onClosed() {
+//                }
+//
+//                @Override
+//                public void cancel() {
+//                }
+//            });
+//        }
     }
 
     private long getCurrentTime() {
