@@ -215,20 +215,20 @@ public class AdmodUtils {
         viewGroup.addView(tagView, 0);
         viewGroup.addView(mAdView, 1);
         ShimmerFrameLayout shimmerFrameLayout = tagView.findViewById(R.id.shimmer_view_container);
-        shimmerFrameLayout.startShimmerAnimation();
+        shimmerFrameLayout.startShimmer();
 
 
         mAdView.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
-                shimmerFrameLayout.stopShimmerAnimation();
+                shimmerFrameLayout.stopShimmer();
                 viewGroup.removeView(tagView);
             }
 
             @Override
             public void onAdFailedToLoad(LoadAdError adError) {
                 Log.e(" Admod", "failloadbanner" + adError.getMessage());
-                shimmerFrameLayout.stopShimmerAnimation();
+                shimmerFrameLayout.stopShimmer();
                 viewGroup.removeView(tagView);
             }
 
@@ -276,7 +276,7 @@ public class AdmodUtils {
         }
         viewGroup.addView(tagView, 0);
         ShimmerFrameLayout shimmerFrameLayout = tagView.findViewById(R.id.shimmer_view_container);
-        shimmerFrameLayout.startShimmerAnimation();
+        shimmerFrameLayout.startShimmer();
 
         if (!isShowAds|| !isNetworkConnected(activity)) {
             viewGroup.setVisibility(View.GONE);
@@ -300,7 +300,7 @@ public class AdmodUtils {
 
                         NativeFunc.Companion.populateNativeAdView(nativeAd, adView, GoogleENative.UNIFIED_MEDIUM);
 
-                        shimmerFrameLayout.stopShimmerAnimation();
+                        shimmerFrameLayout.stopShimmer();
                         viewGroup.removeAllViews();
                         viewGroup.addView(adView);
                         //viewGroup.setVisibility(View.VISIBLE);
@@ -311,7 +311,7 @@ public class AdmodUtils {
                     public void onAdFailedToLoad(LoadAdError adError) {
                         Log.e("Admodfail", "onAdFailedToLoad" + adError.getMessage());
                         Log.e("Admodfail", "errorCodeAds" + adError.getCause());
-                        shimmerFrameLayout.stopShimmerAnimation();
+                        shimmerFrameLayout.stopShimmer();
                         viewGroup.removeAllViews();
                         adCallback.onAdFail();
                     }
@@ -334,7 +334,7 @@ public class AdmodUtils {
         }
         viewGroup.addView(tagView, 0);
         ShimmerFrameLayout shimmerFrameLayout = tagView.findViewById(R.id.shimmer_view_container);
-        shimmerFrameLayout.startShimmerAnimation();
+        shimmerFrameLayout.startShimmer();
         if (!isShowAds || !isNetworkConnected(activity)) {
             viewGroup.setVisibility(View.GONE);
             return;
@@ -362,7 +362,7 @@ public class AdmodUtils {
                                 .inflate(id, null);
 
                         NativeFunc.Companion.populateNativeAdView(nativeAd, adView, size);
-                        shimmerFrameLayout.stopShimmerAnimation();
+                        shimmerFrameLayout.stopShimmer();
                         viewGroup.removeAllViews();
                         viewGroup.addView(adView);
                         //viewGroup.setVisibility(View.VISIBLE);
@@ -374,7 +374,7 @@ public class AdmodUtils {
                     public void onAdFailedToLoad(LoadAdError adError) {
                         Log.e("Admodfail", "onAdFailedToLoad" + adError.getMessage());
                         Log.e("Admodfail", "errorCodeAds" + adError.getCause());
-                        shimmerFrameLayout.stopShimmerAnimation();
+                        shimmerFrameLayout.stopShimmer();
                         viewGroup.removeAllViews();
                         adCallback.onAdFail();
                     }
@@ -629,21 +629,6 @@ public class AdmodUtils {
 
         if (isTesting) {
             admobId = activity.getString(R.string.test_ads_admob_inter_id);
-        } else {
-            if (admobId.equals(activity.getString(R.string.test_ads_admob_inter_id)) && !BuildConfig.DEBUG) {
-
-                Utils.getInstance().showDialogTitle(activity, "Warning", "Build bản release nhưng đang để id test ads", "Đã biết", DialogType.WARNING_TYPE, false, "", new DialogCallback() {
-                    @Override
-                    public void onClosed() {
-
-                    }
-
-                    @Override
-                    public void cancel() {
-
-                    }
-                });
-            }
         }
         if(adRequest == null){
             initAdRequest(timeOut);
