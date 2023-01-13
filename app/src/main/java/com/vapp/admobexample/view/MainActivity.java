@@ -20,6 +20,7 @@ import com.vapp.admobexample.utilsdemp.UtilsDemoActivity;
 import com.vapp.admoblibrary.ads.AdCallbackNew;
 import com.vapp.admoblibrary.ads.AdLoadCallback;
 import com.vapp.admoblibrary.ads.NativeAdCallback;
+import com.vapp.admoblibrary.ads.admobnative.enumclass.CollapsibleBanner;
 import com.vapp.admoblibrary.ads.admobnative.enumclass.GoogleEBanner;
 import com.vapp.admoblibrary.ads.admobnative.enumclass.GoogleENative;
 import com.vapp.admobexample.R;
@@ -82,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onAdFail() {
 
                     }
-                },false);
+                }, false);
 
             }
         });
@@ -253,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         //AdmodUtils.getInstance().loadAdBanner(MainActivity.this, getString(R.string.test_ads_admob_banner_id), banner);
-        AdmodUtils.getInstance().loadAdBannerCollapsible(MainActivity.this, getString(R.string.test_ads_admob_banner_id), banner);
+        AdmodUtils.getInstance().loadAdBannerCollapsible(MainActivity.this, getString(R.string.test_ads_admob_banner_id), CollapsibleBanner.BOTTOM, banner);
     }
 
     private void showDialogRate() {
