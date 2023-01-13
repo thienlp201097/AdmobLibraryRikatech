@@ -304,7 +304,7 @@ public class AdmodUtils {
             }
         });
         Bundle extras = new Bundle();
-        extras.putString("collapsible", "top");
+        extras.putString("collapsible", "bottom");
         AdRequest adRequest2 = new AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter.class, extras)
                 .build();
         if (adRequest2 != null) {
