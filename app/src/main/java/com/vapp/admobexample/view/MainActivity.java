@@ -252,7 +252,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        AdmodUtils.getInstance().loadAdBanner(MainActivity.this, getString(R.string.test_ads_admob_banner_id), banner);
+        //AdmodUtils.getInstance().loadAdBanner(MainActivity.this, getString(R.string.test_ads_admob_banner_id), banner);
+        AdmodUtils.getInstance().loadAdBannerCollapsible(MainActivity.this, getString(R.string.test_ads_admob_banner_id), banner);
     }
 
     private void showDialogRate() {

@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
@@ -24,6 +25,7 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ProcessLifecycleOwner;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd;
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoadCallback;
 import com.vapp.admoblibrary.BuildConfig;
@@ -251,6 +253,64 @@ public class AdmodUtils {
         if (adRequest != null) {
             mAdView.loadAd(adRequest);
         }
+        Log.e(" Admod", "loadAdBanner");
+    }
+    public void loadAdBannerCollapsible( Activity activity, String bannerId, ViewGroup viewGroup) {
+        if (!isShowAds|| !isNetworkConnected(activity)) {
+            viewGroup.setVisibility(View.GONE);
+            return;
+        }
+        AdView mAdView = new AdView(activity);
+        if (isTesting) {
+            bannerId = activity.getString(R.string.test_ads_admob_banner_id);
+        }
+        mAdView.setAdUnitId(bannerId);
+        AdSize adSize = getAdSize(activity);
+        mAdView.setAdSize(adSize);
+        viewGroup.removeAllViews();
+        View tagView = activity.getLayoutInflater().inflate(R.layout.layoutbanner_loading, null, false);
+        viewGroup.addView(tagView, 0);
+        viewGroup.addView(mAdView, 1);
+        ShimmerFrameLayout shimmerFrameLayout = tagView.findViewById(R.id.shimmer_view_container);
+        shimmerFrameLayout.startShimmer();
+
+        mAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                shimmerFrameLayout.stopShimmer();
+                viewGroup.removeView(tagView);
+            }
+
+            @Override
+            public void onAdFailedToLoad(LoadAdError adError) {
+                Log.e(" Admod", "failloadbanner" + adError.getMessage());
+                shimmerFrameLayout.stopShimmer();
+                viewGroup.removeView(tagView);
+            }
+
+            @Override
+            public void onAdOpened() {
+            }
+
+            @Override
+            public void onAdClicked() {
+                // Code to be executed when the user clicks on an ad.
+            }
+
+            @Override
+            public void onAdClosed() {
+                // Code to be executed when the user is about to return
+                // to the app after tapping on an ad.
+            }
+        });
+        Bundle extras = new Bundle();
+        extras.putString("collapsible", "top");
+        AdRequest adRequest2 = new AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter.class, extras)
+                .build();
+        if (adRequest2 != null) {
+            mAdView.loadAd(adRequest2);
+        }
+
         Log.e(" Admod", "loadAdBanner");
     }
 
