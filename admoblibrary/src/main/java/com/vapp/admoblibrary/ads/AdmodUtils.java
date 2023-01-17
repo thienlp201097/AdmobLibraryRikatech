@@ -54,6 +54,7 @@ import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.vapp.admoblibrary.R;
 import com.vapp.admoblibrary.ads.admobnative.NativeFunc;
 import com.vapp.admoblibrary.ads.model.AdUnitListModel;
+import com.vapp.admoblibrary.ads.model.BannerAdCallback;
 import com.vapp.admoblibrary.utils.DialogCallback;
 import com.vapp.admoblibrary.utils.DialogType;
 import com.vapp.admoblibrary.utils.SweetAlert.SweetAlertDialog;
@@ -259,7 +260,7 @@ public class AdmodUtils {
         Log.e(" Admod", "loadAdBanner");
     }
 
-    public void loadAdBannerCollapsible(Activity activity, String bannerId, CollapsibleBanner collapsibleBannersize, ViewGroup viewGroup) {
+    public void loadAdBannerCollapsible(Activity activity, String bannerId, CollapsibleBanner collapsibleBannersize, ViewGroup viewGroup, BannerAdCallback callback) {
         if (!isShowAds || !isNetworkConnected(activity)) {
             viewGroup.setVisibility(View.GONE);
             return;
@@ -283,6 +284,7 @@ public class AdmodUtils {
             public void onAdLoaded() {
                 shimmerFrameLayout.stopShimmer();
                 viewGroup.removeView(tagView);
+                callback.onBannerAdLoaded(adSize);
             }
 
             @Override
@@ -290,6 +292,7 @@ public class AdmodUtils {
                 Log.e(" Admod", "failloadbanner" + adError.getMessage());
                 shimmerFrameLayout.stopShimmer();
                 viewGroup.removeView(tagView);
+                callback.onAdFail();
             }
 
             @Override

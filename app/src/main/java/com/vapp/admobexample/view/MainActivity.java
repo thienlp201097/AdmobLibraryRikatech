@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.codemybrainsout.ratingdialog.MaybeLaterCallback;
 import com.codemybrainsout.ratingdialog.RatingDialog;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.gms.ads.AdSize;
 import com.vapp.admobexample.SplashActivity;
 import com.vapp.admobexample.utilsdemp.UtilsDemoActivity;
 import com.vapp.admoblibrary.ads.AdCallbackNew;
@@ -27,6 +28,7 @@ import com.vapp.admobexample.R;
 import com.vapp.admobexample.iap.IAPActivity;
 import com.vapp.admoblibrary.ads.model.AdUnitListModel;
 import com.vapp.admoblibrary.ads.model.AdsConfigModel;
+import com.vapp.admoblibrary.ads.model.BannerAdCallback;
 import com.vapp.admoblibrary.utils.Utils;
 import com.vapp.admoblibrary.ads.AdCallback;
 import com.vapp.admoblibrary.ads.AdmodUtils;
@@ -254,7 +256,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         //AdmodUtils.getInstance().loadAdBanner(MainActivity.this, getString(R.string.test_ads_admob_banner_id), banner);
-        AdmodUtils.getInstance().loadAdBannerCollapsible(MainActivity.this, getString(R.string.test_ads_admob_banner_id), CollapsibleBanner.BOTTOM, banner);
+        AdmodUtils.getInstance().loadAdBannerCollapsible(MainActivity.this, getString(R.string.test_ads_admob_banner_id), CollapsibleBanner.BOTTOM, banner, new BannerAdCallback() {
+            @Override
+            public void onBannerAdLoaded(AdSize adSize) {
+                Toast.makeText(MainActivity.this, String.valueOf(adSize.getHeight()), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAdFail() {
+
+            }
+        });
     }
 
     private void showDialogRate() {
