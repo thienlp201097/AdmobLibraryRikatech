@@ -24,19 +24,21 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
         AppCompatButton btn_next = findViewById(R.id.btn_next);
-        AdmodUtils.getInstance().loadAndShowAdInterstitialWithCallbackMultiAds(this, "", "", "", new AdCallback() {
-            @Override
-            public void onAdClosed() {
+        Utils.getInstance().replaceActivity(SplashActivity.this, MainActivity.class);
 
-                Utils.getInstance().replaceActivity(SplashActivity.this, MainActivity.class);
-            }
-
-            @Override
-            public void onAdFail() {
-                Utils.getInstance().replaceActivity(SplashActivity.this, MainActivity.class);
-
-            }
-        },false);
+//        AdmodUtils.getInstance().loadAndShowAdInterstitialWithCallbackMultiAds(this, "", "", "", new AdCallback() {
+//            @Override
+//            public void onAdClosed() {
+//
+//                Utils.getInstance().replaceActivity(SplashActivity.this, MainActivity.class);
+//            }
+//
+//            @Override
+//            public void onAdFail() {
+//                Utils.getInstance().replaceActivity(SplashActivity.this, MainActivity.class);
+//
+//            }
+//        },false);
 //        btn_next.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {

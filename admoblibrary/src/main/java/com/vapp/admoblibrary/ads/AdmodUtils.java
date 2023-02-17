@@ -505,7 +505,6 @@ public class AdmodUtils {
                         AdmodUtils.getInstance().isAdShowing = false;
                         Log.e("Admodfail", "onAdFailedToLoad" + loadAdError.getMessage());
                         Log.e("Admodfail", "errorCodeAds" + loadAdError.getCause());
-
                     }
 
                     @Override
@@ -677,7 +676,7 @@ public class AdmodUtils {
         }
     }
 
-    public void loadAdInterstitial(Context activity, String admobId, AdLoadCallback adLoadCallback, boolean enableLoadingDialog) {
+    public void loadAdInterstitial(Context activity, String admobId, AdCallbackNew adLoadCallback, boolean enableLoadingDialog) {
 
         AdmodUtils.getInstance().mInterstitialAd = null;
         AdmodUtils.getInstance().isAdShowing = false;
@@ -778,6 +777,8 @@ public class AdmodUtils {
                             AppOpenManager.getInstance().isAppResumeEnabled = true;
                         }
                         adCallback.onEventClickAdClosed();
+                        adCallback.onAdClosed();
+
                         Log.d("TAG", "The ad was dismissed.");
 
                     }
@@ -827,6 +828,7 @@ public class AdmodUtils {
                     @Override
                     public void onAdDismissedFullScreenContent() {
                         isAdShowing = false;
+                        adCallback.onAdClosed();
                         adCallback.onEventClickAdClosed();
                         Log.d("TAG", "The ad was dismissed.");
                     }
@@ -836,7 +838,22 @@ public class AdmodUtils {
                         adCallback.onAdFail();
                         isAdShowing = false;
                         mInterstitialAd = null;
-                        loadAdInterstitial(activity, idIntersitialReal, new AdLoadCallback() {
+                        loadAdInterstitial(activity, idIntersitialReal, new AdCallbackNew() {
+                            @Override
+                            public void onAdClosed() {
+
+                            }
+
+                            @Override
+                            public void onEventClickAdClosed() {
+
+                            }
+
+                            @Override
+                            public void onAdShowed() {
+
+                            }
+
                             @Override
                             public void onAdFail() {
                                 Log.d("TAG", "Ad loaded again fails");
@@ -857,7 +874,22 @@ public class AdmodUtils {
                         adCallback.onAdShowed();
 
                         Log.d("TAG", "The ad was shown.");
-                        loadAdInterstitial(activity, idIntersitialReal, new AdLoadCallback() {
+                        loadAdInterstitial(activity, idIntersitialReal, new AdCallbackNew() {
+                            @Override
+                            public void onAdClosed() {
+
+                            }
+
+                            @Override
+                            public void onEventClickAdClosed() {
+
+                            }
+
+                            @Override
+                            public void onAdShowed() {
+
+                            }
+
                             @Override
                             public void onAdFail() {
                                 Log.d("TAG", "Ad loaded again fails");
@@ -892,7 +924,7 @@ public class AdmodUtils {
         }
     }
 
-    public void loadAndShowAdInterstitialWithCallback(AppCompatActivity activity, String admobId, int limitTime, AdCallback adCallback, boolean enableLoadingDialog) {
+    public void loadAndShowAdInterstitialWithCallback(AppCompatActivity activity, String admobId, int limitTime, AdCallbackNew adCallback, boolean enableLoadingDialog) {
         AdmodUtils.getInstance().mInterstitialAd = null;
         AdmodUtils.getInstance().isAdShowing = false;
 
@@ -934,6 +966,8 @@ public class AdmodUtils {
             @Override
             public void onAdLoaded(@NonNull @org.jetbrains.annotations.NotNull InterstitialAd interstitialAd) {
                 super.onAdLoaded(interstitialAd);
+                adCallback.onAdLoaded();
+
                 new Handler(Looper.getMainLooper()).postDelayed(() -> {
                     mInterstitialAd = interstitialAd;
                     if (mInterstitialAd != null) {
@@ -957,6 +991,7 @@ public class AdmodUtils {
                             public void onAdDismissedFullScreenContent() {
                                 lastTimeShowInterstitial = new Date().getTime();
                                 adCallback.onAdClosed();
+                                adCallback.onEventClickAdClosed();
                                 if (AdmodUtils.getInstance().mInterstitialAd != null) {
                                     AdmodUtils.getInstance().mInterstitialAd = null;
                                 }
@@ -964,6 +999,12 @@ public class AdmodUtils {
                                 if (AppOpenManager.getInstance().isInitialized()) {
                                     AppOpenManager.getInstance().isAppResumeEnabled = true;
                                 }
+                            }
+
+                            @Override
+                            public void onAdShowedFullScreenContent() {
+                                adCallback.onAdShowed();
+                                super.onAdShowedFullScreenContent();
                             }
                         });
 
@@ -1006,7 +1047,7 @@ public class AdmodUtils {
 
     }
 
-    public void loadAndShowAdInterstitialWithCallbackMultiAds(AppCompatActivity activity, String admobId, String admobId2, String admobId3, AdCallback adCallback, boolean enableLoadingDialog) {
+    public void loadAndShowAdInterstitialWithCallbackMultiAds(AppCompatActivity activity, String admobId, String admobId2, String admobId3, AdCallbackNew adCallback, boolean enableLoadingDialog) {
         AdmodUtils.getInstance().mInterstitialAd = null;
         AdmodUtils.getInstance().isAdShowing = false;
         if (adRequest == null) {
@@ -1051,6 +1092,7 @@ public class AdmodUtils {
             @Override
             public void onAdLoaded(@NonNull @org.jetbrains.annotations.NotNull InterstitialAd interstitialAd) {
                 super.onAdLoaded(interstitialAd);
+                adCallback.onAdLoaded();
 
                 new Handler(Looper.getMainLooper()).postDelayed(() -> {
                     mInterstitialAd = interstitialAd;
@@ -1075,6 +1117,7 @@ public class AdmodUtils {
                             public void onAdDismissedFullScreenContent() {
                                 lastTimeShowInterstitial = new Date().getTime();
                                 adCallback.onAdClosed();
+                                adCallback.onEventClickAdClosed();
                                 if (AdmodUtils.getInstance().mInterstitialAd != null) {
                                     AdmodUtils.getInstance().mInterstitialAd = null;
                                 }
@@ -1082,6 +1125,12 @@ public class AdmodUtils {
                                 if (AppOpenManager.getInstance().isInitialized()) {
                                     AppOpenManager.getInstance().isAppResumeEnabled = true;
                                 }
+                            }
+
+                            @Override
+                            public void onAdShowedFullScreenContent() {
+                                adCallback.onAdShowed();
+                                super.onAdShowedFullScreenContent();
                             }
                         });
 
@@ -1122,7 +1171,7 @@ public class AdmodUtils {
 
     }
 
-    private void loadAndShowAdInterstitialWithCallback2(AppCompatActivity activity, String admobId, String admobId3, AdCallback adCallback) {
+    private void loadAndShowAdInterstitialWithCallback2(AppCompatActivity activity, String admobId, String admobId3, AdCallbackNew adCallback) {
         AdmodUtils.getInstance().mInterstitialAd = null;
         AdmodUtils.getInstance().isAdShowing = false;
 
@@ -1159,6 +1208,7 @@ public class AdmodUtils {
             @Override
             public void onAdLoaded(@NonNull @org.jetbrains.annotations.NotNull InterstitialAd interstitialAd) {
                 super.onAdLoaded(interstitialAd);
+                adCallback.onAdLoaded();
 
                 new Handler(Looper.getMainLooper()).postDelayed(() -> {
                     mInterstitialAd = interstitialAd;
@@ -1183,6 +1233,7 @@ public class AdmodUtils {
                             public void onAdDismissedFullScreenContent() {
                                 lastTimeShowInterstitial = new Date().getTime();
                                 adCallback.onAdClosed();
+                                adCallback.onEventClickAdClosed();
                                 if (AdmodUtils.getInstance().mInterstitialAd != null) {
                                     AdmodUtils.getInstance().mInterstitialAd = null;
                                 }
@@ -1190,6 +1241,12 @@ public class AdmodUtils {
                                 if (AppOpenManager.getInstance().isInitialized()) {
                                     AppOpenManager.getInstance().isAppResumeEnabled = true;
                                 }
+                            }
+
+                            @Override
+                            public void onAdShowedFullScreenContent() {
+                                adCallback.onAdShowed();
+                                super.onAdShowedFullScreenContent();
                             }
                         });
 
@@ -1232,7 +1289,7 @@ public class AdmodUtils {
 
     }
 
-    private void loadAndShowAdInterstitialWithCallback3(AppCompatActivity activity, String admobId, AdCallback adCallback) {
+    private void loadAndShowAdInterstitialWithCallback3(AppCompatActivity activity, String admobId, AdCallbackNew adCallback) {
         AdmodUtils.getInstance().mInterstitialAd = null;
         AdmodUtils.getInstance().isAdShowing = false;
 
@@ -1268,7 +1325,7 @@ public class AdmodUtils {
             @Override
             public void onAdLoaded(@NonNull @org.jetbrains.annotations.NotNull InterstitialAd interstitialAd) {
                 super.onAdLoaded(interstitialAd);
-
+                    adCallback.onAdLoaded();
                 new Handler(Looper.getMainLooper()).postDelayed(() -> {
                     mInterstitialAd = interstitialAd;
                     if (mInterstitialAd != null) {
@@ -1292,6 +1349,7 @@ public class AdmodUtils {
                             public void onAdDismissedFullScreenContent() {
                                 lastTimeShowInterstitial = new Date().getTime();
                                 adCallback.onAdClosed();
+                                adCallback.onEventClickAdClosed();
                                 if (AdmodUtils.getInstance().mInterstitialAd != null) {
                                     AdmodUtils.getInstance().mInterstitialAd = null;
                                 }
@@ -1299,6 +1357,12 @@ public class AdmodUtils {
                                 if (AppOpenManager.getInstance().isInitialized()) {
                                     AppOpenManager.getInstance().isAppResumeEnabled = true;
                                 }
+                            }
+
+                            @Override
+                            public void onAdShowedFullScreenContent() {
+                                adCallback.onAdShowed();
+                                super.onAdShowedFullScreenContent();
                             }
                         });
 

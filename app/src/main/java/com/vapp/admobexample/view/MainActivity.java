@@ -75,14 +75,34 @@ public class MainActivity extends AppCompatActivity {
         btn_LoadInter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AdmodUtils.getInstance().loadAdInterstitial(MainActivity.this, getString(R.string.test_ads_admob_inter_id), new AdLoadCallback() {
+                AdmodUtils.getInstance().loadAdInterstitial(MainActivity.this, getString(R.string.test_ads_admob_inter_id), new AdCallbackNew() {
+                    @Override
+                    public void onAdClosed() {
+                        Utils.getInstance().showMessenger(MainActivity.this, "onAdClosed");
+
+                    }
+
+                    @Override
+                    public void onEventClickAdClosed() {
+                        Utils.getInstance().showMessenger(MainActivity.this, "onEventClickAdClosed");
+
+                    }
+
+                    @Override
+                    public void onAdShowed() {
+                        Utils.getInstance().showMessenger(MainActivity.this, "onAdShowed");
+
+                    }
+
                     @Override
                     public void onAdLoaded() {
+                        Utils.getInstance().showMessenger(MainActivity.this, "onAdLoaded");
 
                     }
 
                     @Override
                     public void onAdFail() {
+                        Utils.getInstance().showMessenger(MainActivity.this, "onAdFail");
 
                     }
                 }, false);
@@ -95,6 +115,11 @@ public class MainActivity extends AppCompatActivity {
                 if (AdmodUtils.getInstance().mInterstitialAd != null) {
                     AdmodUtils.getInstance().showAdInterstitialWithCallback(AdmodUtils.getInstance().mInterstitialAd, MainActivity.this, new AdCallbackNew() {
                         @Override
+                        public void onAdLoaded() {
+                            Utils.getInstance().showMessenger(MainActivity.this, "onAdLoaded");
+                        }
+
+                        @Override
                         public void onAdClosed() {
                             Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
                         }
@@ -106,11 +131,13 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         public void onEventClickAdClosed() {
+                            Utils.getInstance().showMessenger(MainActivity.this, "onEventClickAdClosed");
 
                         }
 
                         @Override
                         public void onAdShowed() {
+                            Utils.getInstance().showMessenger(MainActivity.this, "onAdShowed");
 
                         }
                     });
@@ -122,7 +149,22 @@ public class MainActivity extends AppCompatActivity {
         btn_LoadAndShowInter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AdmodUtils.getInstance().loadAndShowAdInterstitialWithCallback(MainActivity.this, getString(R.string.test_ads_admob_inter_id), 0, new AdCallback() {
+                AdmodUtils.getInstance().loadAndShowAdInterstitialWithCallback(MainActivity.this, getString(R.string.test_ads_admob_inter_id), 0, new AdCallbackNew() {
+                    @Override
+                    public void onEventClickAdClosed() {
+                        Utils.getInstance().showMessenger(MainActivity.this, "onEventClickAdClosed");
+                    }
+
+                    @Override
+                    public void onAdShowed() {
+                        Utils.getInstance().showMessenger(MainActivity.this, "onAdShowed");
+                    }
+
+                    @Override
+                    public void onAdLoaded() {
+                        Utils.getInstance().showMessenger(MainActivity.this, "onAdLoaded");
+                    }
+
                     @Override
                     public void onAdClosed() {
                         Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
