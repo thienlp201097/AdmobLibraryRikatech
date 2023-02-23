@@ -402,7 +402,9 @@ public class AdmodUtils {
                     .inflate(layout, null);
 
             NativeFunc.Companion.populateNativeAdView(nativeAd, adView, GoogleENative.UNIFIED_MEDIUM);
-            shimmerFrameLayout.stopShimmer();
+            if (shimmerFrameLayout != null) {
+                shimmerFrameLayout.stopShimmer();
+            }
             viewGroup.addView(adView);
         }
 
