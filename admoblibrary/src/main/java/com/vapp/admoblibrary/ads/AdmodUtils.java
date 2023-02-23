@@ -341,16 +341,16 @@ public class AdmodUtils {
     }
 
 
-    public void loadAndGetNativeAds(Activity activity, String s, NativeAdCallback adCallback) {
-        if (!isShowAds || !isNetworkConnected(activity)) {
+    public void loadAndGetNativeAds(Context context, String s, NativeAdCallback adCallback) {
+        if (!isShowAds || !isNetworkConnected(context)) {
             return;
         }
         AdLoader adLoader;
         if (isTesting) {
-            s = activity.getString(R.string.test_ads_admob_native_id);
+            s = context.getString(R.string.test_ads_admob_native_id);
         }
 
-        adLoader = new AdLoader.Builder(activity, s)
+        adLoader = new AdLoader.Builder(context, s)
                 .forNativeAd(new NativeAd.OnNativeAdLoadedListener() {
 
                     @Override
