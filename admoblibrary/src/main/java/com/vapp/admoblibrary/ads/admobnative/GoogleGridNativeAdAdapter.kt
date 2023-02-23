@@ -11,6 +11,7 @@ import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.ads.nativead.NativeAd
 import com.vapp.admoblibrary.R
 import com.vapp.admoblibrary.ads.AdmodUtils
 import com.vapp.admoblibrary.ads.NativeAdCallback
@@ -60,10 +61,13 @@ class GoogleGridNativeAdAdapter(private val mParam: Param) :
             }else{
                 idAdmob = mParam.idAdmob;
             }
-            AdmodUtils.getInstance().loadNativeAdsWithLayout(mParam.activity!!,
+            AdmodUtils.getInstance().loadAndShowNativeAdsWithLayout(mParam.activity!!,
                 idAdmob,
                 holder.adFrame,
                 mParam.layout,  GoogleENative.UNIFIED_MEDIUM,object : NativeAdCallback {
+                    override fun onLoadedAndGetNativeAd(ad: NativeAd?) {
+                    }
+
                     override fun onNativeAdLoaded() {}
                     override fun onAdFail() {}
                 })

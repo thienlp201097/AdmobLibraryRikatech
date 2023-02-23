@@ -2,8 +2,6 @@ package com.vapp.admobexample.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -14,43 +12,40 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.codemybrainsout.ratingdialog.MaybeLaterCallback;
 import com.codemybrainsout.ratingdialog.RatingDialog;
-import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.ads.AdSize;
-import com.vapp.admobexample.SplashActivity;
+import com.google.android.gms.ads.nativead.NativeAd;
 import com.vapp.admobexample.utilsdemp.UtilsDemoActivity;
 import com.vapp.admoblibrary.ads.AdCallbackNew;
 import com.vapp.admoblibrary.ads.AdLoadCallback;
 import com.vapp.admoblibrary.ads.NativeAdCallback;
 import com.vapp.admoblibrary.ads.admobnative.enumclass.CollapsibleBanner;
-import com.vapp.admoblibrary.ads.admobnative.enumclass.GoogleEBanner;
 import com.vapp.admoblibrary.ads.admobnative.enumclass.GoogleENative;
 import com.vapp.admobexample.R;
 import com.vapp.admobexample.iap.IAPActivity;
 import com.vapp.admoblibrary.ads.model.AdUnitListModel;
-import com.vapp.admoblibrary.ads.model.AdsConfigModel;
 import com.vapp.admoblibrary.ads.model.BannerAdCallback;
 import com.vapp.admoblibrary.utils.Utils;
-import com.vapp.admoblibrary.ads.AdCallback;
 import com.vapp.admoblibrary.ads.AdmodUtils;
 import com.vapp.admoblibrary.ads.RewardAdCallback;
-
-import java.util.Calendar;
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     Button btn_LoadInter, btn_ShowInter;
     Button btn_LoadAndShowInter, btn_LoadAndShowReward;
     Button btn_LoadInterReward, btn_ShowInterReward;
-    Button btn_LoadNative, btn_LoadNativeGrid;
+    Button btn_LoadNativeinRec, btn_LoadNativeGrid;
+    Button btn_LoadAndShowNative, btn_LoadAndGetNative, btn_ShowNative;
     Button btn_IAP, btn_Rate, btn_Utils;
-    LinearLayout nativeAds;
+    LinearLayout viewNativeAds;
     FrameLayout banner;
+    public NativeAd nativeAd;
+    public NativeAd nativeAd2;
+    public NativeAd nativeAd3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-        finbyid();
+        findbyid();
         showDialogRate();
 
         // AdsConfigModel = Model call by API
@@ -210,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        btn_LoadNative.setOnClickListener(new View.OnClickListener() {
+        btn_LoadNativeinRec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Utils.getInstance().addActivity(MainActivity.this, NativeRecyclerActivity.class);
@@ -286,17 +281,72 @@ public class MainActivity extends AppCompatActivity {
         });
 //        AdmodUtils.getInstance().loadNativeAdsWithLayout(MainActivity.this, getString(R.string.test_ads_admob_native_id), nativeAds, R.layout.ad_unified_medium);
 
-
-        AdmodUtils.getInstance().loadNativeAds(MainActivity.this, getString(R.string.test_ads_admob_native_id), nativeAds, GoogleENative.UNIFIED_MEDIUM, new NativeAdCallback() {
+        btn_LoadAndShowNative.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onNativeAdLoaded() {
-            }
+            public void onClick(View view) {
+                AdmodUtils.getInstance().loadAndShowNativeAdsWithLayout(MainActivity.this, getString(R.string.test_ads_admob_native_id), viewNativeAds, R.layout.ad_template_medium, GoogleENative.UNIFIED_MEDIUM, new NativeAdCallback() {
+                    @Override
+                    public void onNativeAdLoaded() {
+                    }
 
-            @Override
-            public void onAdFail() {
+                    @Override
+                    public void onAdFail() {
+
+                    }
+
+                    @Override
+                    public void onLoadedAndGetNativeAd(NativeAd ad) {
+
+                    }
+                });
 
             }
         });
+
+        btn_LoadAndGetNative.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                nativeAd = null;
+                AdmodUtils.getInstance().loadAndGetNativeAds(MainActivity.this, getString(R.string.test_ads_admob_native_id), new NativeAdCallback() {
+                    @Override
+                    public void onLoadedAndGetNativeAd(NativeAd ad) {
+                        nativeAd = ad;
+                    }
+
+                    @Override
+                    public void onNativeAdLoaded() {
+                    }
+
+                    @Override
+                    public void onAdFail() {
+
+                    }
+                });
+            }
+        });
+
+        btn_ShowNative.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AdmodUtils.getInstance().showNativeAdsWithLayout(MainActivity.this, nativeAd, viewNativeAds, R.layout.ad_template_medium, GoogleENative.UNIFIED_MEDIUM, new NativeAdCallback() {
+                    @Override
+                    public void onNativeAdLoaded() {
+                    }
+
+                    @Override
+                    public void onAdFail() {
+
+                    }
+
+                    @Override
+                    public void onLoadedAndGetNativeAd(NativeAd ad) {
+
+                    }
+                });
+
+            }
+        });
+
         //AdmodUtils.getInstance().loadAdBanner(MainActivity.this, getString(R.string.test_ads_admob_banner_id), banner);
         AdmodUtils.getInstance().loadAdBannerCollapsible(MainActivity.this, getString(R.string.test_ads_admob_banner_id), CollapsibleBanner.BOTTOM, banner, new BannerAdCallback() {
             @Override
@@ -349,14 +399,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    void finbyid() {
+    void findbyid() {
         btn_Utils = findViewById(R.id.btn_Utils);
         btn_LoadInter = findViewById(R.id.btn_LoadInter);
         btn_ShowInter = findViewById(R.id.btn_ShowInter);
         btn_LoadAndShowInter = findViewById(R.id.btn_LoadAndShowInter);
         btn_LoadAndShowReward = findViewById(R.id.btn_LoadAndShowReward);
-        btn_LoadNative = findViewById(R.id.btn_LoadNative);
-        nativeAds = findViewById(R.id.nativeAds);
+        btn_LoadNativeinRec = findViewById(R.id.btn_LoadNative);
+        viewNativeAds = findViewById(R.id.nativeAds);
         banner = findViewById(R.id.banner);
         btn_IAP = findViewById(R.id.btn_IAP);
         btn_Rate = findViewById(R.id.btn_Rate);
@@ -364,6 +414,12 @@ public class MainActivity extends AppCompatActivity {
 
         btn_LoadInterReward = findViewById(R.id.btn_LoadInterReward);
         btn_ShowInterReward = findViewById(R.id.btn_ShowInterReward);
+
+        btn_LoadAndGetNative = findViewById(R.id.btn_LoadAndGetNative);
+        btn_ShowNative = findViewById(R.id.btn_ShowNative);
+        btn_LoadAndShowNative = findViewById(R.id.btn_LoadAndShowNative);
+
+
     }
 
     @Override

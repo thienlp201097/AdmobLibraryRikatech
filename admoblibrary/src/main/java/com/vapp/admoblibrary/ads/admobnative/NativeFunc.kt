@@ -12,9 +12,9 @@ import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
 import com.vapp.admoblibrary.R
 
-class NativeFunc {
+public class NativeFunc {
 
-    companion object {
+   public companion object {
         fun populateNativeAdView(
             nativeAd: NativeAd,
             adView: NativeAdView,

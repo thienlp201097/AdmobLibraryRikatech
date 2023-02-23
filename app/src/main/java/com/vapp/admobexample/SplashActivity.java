@@ -76,8 +76,7 @@ public class SplashActivity extends AppCompatActivity {
 //            @Override
 //            public void onAdFail() {
 //                btn_next.setVisibility(View.VISIBLE);
-//            }
-//
+//            }//
 //            @Override
 //            public void onAdLoaded() {
 //                btn_next.setVisibility(View.VISIBLE);
