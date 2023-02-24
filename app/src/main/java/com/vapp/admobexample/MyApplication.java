@@ -4,6 +4,7 @@ import android.content.Context;
 
 import androidx.multidex.MultiDex;
 
+import com.vapp.admobexample.utilsdemp.AdsManager;
 import com.vapp.admoblibrary.AdsMultiDexApplication;
 import com.vapp.admoblibrary.ads.AdmodUtils;
 import com.vapp.admoblibrary.ads.AppOpenManager;
@@ -18,7 +19,6 @@ public class MyApplication extends AdsMultiDexApplication {
         super.onCreate();
 
         PurchaseUtils.getInstance().initBilling(this,getString(R.string.play_console_license));
-
 //        if (PurchaseUtils.getInstance().isSubscriptiond(getString(R.string.premium))) {
 //            isShowAds = false;
 //        }else {
@@ -31,6 +31,10 @@ public class MyApplication extends AdsMultiDexApplication {
             AppOpenManager.getInstance().init(this, getString(R.string.test_ads_admob_app_open));
 //            AppOpenManager.getInstance().disableAppResumeWithActivity(SplashActivity.class);
         }
+//        ;
+//        AdsManager.INSTANCE.loadInter(getApplicationContext());
+        AdsManager.INSTANCE.loadInter2(getApplicationContext());
+        AdsManager.INSTANCE.loadInter3(getApplicationContext());
     }
 
     @Override

@@ -14,6 +14,7 @@ import com.codemybrainsout.ratingdialog.MaybeLaterCallback;
 import com.codemybrainsout.ratingdialog.RatingDialog;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.nativead.NativeAd;
+import com.vapp.admobexample.utilsdemp.AdsManager;
 import com.vapp.admobexample.utilsdemp.UtilsDemoActivity;
 import com.vapp.admoblibrary.ads.AdCallbackNew;
 import com.vapp.admoblibrary.ads.AdLoadCallback;
@@ -29,7 +30,7 @@ import com.vapp.admoblibrary.ads.AdmodUtils;
 import com.vapp.admoblibrary.ads.RewardAdCallback;
 
 public class MainActivity extends AppCompatActivity {
-    Button btn_LoadInter, btn_ShowInter;
+    Button btn_LoadInter, btn_ShowInter, btn_ShowInter1, btn_ShowInter2, btn_ShowInter3;
     Button btn_LoadAndShowInter, btn_LoadAndShowReward;
     Button btn_LoadInterReward, btn_ShowInterReward;
     Button btn_LoadNativeinRec, btn_LoadNativeGrid;
@@ -138,6 +139,95 @@ public class MainActivity extends AppCompatActivity {
                     });
                 } else {
                     Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
+                }
+            }
+        });
+
+        btn_ShowInter1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (AdsManager.INSTANCE.getInterstitial1() != null) {
+                    AdsManager.INSTANCE.showInter(MainActivity.this, AdsManager.INSTANCE.getInterstitial1(), new AdsManager.AdListener() {
+
+                        @Override
+                        public void onFailed() {
+                            AdsManager.INSTANCE.setInterstitial1(null);
+                            AdsManager.INSTANCE.loadInter(MainActivity.this);
+                            Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
+                        }
+
+                        @Override
+                        public void onAdClosed() {
+                            AdsManager.INSTANCE.setInterstitial1(null);
+                            AdsManager.INSTANCE.loadInter(MainActivity.this);
+                            Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
+                        }
+                    },true);
+                } else {
+                    AdsManager.INSTANCE.loadAndShowInter(MainActivity.this, new AdsManager.AdListener() {
+                        @Override
+                        public void onAdClosed() {
+                            AdsManager.INSTANCE.setInterstitial1(null);
+//                            AdsManager.INSTANCE.loadInter(MainActivity.this);
+                            Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
+                        }
+
+                        @Override
+                        public void onFailed() {
+                            AdsManager.INSTANCE.setInterstitial1(null);
+//                            AdsManager.INSTANCE.loadInter(MainActivity.this);
+                            Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
+                        }
+                    });
+                }
+            }
+        });
+
+        btn_ShowInter2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (AdsManager.INSTANCE.getInterstitial2() != null) {
+                    AdsManager.INSTANCE.showInter(MainActivity.this, AdsManager.INSTANCE.getInterstitial2(), new AdsManager.AdListener() {
+                        @Override
+                        public void onFailed() {
+                            AdsManager.INSTANCE.setInterstitial2(null);
+                            AdsManager.INSTANCE.loadInter2(MainActivity.this);
+                            Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
+                        }
+
+                        @Override
+                        public void onAdClosed() {
+                            AdsManager.INSTANCE.setInterstitial2(null);
+                            AdsManager.INSTANCE.loadInter2(MainActivity.this);
+                            Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
+                        }
+                    },true);
+                } else {
+                    AdsManager.INSTANCE.loadInter2(MainActivity.this);
+                    Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
+                }
+            }
+        });
+
+        btn_ShowInter3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (AdsManager.INSTANCE.getInterstitial3() != null) {
+                    AdsManager.INSTANCE.showInter(MainActivity.this, AdsManager.INSTANCE.getInterstitial3(), new AdsManager.AdListener() {
+                        @Override
+                        public void onFailed() {
+                            AdsManager.INSTANCE.setInterstitial3(null);
+                            AdsManager.INSTANCE.loadInter3(MainActivity.this);
+                            Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
+                        }
+
+                        @Override
+                        public void onAdClosed() {
+                            AdsManager.INSTANCE.setInterstitial3(null);
+                            AdsManager.INSTANCE.loadInter3(MainActivity.this);
+                            Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
+                        }
+                    },true);
                 }
             }
         });
@@ -403,6 +493,9 @@ public class MainActivity extends AppCompatActivity {
         btn_Utils = findViewById(R.id.btn_Utils);
         btn_LoadInter = findViewById(R.id.btn_LoadInter);
         btn_ShowInter = findViewById(R.id.btn_ShowInter);
+        btn_ShowInter1 = findViewById(R.id.btn_ShowInter1);
+        btn_ShowInter2 = findViewById(R.id.btn_ShowInter2);
+        btn_ShowInter3 = findViewById(R.id.btn_ShowInter3);
         btn_LoadAndShowInter = findViewById(R.id.btn_LoadAndShowInter);
         btn_LoadAndShowReward = findViewById(R.id.btn_LoadAndShowReward);
         btn_LoadNativeinRec = findViewById(R.id.btn_LoadNative);

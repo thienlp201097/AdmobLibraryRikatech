@@ -980,19 +980,18 @@ public class AdmodUtils {
 
     private void showInterstitialAd(Activity activity, InterstitialAd mInterstitialAd, AdCallbackNew callback) {
         if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED) && mInterstitialAd != null) {
-
             AdmodUtils.getInstance().isAdShowing = true;
             if (callback != null) {
                 callback.onAdClosed();
             }
-            mInterstitialAd.show(activity);
-
+            new Handler().postDelayed(() -> mInterstitialAd.show(activity), 400);
         } else {
             AdmodUtils.getInstance().isAdShowing = false;
             if (AppOpenManager.getInstance().isInitialized()) {
                 AppOpenManager.getInstance().isAppResumeEnabled = true;
             }
             dismissAdDialog();
+            Log.d("===Admod", "4");
             callback.onAdFail();
         }
     }
@@ -1127,7 +1126,7 @@ public class AdmodUtils {
             initAdRequest(timeOut);
         }
         if (!isShowAds || !isNetworkConnected(activity)) {
-            adCallback.onAdClosed();
+            adCallback.onEventClickAdClosed();
 //            handlerTimeOut.removeCallbacksAndMessages(null);
             return;
         }
@@ -1355,10 +1354,347 @@ public class AdmodUtils {
                 AdmodUtils.getInstance().isAdShowing = false;
                 adCallback.onAdFail();
                 dismissAdDialog();
-
             }
         });
 
+    }
+
+    public void loadAndGetAdInterstitial(Context activity, String admobId, String admobId2, AdCallBackInterLoad adLoadCallback) {
+        AdmodUtils.getInstance().isAdShowing = false;
+
+        if (!isShowAds || !isNetworkConnected(activity)) {
+            adLoadCallback.onAdFail();
+            return;
+        }
+
+        if (isTesting) {
+            admobId = activity.getString(R.string.test_ads_admob_inter_id);
+        }
+        if (adRequest == null) {
+            initAdRequest(timeOut);
+        }
+        idIntersitialReal = admobId;
+        String idLoadInter2 = admobId2;
+        InterstitialAd.load(activity, idIntersitialReal, adRequest, new InterstitialAdLoadCallback() {
+            @Override
+            public void onAdLoaded(@NonNull @org.jetbrains.annotations.NotNull InterstitialAd interstitialAd) {
+                adLoadCallback.onAdLoaded(interstitialAd);
+                Log.i("adLog", "onAdLoaded");
+            }
+
+            @Override
+            public void onAdFailedToLoad(@NonNull @org.jetbrains.annotations.NotNull LoadAdError loadAdError) {
+                isAdShowing = false;
+                AdmodUtils.getInstance().isAdShowing = false;
+                if (AdmodUtils.getInstance().mInterstitialAd != null) {
+                    AdmodUtils.getInstance().mInterstitialAd = null;
+                }
+                loadAndGetAdInterstitialId2(activity, idLoadInter2, adLoadCallback);
+            }
+        });
+    }
+
+    public void loadAndGetAdInterstitialId2(Context activity, String admobId2, AdCallBackInterLoad adLoadCallback) {
+        AdmodUtils.getInstance().isAdShowing = false;
+
+        if (!isShowAds || !isNetworkConnected(activity)) {
+            adLoadCallback.onAdFail();
+            return;
+        }
+
+        if (isTesting) {
+            admobId2 = activity.getString(R.string.test_ads_admob_inter_id);
+        }
+        if (adRequest == null) {
+            initAdRequest(timeOut);
+        }
+        idIntersitialReal = admobId2;
+        InterstitialAd.load(activity, idIntersitialReal, adRequest, new InterstitialAdLoadCallback() {
+            @Override
+            public void onAdLoaded(@NonNull @org.jetbrains.annotations.NotNull InterstitialAd interstitialAd) {
+                adLoadCallback.onAdLoaded(interstitialAd);
+                Log.i("adLog", "onAdLoaded");
+            }
+
+            @Override
+            public void onAdFailedToLoad(@NonNull @org.jetbrains.annotations.NotNull LoadAdError loadAdError) {
+                isAdShowing = false;
+                AdmodUtils.getInstance().isAdShowing = false;
+                if (AdmodUtils.getInstance().mInterstitialAd != null) {
+                    AdmodUtils.getInstance().mInterstitialAd = null;
+                }
+                adLoadCallback.onAdFail();
+            }
+        });
+    }
+
+    public void showAdInterstitialWithCallbackNotLoadNew(InterstitialAd localInterstitialAd, Activity activity, AdCallbackNew adCallback, boolean enableLoadingDialog) {
+        if (!isShowAds || !isNetworkConnected(activity)) {
+            isAdShowing = false;
+            if (AppOpenManager.getInstance().isInitialized()) {
+                AppOpenManager.getInstance().isAppResumeEnabled = true;
+            }
+            Log.d("===Admod", "1");
+            adCallback.onAdFail();
+            return;
+        }
+        if (localInterstitialAd == null) {
+            if (adCallback != null) {
+                isAdShowing = false;
+                if (AppOpenManager.getInstance().isInitialized()) {
+                    AppOpenManager.getInstance().isAppResumeEnabled = true;
+                }
+                Log.d("===Admod", "2");
+                adCallback.onAdFail();
+            }
+            return;
+        }
+
+        if (enableLoadingDialog) {
+            dialog = new SweetAlertDialog(activity, SweetAlertDialog.PROGRESS_TYPE);
+            dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+            dialog.setTitleText("Loading ads. Please wait...");
+            dialog.setCancelable(false);
+            dialog.show();
+        }
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            localInterstitialAd.setFullScreenContentCallback(
+                    new FullScreenContentCallback() {
+                        @Override
+                        public void onAdDismissedFullScreenContent() {
+                            isAdShowing = false;
+                            if (AppOpenManager.getInstance().isInitialized()) {
+                                AppOpenManager.getInstance().isAppResumeEnabled = true;
+                            }
+                            adCallback.onEventClickAdClosed();
+                            dismissAdDialog();
+                            Log.d("TAG", "The ad was dismissed.");
+                        }
+
+                        @Override
+                        public void onAdFailedToShowFullScreenContent(AdError adError) {
+                            isAdShowing = false;
+                            if (AppOpenManager.getInstance().isInitialized()) {
+                                AppOpenManager.getInstance().isAppResumeEnabled = true;
+                            }
+                            AdmodUtils.getInstance().isAdShowing = false;
+                            dismissAdDialog();
+                            Log.e("Admodfail", "onAdFailedToLoad" + adError.getMessage());
+                            Log.e("Admodfail", "errorCodeAds" + adError.getCause());
+                            Log.d("===Admod", "3");
+                            adCallback.onAdFail();
+                        }
+
+                        @Override
+                        public void onAdShowedFullScreenContent() {
+                            isAdShowing = true;
+                            adCallback.onAdShowed();
+                        }
+                    });
+            showInterstitialAd(activity, localInterstitialAd, adCallback);
+        }, 400);
+    }
+
+    public void loadGetAndShowInterstitial(Context activity, String admobId, String admobId2, AdCallBackInterLoad adLoadCallback, boolean enableLoadingDialog) {
+
+        AdmodUtils.getInstance().mInterstitialAd = null;
+        AdmodUtils.getInstance().isAdShowing = false;
+
+        if (!isShowAds || !isNetworkConnected(activity)) {
+            adLoadCallback.onAdFail();
+            return;
+        }
+
+        if (AppOpenManager.getInstance().isInitialized()) {
+            if (!AppOpenManager.getInstance().isAppResumeEnabled) {
+                return;
+            } else {
+                isAdShowing = false;
+                if (AppOpenManager.getInstance().isInitialized()) {
+                    AppOpenManager.getInstance().isAppResumeEnabled = false;
+                }
+            }
+        }
+
+        if (enableLoadingDialog) {
+            dialog = new SweetAlertDialog(activity, SweetAlertDialog.PROGRESS_TYPE);
+            dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+            dialog.setTitleText("Loading ads. Please wait...");
+            dialog.setCancelable(false);
+            dialog.show();
+        }
+
+        if (isTesting) {
+            admobId = activity.getString(R.string.test_ads_admob_inter_id);
+        }
+        if (adRequest == null) {
+            initAdRequest(timeOut);
+        }
+        idIntersitialReal = admobId;
+        String id2 = admobId2;
+        InterstitialAd.load(activity, idIntersitialReal, adRequest, new InterstitialAdLoadCallback() {
+            @Override
+            public void onAdLoaded(@NonNull @org.jetbrains.annotations.NotNull InterstitialAd interstitialAd) {
+                mInterstitialAd = interstitialAd;
+                adLoadCallback.onAdLoaded(interstitialAd);
+                Log.i("adLog", "onAdLoaded");
+                // Toast.makeText(activity, "success load ads", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAdFailedToLoad(@NonNull @org.jetbrains.annotations.NotNull LoadAdError loadAdError) {
+                isAdShowing = false;
+                if (AppOpenManager.getInstance().isInitialized()) {
+                    AppOpenManager.getInstance().isAppResumeEnabled = true;
+                }
+                AdmodUtils.getInstance().isAdShowing = false;
+                if (AdmodUtils.getInstance().mInterstitialAd != null) {
+                    AdmodUtils.getInstance().mInterstitialAd = null;
+                }
+                loadGetAndShowInterstitialId2(activity, id2, adLoadCallback, false);
+            }
+        });
+    }
+
+    public void loadGetAndShowInterstitialId2(Context activity, String admobId, AdCallBackInterLoad adLoadCallback, boolean enableLoadingDialog) {
+
+        AdmodUtils.getInstance().mInterstitialAd = null;
+        AdmodUtils.getInstance().isAdShowing = false;
+
+        if (!isShowAds || !isNetworkConnected(activity)) {
+            adLoadCallback.onAdFail();
+            return;
+        }
+
+        if (AppOpenManager.getInstance().isInitialized()) {
+            if (!AppOpenManager.getInstance().isAppResumeEnabled) {
+                return;
+            } else {
+                isAdShowing = false;
+                if (AppOpenManager.getInstance().isInitialized()) {
+                    AppOpenManager.getInstance().isAppResumeEnabled = false;
+                }
+            }
+        }
+
+        if (enableLoadingDialog) {
+            dialog = new SweetAlertDialog(activity, SweetAlertDialog.PROGRESS_TYPE);
+            dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+            dialog.setTitleText("Loading ads. Please wait...");
+            dialog.setCancelable(false);
+            dialog.show();
+        }
+
+        if (isTesting) {
+            admobId = activity.getString(R.string.test_ads_admob_inter_id);
+        }
+        if (adRequest == null) {
+            initAdRequest(timeOut);
+        }
+        idIntersitialReal = admobId;
+        InterstitialAd.load(activity, idIntersitialReal, adRequest, new InterstitialAdLoadCallback() {
+            @Override
+            public void onAdLoaded(@NonNull @org.jetbrains.annotations.NotNull InterstitialAd interstitialAd) {
+                mInterstitialAd = interstitialAd;
+                adLoadCallback.onAdLoaded(interstitialAd);
+                Log.i("adLog", "onAdLoaded");
+                // Toast.makeText(activity, "success load ads", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAdFailedToLoad(@NonNull @org.jetbrains.annotations.NotNull LoadAdError loadAdError) {
+
+                isAdShowing = false;
+                if (AppOpenManager.getInstance().isInitialized()) {
+                    AppOpenManager.getInstance().isAppResumeEnabled = true;
+                }
+                AdmodUtils.getInstance().isAdShowing = false;
+                if (AdmodUtils.getInstance().mInterstitialAd != null) {
+                    AdmodUtils.getInstance().mInterstitialAd = null;
+                }
+                adLoadCallback.onAdFail();
+
+            }
+        });
+    }
+
+    public void showAdInterstitial(InterstitialAd localInterstitialAd, Activity activity, AdCallbackNew adCallback, boolean enableLoadingDialog) {
+        if (!isShowAds || !isNetworkConnected(activity)) {
+            isAdShowing = false;
+            if (AppOpenManager.getInstance().isInitialized()) {
+                AppOpenManager.getInstance().isAppResumeEnabled = true;
+            }
+            Log.d("===Admod", "1");
+            adCallback.onAdFail();
+            return;
+        }
+        if (localInterstitialAd == null) {
+            if (adCallback != null) {
+                isAdShowing = false;
+                if (AppOpenManager.getInstance().isInitialized()) {
+                    AppOpenManager.getInstance().isAppResumeEnabled = true;
+                }
+                Log.d("===Admod", "2");
+                adCallback.onAdFail();
+            }
+            return;
+        }
+
+        if (enableLoadingDialog) {
+            dialog = new SweetAlertDialog(activity, SweetAlertDialog.PROGRESS_TYPE);
+            dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+            dialog.setTitleText("Loading ads. Please wait...");
+            dialog.setCancelable(false);
+            dialog.show();
+        }
+        localInterstitialAd.setFullScreenContentCallback(
+                new FullScreenContentCallback() {
+                    @Override
+                    public void onAdDismissedFullScreenContent() {
+                        isAdShowing = false;
+                        if (AppOpenManager.getInstance().isInitialized()) {
+                            AppOpenManager.getInstance().isAppResumeEnabled = true;
+                        }
+                        adCallback.onEventClickAdClosed();
+                        dismissAdDialog();
+                        Log.d("TAG", "The ad was dismissed.");
+                    }
+
+                    @Override
+                    public void onAdFailedToShowFullScreenContent(AdError adError) {
+                        isAdShowing = false;
+                        if (AppOpenManager.getInstance().isInitialized()) {
+                            AppOpenManager.getInstance().isAppResumeEnabled = true;
+                        }
+                        AdmodUtils.getInstance().isAdShowing = false;
+                        dismissAdDialog();
+                        Log.e("Admodfail", "onAdFailedToLoad" + adError.getMessage());
+                        Log.e("Admodfail", "errorCodeAds" + adError.getCause());
+                        Log.d("===Admod", "3");
+                        adCallback.onAdFail();
+                    }
+
+                    @Override
+                    public void onAdShowedFullScreenContent() {
+                        isAdShowing = true;
+                        adCallback.onAdShowed();
+                    }
+                });
+        if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED) && mInterstitialAd != null) {
+            AdmodUtils.getInstance().isAdShowing = true;
+            if (adCallback != null) {
+                adCallback.onAdClosed();
+            }
+            new Handler().postDelayed(() -> mInterstitialAd.show(activity), 100);
+        } else {
+            AdmodUtils.getInstance().isAdShowing = false;
+            if (AppOpenManager.getInstance().isInitialized()) {
+                AppOpenManager.getInstance().isAppResumeEnabled = true;
+            }
+            dismissAdDialog();
+            Log.d("===Admod", "4");
+            adCallback.onAdFail();
+        }
     }
 
     public void dismissAdDialog() {

@@ -16,6 +16,7 @@ public abstract class AdsApplication extends Application {
         if(enableAdsResume()) {
             AppOpenManager.getInstance().init(this, getOpenAppAdId());
         }
+
     }
 
     public abstract boolean enableAdsResume();
