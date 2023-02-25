@@ -43,6 +43,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:layout_marginVertical="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -53,18 +54,8 @@
                     android:id="@+id/btn_ShowInter1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="show inter 1" />
+                    android:text="nút Này là để test inter nhé" />
 
-                <Button
-                    android:id="@+id/btn_ShowInter2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="show inter 2" />
-                <Button
-                    android:id="@+id/btn_ShowInter3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="show inter 3" />
             </LinearLayout>
 
             <Button

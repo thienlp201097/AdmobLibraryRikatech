@@ -1460,7 +1460,7 @@ public class AdmodUtils {
             adCallback.onAdFail();
             return;
         }
-
+        //check Ads Load
         if (isLoading) {
             if (enableLoadingDialog) {
                 dialogLoading(activity);
@@ -1480,6 +1480,7 @@ public class AdmodUtils {
                                             AppOpenManager.getInstance().isAppResumeEnabled = true;
                                         }
                                         AdmodUtils.getInstance().isClick = false;
+                                        //set intersitial
                                         isAdsLoaded.setValue(null);
                                         adCallback.onEventClickAdClosed();
                                         dismissAdDialog();
@@ -1492,12 +1493,14 @@ public class AdmodUtils {
                                         if (AppOpenManager.getInstance().isInitialized()) {
                                             AppOpenManager.getInstance().isAppResumeEnabled = true;
                                         }
+                                        //check click showintersitial
                                         AdmodUtils.getInstance().isClick = false;
                                         AdmodUtils.getInstance().isAdShowing = false;
                                         dismissAdDialog();
                                         Log.e("Admodfail", "onAdFailedToLoad" + adError.getMessage());
                                         Log.e("Admodfail", "errorCodeAds" + adError.getCause());
                                         adCallback.onAdFail();
+                                        //set intersitial
                                         isAdsLoaded.setValue(null);
                                     }
 
@@ -1569,7 +1572,6 @@ public class AdmodUtils {
             }, 400);
         }
     }
-
     public void dismissAdDialog() {
         if (AdmodUtils.getInstance().dialog != null && AdmodUtils.getInstance().dialog.isShowing()) {
             AdmodUtils.getInstance().dialog.dismiss();

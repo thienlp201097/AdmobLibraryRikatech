@@ -164,55 +164,6 @@ public class MainActivity extends AppCompatActivity {
                 },true);
             }
         });
-
-        btn_ShowInter2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                if (AdsManager.INSTANCE.getInterstitial2() != null) {
-//                    AdsManager.INSTANCE.showInter(MainActivity.this, AdsManager.INSTANCE.getInterstitial2(), new AdsManager.AdListener() {
-//                        @Override
-//                        public void onFailed() {
-//                            AdsManager.INSTANCE.setInterstitial2(null);
-//                            AdsManager.INSTANCE.loadInter2(MainActivity.this);
-//                            Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
-//                        }
-//
-//                        @Override
-//                        public void onAdClosed() {
-//                            AdsManager.INSTANCE.setInterstitial2(null);
-//                            AdsManager.INSTANCE.loadInter2(MainActivity.this);
-//                            Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
-//                        }
-//                    },true);
-//                } else {
-//                    AdsManager.INSTANCE.loadInter2(MainActivity.this);
-//                    Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
-//                }
-            }
-        });
-
-        btn_ShowInter3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                if (AdsManager.INSTANCE.getInterstitial3() != null) {
-//                    AdsManager.INSTANCE.showInter(MainActivity.this, AdsManager.INSTANCE.getInterstitial3(), new AdsManager.AdListener() {
-//                        @Override
-//                        public void onFailed() {
-//                            AdsManager.INSTANCE.setInterstitial3(null);
-//                            AdsManager.INSTANCE.loadInter3(MainActivity.this);
-//                            Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
-//                        }
-//
-//                        @Override
-//                        public void onAdClosed() {
-//                            AdsManager.INSTANCE.setInterstitial3(null);
-//                            AdsManager.INSTANCE.loadInter3(MainActivity.this);
-//                            Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
-//                        }
-//                    },true);
-//                }
-            }
-        });
         btn_LoadAndShowInter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -476,8 +427,6 @@ public class MainActivity extends AppCompatActivity {
         btn_LoadInter = findViewById(R.id.btn_LoadInter);
         btn_ShowInter = findViewById(R.id.btn_ShowInter);
         btn_ShowInter1 = findViewById(R.id.btn_ShowInter1);
-        btn_ShowInter2 = findViewById(R.id.btn_ShowInter2);
-        btn_ShowInter3 = findViewById(R.id.btn_ShowInter3);
         btn_LoadAndShowInter = findViewById(R.id.btn_LoadAndShowInter);
         btn_LoadAndShowReward = findViewById(R.id.btn_LoadAndShowReward);
         btn_LoadNativeinRec = findViewById(R.id.btn_LoadNative);
