@@ -18,7 +18,7 @@ public class MyApplication extends AdsMultiDexApplication {
     public void onCreate() {
         super.onCreate();
 
-        PurchaseUtils.getInstance().initBilling(this,getString(R.string.play_console_license));
+        PurchaseUtils.getInstance().initBilling(this, getString(R.string.play_console_license));
 //        if (PurchaseUtils.getInstance().isSubscriptiond(getString(R.string.premium))) {
 //            isShowAds = false;
 //        }else {
@@ -26,15 +26,15 @@ public class MyApplication extends AdsMultiDexApplication {
 //        }
         PurchaseUtils.getInstance().isPurchased(getString(R.string.product_id));
 
-        AdmodUtils.getInstance().initAdmob(this, 10000,true, isShowAds);
+        AdmodUtils.getInstance().initAdmob(this, 10000, true, isShowAds);
         if (isShowAdsResume) {
             AppOpenManager.getInstance().init(this, getString(R.string.test_ads_admob_app_open));
 //            AppOpenManager.getInstance().disableAppResumeWithActivity(SplashActivity.class);
         }
 //        ;
-//        AdsManager.INSTANCE.loadInter(getApplicationContext());
-        AdsManager.INSTANCE.loadInter2(getApplicationContext());
-        AdsManager.INSTANCE.loadInter3(getApplicationContext());
+        AdsManager.INSTANCE.loadInter(getApplicationContext());
+//        AdsManager.INSTANCE.loadInter2(getApplicationContext());
+//        AdsManager.INSTANCE.loadInter3(getApplicationContext());
     }
 
     @Override

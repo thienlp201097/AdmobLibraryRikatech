@@ -146,89 +146,71 @@ public class MainActivity extends AppCompatActivity {
         btn_ShowInter1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (AdsManager.INSTANCE.getInterstitial1() != null) {
-                    AdsManager.INSTANCE.showInter(MainActivity.this, AdsManager.INSTANCE.getInterstitial1(), new AdsManager.AdListener() {
+                AdsManager.INSTANCE.showInter(MainActivity.this, AdsManager.INSTANCE.getInterAds1(), new AdsManager.AdListener() {
 
-                        @Override
-                        public void onFailed() {
-                            AdsManager.INSTANCE.setInterstitial1(null);
-                            AdsManager.INSTANCE.loadInter(MainActivity.this);
-                            Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
-                        }
+                    @Override
+                    public void onFailed() {
+                        AdsManager.INSTANCE.setInterAds1(null);
+                        AdsManager.INSTANCE.loadInter(MainActivity.this);
+                        Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
+                    }
 
-                        @Override
-                        public void onAdClosed() {
-                            AdsManager.INSTANCE.setInterstitial1(null);
-                            AdsManager.INSTANCE.loadInter(MainActivity.this);
-                            Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
-                        }
-                    },true);
-                } else {
-                    AdsManager.INSTANCE.loadAndShowInter(MainActivity.this, new AdsManager.AdListener() {
-                        @Override
-                        public void onAdClosed() {
-                            AdsManager.INSTANCE.setInterstitial1(null);
-//                            AdsManager.INSTANCE.loadInter(MainActivity.this);
-                            Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
-                        }
-
-                        @Override
-                        public void onFailed() {
-                            AdsManager.INSTANCE.setInterstitial1(null);
-//                            AdsManager.INSTANCE.loadInter(MainActivity.this);
-                            Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
-                        }
-                    });
-                }
+                    @Override
+                    public void onAdClosed() {
+                        AdsManager.INSTANCE.setInterAds1(null);
+                        AdsManager.INSTANCE.loadInter(MainActivity.this);
+                        Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
+                    }
+                },true);
             }
         });
 
         btn_ShowInter2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (AdsManager.INSTANCE.getInterstitial2() != null) {
-                    AdsManager.INSTANCE.showInter(MainActivity.this, AdsManager.INSTANCE.getInterstitial2(), new AdsManager.AdListener() {
-                        @Override
-                        public void onFailed() {
-                            AdsManager.INSTANCE.setInterstitial2(null);
-                            AdsManager.INSTANCE.loadInter2(MainActivity.this);
-                            Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
-                        }
-
-                        @Override
-                        public void onAdClosed() {
-                            AdsManager.INSTANCE.setInterstitial2(null);
-                            AdsManager.INSTANCE.loadInter2(MainActivity.this);
-                            Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
-                        }
-                    },true);
-                } else {
-                    AdsManager.INSTANCE.loadInter2(MainActivity.this);
-                    Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
-                }
+//                if (AdsManager.INSTANCE.getInterstitial2() != null) {
+//                    AdsManager.INSTANCE.showInter(MainActivity.this, AdsManager.INSTANCE.getInterstitial2(), new AdsManager.AdListener() {
+//                        @Override
+//                        public void onFailed() {
+//                            AdsManager.INSTANCE.setInterstitial2(null);
+//                            AdsManager.INSTANCE.loadInter2(MainActivity.this);
+//                            Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
+//                        }
+//
+//                        @Override
+//                        public void onAdClosed() {
+//                            AdsManager.INSTANCE.setInterstitial2(null);
+//                            AdsManager.INSTANCE.loadInter2(MainActivity.this);
+//                            Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
+//                        }
+//                    },true);
+//                } else {
+//                    AdsManager.INSTANCE.loadInter2(MainActivity.this);
+//                    Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
+//                }
             }
         });
 
         btn_ShowInter3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (AdsManager.INSTANCE.getInterstitial3() != null) {
-                    AdsManager.INSTANCE.showInter(MainActivity.this, AdsManager.INSTANCE.getInterstitial3(), new AdsManager.AdListener() {
-                        @Override
-                        public void onFailed() {
-                            AdsManager.INSTANCE.setInterstitial3(null);
-                            AdsManager.INSTANCE.loadInter3(MainActivity.this);
-                            Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
-                        }
-
-                        @Override
-                        public void onAdClosed() {
-                            AdsManager.INSTANCE.setInterstitial3(null);
-                            AdsManager.INSTANCE.loadInter3(MainActivity.this);
-                            Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
-                        }
-                    },true);
-                }
+//                if (AdsManager.INSTANCE.getInterstitial3() != null) {
+//                    AdsManager.INSTANCE.showInter(MainActivity.this, AdsManager.INSTANCE.getInterstitial3(), new AdsManager.AdListener() {
+//                        @Override
+//                        public void onFailed() {
+//                            AdsManager.INSTANCE.setInterstitial3(null);
+//                            AdsManager.INSTANCE.loadInter3(MainActivity.this);
+//                            Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
+//                        }
+//
+//                        @Override
+//                        public void onAdClosed() {
+//                            AdsManager.INSTANCE.setInterstitial3(null);
+//                            AdsManager.INSTANCE.loadInter3(MainActivity.this);
+//                            Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
+//                        }
+//                    },true);
+//                }
             }
         });
         btn_LoadAndShowInter.setOnClickListener(new View.OnClickListener() {

@@ -6,6 +6,6 @@ public interface AdCallBackInterLoad {
     void onAdClosed();
     void onEventClickAdClosed();
     void onAdShowed();
-    void onAdLoaded(InterstitialAd interstitialAd);
-    void onAdFail();
+    void onAdLoaded(InterstitialAd interstitialAd, boolean isLoading);
+    void onAdFail( boolean isLoading);
 }
