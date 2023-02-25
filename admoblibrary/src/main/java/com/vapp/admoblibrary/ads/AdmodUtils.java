@@ -2,9 +2,11 @@ package com.vapp.admoblibrary.ads;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +17,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -73,6 +76,7 @@ import java.util.List;
 public class AdmodUtils {
     //Dialog loading
     public SweetAlertDialog dialog;
+    public Dialog dialogFullScreen;
     // Biến check lần cuối hiển thị quảng cáo
     public long lastTimeShowInterstitial = 0;
     // Timeout init admob
@@ -1451,11 +1455,7 @@ public class AdmodUtils {
         }
 
         if (enableLoadingDialog) {
-            dialog = new SweetAlertDialog(activity, SweetAlertDialog.PROGRESS_TYPE);
-            dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-            dialog.setTitleText("Loading ads. Please wait...");
-            dialog.setCancelable(false);
-            dialog.show();
+            dialogLoading(activity);
         }
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             localInterstitialAd.setFullScreenContentCallback(
@@ -1517,11 +1517,7 @@ public class AdmodUtils {
         }
 
         if (enableLoadingDialog) {
-            dialog = new SweetAlertDialog(activity, SweetAlertDialog.PROGRESS_TYPE);
-            dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-            dialog.setTitleText("Loading ads. Please wait...");
-            dialog.setCancelable(false);
-            dialog.show();
+            dialogLoading(activity);
         }
 
         if (isTesting) {
@@ -1578,11 +1574,7 @@ public class AdmodUtils {
         }
 
         if (enableLoadingDialog) {
-            dialog = new SweetAlertDialog(activity, SweetAlertDialog.PROGRESS_TYPE);
-            dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-            dialog.setTitleText("Loading ads. Please wait...");
-            dialog.setCancelable(false);
-            dialog.show();
+            dialogLoading(activity);
         }
 
         if (isTesting) {
@@ -1641,11 +1633,7 @@ public class AdmodUtils {
         }
 
         if (enableLoadingDialog) {
-            dialog = new SweetAlertDialog(activity, SweetAlertDialog.PROGRESS_TYPE);
-            dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-            dialog.setTitleText("Loading ads. Please wait...");
-            dialog.setCancelable(false);
-            dialog.show();
+            dialogLoading(activity);
         }
         localInterstitialAd.setFullScreenContentCallback(
                 new FullScreenContentCallback() {
@@ -1701,6 +1689,9 @@ public class AdmodUtils {
         if (AdmodUtils.getInstance().dialog != null && AdmodUtils.getInstance().dialog.isShowing()) {
             AdmodUtils.getInstance().dialog.dismiss();
         }
+        if (AdmodUtils.getInstance().dialogFullScreen != null && AdmodUtils.getInstance().dialogFullScreen.isShowing()) {
+            AdmodUtils.getInstance().dialogFullScreen.dismiss();
+        }
     }
 
     private void checkIdTest(Activity activity, String admobId) {
@@ -1747,5 +1738,16 @@ public class AdmodUtils {
             e.printStackTrace();
         }
         return "";
+    }
+
+    public void dialogLoading(Context context){
+        dialogFullScreen = new Dialog(context);
+        dialogFullScreen.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogFullScreen.setContentView(R.layout.dialog_full_screen);
+        dialogFullScreen.setCancelable(false);
+        dialogFullScreen.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        dialogFullScreen.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        dialogFullScreen.show();
     }
 }
