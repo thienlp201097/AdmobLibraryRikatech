@@ -1531,7 +1531,6 @@ public class AdmodUtils {
         InterstitialAd.load(activity, idIntersitialReal, adRequest, new InterstitialAdLoadCallback() {
             @Override
             public void onAdLoaded(@NonNull @org.jetbrains.annotations.NotNull InterstitialAd interstitialAd) {
-                mInterstitialAd = interstitialAd;
                 adLoadCallback.onAdLoaded(interstitialAd);
                 Log.i("adLog", "onAdLoaded");
                 // Toast.makeText(activity, "success load ads", Toast.LENGTH_SHORT).show();
@@ -1544,9 +1543,6 @@ public class AdmodUtils {
                     AppOpenManager.getInstance().isAppResumeEnabled = true;
                 }
                 AdmodUtils.getInstance().isAdShowing = false;
-                if (AdmodUtils.getInstance().mInterstitialAd != null) {
-                    AdmodUtils.getInstance().mInterstitialAd = null;
-                }
                 loadGetAndShowInterstitialId2(activity, id2, adLoadCallback, false);
             }
         });
@@ -1587,10 +1583,8 @@ public class AdmodUtils {
         InterstitialAd.load(activity, idIntersitialReal, adRequest, new InterstitialAdLoadCallback() {
             @Override
             public void onAdLoaded(@NonNull @org.jetbrains.annotations.NotNull InterstitialAd interstitialAd) {
-                mInterstitialAd = interstitialAd;
                 adLoadCallback.onAdLoaded(interstitialAd);
                 Log.i("adLog", "onAdLoaded");
-                // Toast.makeText(activity, "success load ads", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -1601,9 +1595,6 @@ public class AdmodUtils {
                     AppOpenManager.getInstance().isAppResumeEnabled = true;
                 }
                 AdmodUtils.getInstance().isAdShowing = false;
-                if (AdmodUtils.getInstance().mInterstitialAd != null) {
-                    AdmodUtils.getInstance().mInterstitialAd = null;
-                }
                 adLoadCallback.onAdFail();
 
             }
@@ -1668,12 +1659,12 @@ public class AdmodUtils {
                         adCallback.onAdShowed();
                     }
                 });
-        if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED) && mInterstitialAd != null) {
+        if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
             AdmodUtils.getInstance().isAdShowing = true;
             if (adCallback != null) {
                 adCallback.onAdClosed();
             }
-            new Handler().postDelayed(() -> mInterstitialAd.show(activity), 100);
+            new Handler().postDelayed(() -> localInterstitialAd.show(activity), 100);
         } else {
             AdmodUtils.getInstance().isAdShowing = false;
             if (AppOpenManager.getInstance().isInitialized()) {
