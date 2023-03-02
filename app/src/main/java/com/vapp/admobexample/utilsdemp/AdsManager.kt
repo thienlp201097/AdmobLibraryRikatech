@@ -2,26 +2,25 @@ package com.vapp.admobexample.utilsdemp
 
 import android.app.Activity
 import android.content.Context
-import android.util.Log
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.ads.interstitial.InterstitialAd
-import com.vapp.admoblibrary.R
 import com.vapp.admoblibrary.ads.AdCallBackInterLoad
 import com.vapp.admoblibrary.ads.AdCallbackNew
 import com.vapp.admoblibrary.ads.AdmodUtils
+import com.vapp.admoblibrary.ads.model.InterHolder
+import com.vapp.admoblibrary.ads.model.NativeHolder
 import com.vapp.admoblibrary.utils.Utils
 
 object AdsManager {
     var interAds1: InterstitialAd? = null
     val mutable_inter1: MutableLiveData<InterstitialAd> = MutableLiveData()
     var check_inter1 = false
-    fun loadInter(context: Context) {
-        check_inter1 = true
-        AdmodUtils.getInstance().loadAndGetAdInterstitial(
-            context,
-            context.getString(R.string.test_ads_admob_inter_id),
-            context.getString(R.string.test_ads_admob_inter_id),
+
+    var nativeHolder = NativeHolder("ca-app-pub-3940256099942544/2247696110", "ca-app-pub-3940256099942544/2247696110")
+    var interholder = InterHolder("ca-app-pub-3940256099942544/1033173712","ca-app-pub-3940256099942544/1033173712");
+    fun loadInter(context: Context, interHolder: InterHolder) {
+        interHolder.check = true
+        AdmodUtils.getInstance().loadAndGetAdInterstitial(context,interHolder,
             object : AdCallBackInterLoad {
                 override fun onAdClosed() {
                     Utils.getInstance().showMessenger(context, "onAdClosed")
@@ -36,30 +35,27 @@ object AdsManager {
                 }
 
                 override fun onAdLoaded(interstitialAd: InterstitialAd, isLoad: Boolean) {
-                    interAds1 = interstitialAd
-                    check_inter1 = isLoad
+                    interholder.inter = interstitialAd
+                    interHolder.check = isLoad
                     Utils.getInstance().showMessenger(context, "onAdLoaded")
                 }
 
                 override fun onAdFail(isLoad: Boolean) {
-                    check_inter1 = isLoad
+                    interHolder.check = isLoad
                     Utils.getInstance().showMessenger(context, "onAdFail")
                 }
-            },
-            mutable_inter1,
-            check_inter1
+            }
         )
     }
 
     fun showInter(
         context: Context,
-        interstitialAd: InterstitialAd?,
+        interHolder: InterHolder,
         adListener: AdListener,
         enableLoadingDialog: Boolean
     ) {
         AdmodUtils.getInstance().showAdInterstitialWithCallbackNotLoadNew(
-            interstitialAd,
-            context as Activity?,
+            context as Activity?,interHolder,
             object : AdCallbackNew {
                 override fun onAdLoaded() {
                     Utils.getInstance().showMessenger(context, "onAdLoaded")
@@ -70,11 +66,15 @@ object AdsManager {
                 }
 
                 override fun onAdFail() {
+                    interHolder.inter = null
+                    loadInter(context,interHolder)
                     adListener.onFailed()
                     Utils.getInstance().showMessenger(context, "onAdFail")
                 }
 
                 override fun onEventClickAdClosed() {
+                    interHolder.inter = null
+                    loadInter(context,interHolder)
                     adListener.onAdClosed()
                     Utils.getInstance().showMessenger(context, "onEventClickAdClosed")
                 }
@@ -82,8 +82,7 @@ object AdsManager {
                 override fun onAdShowed() {
                     Utils.getInstance().showMessenger(context, "onAdShowed")
                 }
-            }, enableLoadingDialog, mutable_inter1, check_inter1
-        )
+            }, enableLoadingDialog)
     }
 
     interface AdListener {

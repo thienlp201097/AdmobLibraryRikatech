@@ -146,19 +146,15 @@ public class MainActivity extends AppCompatActivity {
         btn_ShowInter1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AdsManager.INSTANCE.showInter(MainActivity.this, AdsManager.INSTANCE.getInterAds1(), new AdsManager.AdListener() {
+                AdsManager.INSTANCE.showInter(MainActivity.this, AdsManager.INSTANCE.getInterholder(), new AdsManager.AdListener() {
 
                     @Override
                     public void onFailed() {
-                        AdsManager.INSTANCE.setInterAds1(null);
-                        AdsManager.INSTANCE.loadInter(MainActivity.this);
                         Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
                     }
 
                     @Override
                     public void onAdClosed() {
-                        AdsManager.INSTANCE.setInterAds1(null);
-                        AdsManager.INSTANCE.loadInter(MainActivity.this);
                         Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
                     }
                 },true);
@@ -330,7 +326,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 nativeAd = null;
-                AdmodUtils.getInstance().loadAndGetNativeAds(MainActivity.this, getString(R.string.test_ads_admob_native_id), new NativeAdCallback() {
+                AdmodUtils.getInstance().loadAndGetNativeAds(MainActivity.this, AdsManager.INSTANCE.getNativeHolder(), new NativeAdCallback() {
                     @Override
                     public void onLoadedAndGetNativeAd(NativeAd ad) {
                         nativeAd = ad;
@@ -351,22 +347,7 @@ public class MainActivity extends AppCompatActivity {
         btn_ShowNative.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AdmodUtils.getInstance().showNativeAdsWithLayout(MainActivity.this, nativeAd, viewNativeAds, R.layout.ad_template_medium, GoogleENative.UNIFIED_MEDIUM, new NativeAdCallback() {
-                    @Override
-                    public void onNativeAdLoaded() {
-                    }
-
-                    @Override
-                    public void onAdFail() {
-
-                    }
-
-                    @Override
-                    public void onLoadedAndGetNativeAd(NativeAd ad) {
-
-                    }
-                });
-
+                AdmodUtils.getInstance().showNativeAdsWithLayout(MainActivity.this, AdsManager.INSTANCE.getNativeHolder(), viewNativeAds, R.layout.ad_template_medium, GoogleENative.UNIFIED_MEDIUM);
             }
         });
 
