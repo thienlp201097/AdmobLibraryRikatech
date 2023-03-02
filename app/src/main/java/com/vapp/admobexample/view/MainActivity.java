@@ -351,18 +351,28 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //AdmodUtils.getInstance().loadAdBanner(MainActivity.this, getString(R.string.test_ads_admob_banner_id), banner);
-        AdmodUtils.getInstance().loadAdBannerCollapsible(MainActivity.this, getString(R.string.test_ads_admob_banner_id), CollapsibleBanner.BOTTOM, banner, new BannerAdCallback() {
+        AdmodUtils.getInstance().loadAdBanner(MainActivity.this, getString(R.string.test_ads_admob_banner_id), banner, new AdmodUtils.BannerCallBack() {
             @Override
-            public void onBannerAdLoaded(AdSize adSize) {
-                Toast.makeText(MainActivity.this, String.valueOf(adSize.getHeight()), Toast.LENGTH_SHORT).show();
+            public void onLoad() {
+                Utils.getInstance().showMessenger(MainActivity.this, "onLoad");
             }
 
             @Override
-            public void onAdFail() {
-
+            public void onFailed() {
+                Utils.getInstance().showMessenger(MainActivity.this, "onFailed");
             }
         });
+//        AdmodUtils.getInstance().loadAdBannerCollapsible(MainActivity.this, getString(R.string.test_ads_admob_banner_id), CollapsibleBanner.BOTTOM, banner, new BannerAdCallback() {
+//            @Override
+//            public void onBannerAdLoaded(AdSize adSize) {
+//                Toast.makeText(MainActivity.this, String.valueOf(adSize.getHeight()), Toast.LENGTH_SHORT).show();
+//            }
+//
+//            @Override
+//            public void onAdFail() {
+//
+//            }
+//        });
     }
 
     private void showDialogRate() {

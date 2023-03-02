@@ -212,10 +212,16 @@ public class AdmodUtils {
         return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
     }
 
-    public void loadAdBanner(Activity activity, String bannerId, ViewGroup viewGroup) {
+    public interface BannerCallBack{
+        void onLoad();
+        void onFailed();
+    }
+
+    public void loadAdBanner(Activity activity, String bannerId, ViewGroup viewGroup,BannerCallBack bannerAdCallback) {
 
         if (!isShowAds || !isNetworkConnected(activity)) {
             viewGroup.setVisibility(View.GONE);
+            bannerAdCallback.onFailed();
             return;
         }
 
@@ -240,6 +246,7 @@ public class AdmodUtils {
             public void onAdLoaded() {
                 shimmerFrameLayout.stopShimmer();
                 viewGroup.removeView(tagView);
+                bannerAdCallback.onLoad();
             }
 
             @Override
@@ -247,6 +254,7 @@ public class AdmodUtils {
                 Log.e(" Admod", "failloadbanner" + adError.getMessage());
                 shimmerFrameLayout.stopShimmer();
                 viewGroup.removeView(tagView);
+                bannerAdCallback.onFailed();
             }
 
             @Override
