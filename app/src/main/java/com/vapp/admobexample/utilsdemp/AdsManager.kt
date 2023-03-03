@@ -3,9 +3,10 @@ package com.vapp.admobexample.utilsdemp
 import android.app.Activity
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
+import com.google.android.gms.ads.AdValue
 import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.vapp.admoblibrary.AdsInterCallBack
 import com.vapp.admoblibrary.ads.AdCallBackInterLoad
-import com.vapp.admoblibrary.ads.AdCallbackNew
 import com.vapp.admoblibrary.ads.AdmodUtils
 import com.vapp.admoblibrary.ads.model.InterHolder
 import com.vapp.admoblibrary.ads.model.NativeHolder
@@ -17,7 +18,7 @@ object AdsManager {
     var check_inter1 = false
 
     var nativeHolder = NativeHolder("ca-app-pub-3940256099942544/2247696110", "ca-app-pub-3940256099942544/2247696110")
-    var interholder = InterHolder("ca-app-pub-3940256099942544/1033173712","ca-app-pub-3940256099942544/1033173712");
+    var interholder = InterHolder("ca-app-pub-3940256099942544/1033173712","ca-app-pub-3940256099942544/1033173712")
     fun loadInter(context: Context, interHolder: InterHolder) {
         interHolder.check = true
         AdmodUtils.getInstance().loadAndGetAdInterstitial(context,interHolder,
@@ -56,7 +57,7 @@ object AdsManager {
     ) {
         AdmodUtils.getInstance().showAdInterstitialWithCallbackNotLoadNew(
             context as Activity?,interHolder,
-            object : AdCallbackNew {
+            object : AdsInterCallBack {
                 override fun onAdLoaded() {
                     Utils.getInstance().showMessenger(context, "onAdLoaded")
                 }
@@ -70,6 +71,10 @@ object AdsManager {
                     loadInter(context,interHolder)
                     adListener.onFailed()
                     Utils.getInstance().showMessenger(context, "onAdFail")
+                }
+
+                override fun onPaid(adValue: AdValue?) {
+                    Utils.getInstance().showMessenger(context, adValue.toString())
                 }
 
                 override fun onEventClickAdClosed() {

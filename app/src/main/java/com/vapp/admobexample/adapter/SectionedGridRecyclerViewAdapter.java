@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.ads.AdValue;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.vapp.admoblibrary.ads.AdmodUtils;
 import com.vapp.admoblibrary.ads.NativeAdCallback;
@@ -124,6 +125,11 @@ public class SectionedGridRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
 
                         @Override
                         public void onAdFail() {
+
+                        }
+
+                        @Override
+                        public void onAdPaid(AdValue adValue) {
 
                         }
                     });

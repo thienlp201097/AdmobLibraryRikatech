@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.codemybrainsout.ratingdialog.MaybeLaterCallback;
 import com.codemybrainsout.ratingdialog.RatingDialog;
 import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdValue;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.vapp.admobexample.utilsdemp.AdsManager;
 import com.vapp.admobexample.utilsdemp.UtilsDemoActivity;
@@ -314,6 +315,11 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
+                    public void onAdPaid(AdValue adValue) {
+                        Utils.getInstance().showMessenger(MainActivity.this, adValue.toString());
+                    }
+
+                    @Override
                     public void onLoadedAndGetNativeAd(NativeAd ad) {
 
                     }
@@ -334,11 +340,18 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onNativeAdLoaded() {
+                        Utils.getInstance().showMessenger(MainActivity.this, "NativeLoad");
                     }
 
                     @Override
                     public void onAdFail() {
+                        Utils.getInstance().showMessenger(MainActivity.this, "NativeFailed");
 
+                    }
+
+                    @Override
+                    public void onAdPaid(AdValue adValue) {
+                        Utils.getInstance().showMessenger(MainActivity.this, adValue.toString());
                     }
                 });
             }
@@ -360,6 +373,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailed() {
                 Utils.getInstance().showMessenger(MainActivity.this, "onFailed");
+            }
+
+            @Override
+            public void onPaid(AdValue adValue) {
+                Utils.getInstance().showMessenger(MainActivity.this, adValue.toString());
             }
         });
 //        AdmodUtils.getInstance().loadAdBannerCollapsible(MainActivity.this, getString(R.string.test_ads_admob_banner_id), CollapsibleBanner.BOTTOM, banner, new BannerAdCallback() {

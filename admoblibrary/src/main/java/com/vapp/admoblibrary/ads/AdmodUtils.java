@@ -32,8 +32,11 @@ import androidx.lifecycle.ProcessLifecycleOwner;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.ads.mediation.admob.AdMobAdapter;
+import com.google.android.gms.ads.AdValue;
+import com.google.android.gms.ads.OnPaidEventListener;
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd;
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoadCallback;
+import com.vapp.admoblibrary.AdsInterCallBack;
 import com.vapp.admoblibrary.BuildConfig;
 import com.vapp.admoblibrary.ads.admobnative.enumclass.CollapsibleBanner;
 import com.vapp.admoblibrary.ads.admobnative.enumclass.GoogleEBanner;
@@ -215,6 +218,7 @@ public class AdmodUtils {
     public interface BannerCallBack{
         void onLoad();
         void onFailed();
+        void onPaid(AdValue adValue);
     }
 
     public void loadAdBanner(Activity activity, String bannerId, ViewGroup viewGroup,BannerCallBack bannerAdCallback) {
@@ -239,8 +243,12 @@ public class AdmodUtils {
         viewGroup.addView(mAdView, 1);
         shimmerFrameLayout = tagView.findViewById(R.id.shimmer_view_container);
         shimmerFrameLayout.startShimmer();
-
-
+        mAdView.setOnPaidEventListener(new OnPaidEventListener() {
+            @Override
+            public void onPaidEvent(@NonNull AdValue adValue) {
+                bannerAdCallback.onPaid(adValue);
+            }
+        });
         mAdView.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
@@ -297,7 +305,12 @@ public class AdmodUtils {
         viewGroup.addView(mAdView, 1);
         shimmerFrameLayout = tagView.findViewById(R.id.shimmer_view_container);
         shimmerFrameLayout.startShimmer();
-
+        mAdView.setOnPaidEventListener(new OnPaidEventListener() {
+            @Override
+            public void onPaidEvent(@NonNull AdValue adValue) {
+                callback.onAdPaid(adValue);
+            }
+        });
         mAdView.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
@@ -374,6 +387,7 @@ public class AdmodUtils {
                     @Override
                     public void onNativeAdLoaded(@NonNull @NotNull NativeAd nativeAd) {
                         nativeHolder.setNativeAd(nativeAd);
+                        nativeAd.setOnPaidEventListener(adCallback::onAdPaid);
                         adCallback.onLoadedAndGetNativeAd(nativeAd);
                         //viewGroup.setVisibility(View.VISIBLE);
                     }
@@ -1000,7 +1014,9 @@ public class AdmodUtils {
             if (callback != null) {
                 callback.onAdClosed();
             }
-            new Handler().postDelayed(() -> mInterstitialAd.show(activity), 400);
+            new Handler().postDelayed(() -> {
+                mInterstitialAd.show(activity);
+            }, 400);
         } else {
             AdmodUtils.getInstance().isAdShowing = false;
             if (AppOpenManager.getInstance().isInitialized()) {
@@ -1128,13 +1144,12 @@ public class AdmodUtils {
                 }
                 AdmodUtils.getInstance().isAdShowing = false;
                 dismissAdDialog();
-
             }
         });
 
     }
 
-    public void loadAndShowAdInterstitialWithCallbackMultiAds(AppCompatActivity activity, String admobId, String admobId2, AdCallbackNew adCallback, boolean enableLoadingDialog) {
+    public void loadAndShowAdInterstitialWithCallbackMultiAds(AppCompatActivity activity, String admobId, String admobId2, AdsInterCallBack adCallback, boolean enableLoadingDialog) {
         AdmodUtils.getInstance().mInterstitialAd = null;
         AdmodUtils.getInstance().isAdShowing = false;
         if (adRequest == null) {
@@ -1173,7 +1188,12 @@ public class AdmodUtils {
         }
 
         String finalAdmobId2 = admobId2;
-
+        mInterstitialAd.setOnPaidEventListener(new OnPaidEventListener() {
+            @Override
+            public void onPaidEvent(@NonNull AdValue adValue) {
+                adCallback.onPaid(adValue);
+            }
+        });
         InterstitialAd.load(activity, admobId, adRequest, new InterstitialAdLoadCallback() {
             @Override
             public void onAdLoaded(@NonNull @org.jetbrains.annotations.NotNull InterstitialAd interstitialAd) {
@@ -1258,7 +1278,7 @@ public class AdmodUtils {
     }
 
 
-    private void loadAndShowAdInterstitialWithCallback2(AppCompatActivity activity, String admobId, AdCallbackNew adCallback) {
+    private void loadAndShowAdInterstitialWithCallback2(AppCompatActivity activity, String admobId, AdsInterCallBack adCallback) {
         AdmodUtils.getInstance().mInterstitialAd = null;
         AdmodUtils.getInstance().isAdShowing = false;
 
@@ -1298,6 +1318,12 @@ public class AdmodUtils {
                 new Handler(Looper.getMainLooper()).postDelayed(() -> {
                     mInterstitialAd = interstitialAd;
                     if (mInterstitialAd != null) {
+                        mInterstitialAd.setOnPaidEventListener(new OnPaidEventListener() {
+                            @Override
+                            public void onPaidEvent(@NonNull AdValue adValue) {
+                                adCallback.onPaid(adValue);
+                            }
+                        });
                         mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
                             @Override
                             public void onAdFailedToShowFullScreenContent(@NonNull @NotNull AdError adError) {
@@ -1459,7 +1485,7 @@ public class AdmodUtils {
         });
     }
 
-    public void showAdInterstitialWithCallbackNotLoadNew(Activity activity, InterHolder interHolder, AdCallbackNew adCallback, boolean enableLoadingDialog) {
+    public void showAdInterstitialWithCallbackNotLoadNew(Activity activity, InterHolder interHolder, AdsInterCallBack adCallback, boolean enableLoadingDialog) {
         AdmodUtils.getInstance().isClick = true;
         if (!isShowAds || !isNetworkConnected(activity)) {
             isAdShowing = false;
@@ -1469,6 +1495,7 @@ public class AdmodUtils {
             adCallback.onAdFail();
             return;
         }
+        adCallback.onAdLoaded();
         //check Ads Load
         if (interHolder.getCheck()) {
             if (enableLoadingDialog) {
@@ -1480,6 +1507,7 @@ public class AdmodUtils {
                     AdmodUtils.getInstance().isClick = false;
                     new Handler(Looper.getMainLooper()).postDelayed(() -> {
                         Log.d("===DelayLoad", "delay");
+                        aBoolean.setOnPaidEventListener(adCallback::onPaid);
                         aBoolean.setFullScreenContentCallback(
                                 new FullScreenContentCallback() {
                                     @Override
@@ -1519,7 +1547,7 @@ public class AdmodUtils {
                                         adCallback.onAdShowed();
                                     }
                                 });
-                        showInterstitialAd(activity, aBoolean, adCallback);
+                        showInterstitialAdNew(activity, aBoolean, adCallback);
                     }, 400);
                 }
             });
@@ -1539,6 +1567,7 @@ public class AdmodUtils {
             }
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 Log.d("===DelayLoad", "no-delay");
+                interHolder.getInter().setOnPaidEventListener(adCallback::onPaid);
                 interHolder.getInter().setFullScreenContentCallback(
                         new FullScreenContentCallback() {
                             @Override
@@ -1577,8 +1606,28 @@ public class AdmodUtils {
                                 adCallback.onAdShowed();
                             }
                         });
-                showInterstitialAd(activity, interHolder.getInter(), adCallback);
+                showInterstitialAdNew(activity, interHolder.getInter(), adCallback);
             }, 400);
+        }
+    }
+
+    private void showInterstitialAdNew(Activity activity, InterstitialAd mInterstitialAd, AdsInterCallBack callback) {
+        if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED) && mInterstitialAd != null) {
+            AdmodUtils.getInstance().isAdShowing = true;
+            if (callback != null) {
+                callback.onAdClosed();
+            }
+            new Handler().postDelayed(() -> {
+                mInterstitialAd.setOnPaidEventListener(callback::onPaid);
+                mInterstitialAd.show(activity);
+            }, 400);
+        } else {
+            AdmodUtils.getInstance().isAdShowing = false;
+            if (AppOpenManager.getInstance().isInitialized()) {
+                AppOpenManager.getInstance().isAppResumeEnabled = true;
+            }
+            dismissAdDialog();
+            callback.onAdFail();
         }
     }
     public void dismissAdDialog() {
