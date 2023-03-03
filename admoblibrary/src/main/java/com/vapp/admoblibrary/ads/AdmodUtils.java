@@ -378,10 +378,45 @@ public class AdmodUtils {
         AdLoader adLoader;
         if (isTesting) {
             nativeHolder.setAds(context.getString(R.string.test_ads_admob_native_id));
-            nativeHolder.setAds2(context.getString(R.string.test_ads_admob_native_id));
         }
 
         adLoader = new AdLoader.Builder(context, nativeHolder.getAds())
+                .forNativeAd(new NativeAd.OnNativeAdLoadedListener() {
+
+                    @Override
+                    public void onNativeAdLoaded(@NonNull @NotNull NativeAd nativeAd) {
+                        nativeHolder.setNativeAd(nativeAd);
+                        nativeAd.setOnPaidEventListener(adCallback::onAdPaid);
+                        adCallback.onLoadedAndGetNativeAd(nativeAd);
+                        //viewGroup.setVisibility(View.VISIBLE);
+                    }
+
+                }).withAdListener(new AdListener() {
+                    @Override
+                    public void onAdFailedToLoad(LoadAdError adError) {
+                        Log.e("Admodfail", "onAdFailedToLoad" + adError.getMessage());
+                        Log.e("Admodfail", "errorCodeAds" + adError.getCause());
+                        loadAndGetNativeAds2(context,nativeHolder,adCallback);
+                    }
+                })
+                .withNativeAdOptions(new NativeAdOptions.Builder().build()).build();
+
+        if (adRequest != null) {
+            adLoader.loadAd(adRequest);
+        }
+        Log.e("Admod", "loadAdNativeAds");
+    }
+
+    public void loadAndGetNativeAds2(Context context, NativeHolder nativeHolder, NativeAdCallback adCallback) {
+        if (!isShowAds || !isNetworkConnected(context)) {
+            return;
+        }
+        AdLoader adLoader;
+        if (isTesting) {
+            nativeHolder.setAds2(context.getString(R.string.test_ads_admob_native_id));
+        }
+
+        adLoader = new AdLoader.Builder(context, nativeHolder.getAds2())
                 .forNativeAd(new NativeAd.OnNativeAdLoadedListener() {
 
                     @Override
