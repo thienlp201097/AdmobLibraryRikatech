@@ -62,8 +62,8 @@ object AdsManager {
                     Utils.getInstance().showMessenger(context, "onAdLoaded")
                 }
 
-                override fun onAdClosed() {
-
+                override fun onStartAction() {
+                    adListener.onAdClosed()
                 }
 
                 override fun onAdFail() {
@@ -80,7 +80,7 @@ object AdsManager {
                 override fun onEventClickAdClosed() {
                     interHolder.inter = null
                     loadInter(context,interHolder)
-                    adListener.onAdClosed()
+//                    adListener.onAdClosed()
                     Utils.getInstance().showMessenger(context, "onEventClickAdClosed")
                 }
 

@@ -1257,7 +1257,7 @@ public class AdmodUtils {
                             @Override
                             public void onAdDismissedFullScreenContent() {
                                 lastTimeShowInterstitial = new Date().getTime();
-                                adCallback.onAdClosed();
+                                adCallback.onStartAction();
                                 adCallback.onEventClickAdClosed();
                                 if (AdmodUtils.getInstance().mInterstitialAd != null) {
                                     AdmodUtils.getInstance().mInterstitialAd = null;
@@ -1322,7 +1322,7 @@ public class AdmodUtils {
             initAdRequest(timeOut);
         }
         if (!isShowAds || !isNetworkConnected(activity)) {
-            adCallback.onAdClosed();
+            adCallback.onAdFail();
 //            handlerTimeOut.removeCallbacksAndMessages(null);
             return;
         }
@@ -1378,7 +1378,7 @@ public class AdmodUtils {
                             @Override
                             public void onAdDismissedFullScreenContent() {
                                 lastTimeShowInterstitial = new Date().getTime();
-                                adCallback.onAdClosed();
+                                adCallback.onStartAction();
                                 adCallback.onEventClickAdClosed();
                                 if (AdmodUtils.getInstance().mInterstitialAd != null) {
                                     AdmodUtils.getInstance().mInterstitialAd = null;
@@ -1578,6 +1578,7 @@ public class AdmodUtils {
 
                                     @Override
                                     public void onAdShowedFullScreenContent() {
+                                        dismissAdDialog();
                                         isAdShowing = true;
                                         adCallback.onAdShowed();
                                     }
@@ -1638,6 +1639,7 @@ public class AdmodUtils {
                             @Override
                             public void onAdShowedFullScreenContent() {
                                 isAdShowing = true;
+                                dismissAdDialog();
                                 adCallback.onAdShowed();
                             }
                         });
@@ -1649,10 +1651,10 @@ public class AdmodUtils {
     private void showInterstitialAdNew(Activity activity, InterstitialAd mInterstitialAd, AdsInterCallBack callback) {
         if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED) && mInterstitialAd != null) {
             AdmodUtils.getInstance().isAdShowing = true;
-            if (callback != null) {
-                callback.onAdClosed();
-            }
             new Handler().postDelayed(() -> {
+                if (callback != null) {
+                    callback.onStartAction();
+                }
                 mInterstitialAd.setOnPaidEventListener(callback::onPaid);
                 mInterstitialAd.show(activity);
             }, 400);
