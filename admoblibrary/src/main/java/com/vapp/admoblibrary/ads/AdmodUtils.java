@@ -379,13 +379,15 @@ public class AdmodUtils {
         if (isTesting) {
             nativeHolder.setAds(context.getString(R.string.test_ads_admob_native_id));
         }
-
+        nativeHolder.setLoad(true);
         adLoader = new AdLoader.Builder(context, nativeHolder.getAds())
                 .forNativeAd(new NativeAd.OnNativeAdLoadedListener() {
 
                     @Override
                     public void onNativeAdLoaded(@NonNull @NotNull NativeAd nativeAd) {
                         nativeHolder.setNativeAd(nativeAd);
+                        nativeHolder.setLoad(false);
+                        nativeHolder.getNative_mutable().setValue(nativeAd);
                         nativeAd.setOnPaidEventListener(adCallback::onAdPaid);
                         adCallback.onLoadedAndGetNativeAd(nativeAd);
                         //viewGroup.setVisibility(View.VISIBLE);
@@ -422,6 +424,8 @@ public class AdmodUtils {
                     @Override
                     public void onNativeAdLoaded(@NonNull @NotNull NativeAd nativeAd) {
                         nativeHolder.setNativeAd(nativeAd);
+                        nativeHolder.setLoad(false);
+                        nativeHolder.getNative_mutable().setValue(nativeAd);
                         nativeAd.setOnPaidEventListener(adCallback::onAdPaid);
                         adCallback.onLoadedAndGetNativeAd(nativeAd);
                         //viewGroup.setVisibility(View.VISIBLE);
@@ -432,6 +436,9 @@ public class AdmodUtils {
                     public void onAdFailedToLoad(LoadAdError adError) {
                         Log.e("Admodfail", "onAdFailedToLoad" + adError.getMessage());
                         Log.e("Admodfail", "errorCodeAds" + adError.getCause());
+                        nativeHolder.setNativeAd(null);
+                        nativeHolder.setLoad(false);
+                        nativeHolder.getNative_mutable().setValue(null);
                         adCallback.onAdFail();
                     }
                 })
@@ -443,7 +450,12 @@ public class AdmodUtils {
         Log.e("Admod", "loadAdNativeAds");
     }
 
-    public void showNativeAdsWithLayout(Activity activity, NativeHolder nativeHolder, ViewGroup viewGroup, int layout, GoogleENative size) {
+    public interface AdsNativeCallBackAdmod{
+        void NativeLoaded();
+        void NativeFailed();
+    }
+
+    public void showNativeAdsWithLayout(Activity activity, NativeHolder nativeHolder, ViewGroup viewGroup, int layout, GoogleENative size,AdsNativeCallBackAdmod callback) {
         if (!isShowAds || !isNetworkConnected(activity)) {
             viewGroup.setVisibility(View.GONE);
             return;
@@ -452,8 +464,24 @@ public class AdmodUtils {
             shimmerFrameLayout.stopShimmer();
         }
         viewGroup.removeAllViews();
+        if (!nativeHolder.isLoad()){
+            if (nativeHolder.getNativeAd() != null){
+                NativeAdView adView = (NativeAdView) activity.getLayoutInflater()
+                        .inflate(layout, null);
 
-        if (nativeHolder.getNativeAd() == null) {
+                NativeFunc.Companion.populateNativeAdView(nativeHolder.getNativeAd(), adView, GoogleENative.UNIFIED_MEDIUM);
+                if (shimmerFrameLayout != null) {
+                    shimmerFrameLayout.stopShimmer();
+                }
+                viewGroup.addView(adView);
+                callback.NativeLoaded();
+            }else {
+                if (shimmerFrameLayout != null) {
+                    shimmerFrameLayout.stopShimmer();
+                }
+                callback.NativeFailed();
+            }
+        }else {
             View tagView;
             if (size == GoogleENative.UNIFIED_MEDIUM) {
                 tagView = activity.getLayoutInflater().inflate(R.layout.layoutnative_loading_medium, null, false);
@@ -464,15 +492,23 @@ public class AdmodUtils {
             if (shimmerFrameLayout == null)
                 shimmerFrameLayout = tagView.findViewById(R.id.shimmer_view_container);
             shimmerFrameLayout.startShimmer();
-        } else {
-            NativeAdView adView = (NativeAdView) activity.getLayoutInflater()
-                    .inflate(layout, null);
-
-            NativeFunc.Companion.populateNativeAdView(nativeHolder.getNativeAd(), adView, GoogleENative.UNIFIED_MEDIUM);
-            if (shimmerFrameLayout != null) {
-                shimmerFrameLayout.stopShimmer();
-            }
-            viewGroup.addView(adView);
+            nativeHolder.getNative_mutable().observe((LifecycleOwner) activity, nativeAd -> {
+                if (nativeAd!=null){
+                    NativeAdView adView = (NativeAdView) activity.getLayoutInflater()
+                            .inflate(layout, null);
+                    NativeFunc.Companion.populateNativeAdView(nativeAd, adView, GoogleENative.UNIFIED_MEDIUM);
+                    if (shimmerFrameLayout != null) {
+                        shimmerFrameLayout.stopShimmer();
+                    }
+                    viewGroup.addView(adView);
+                    callback.NativeLoaded();
+                }else {
+                    if (shimmerFrameLayout != null) {
+                        shimmerFrameLayout.stopShimmer();
+                    }
+                    callback.NativeFailed();
+                }
+            });
         }
     }
 
