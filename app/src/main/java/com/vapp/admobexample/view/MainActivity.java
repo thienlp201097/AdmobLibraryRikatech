@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     Button btn_LoadNativeinRec, btn_LoadNativeGrid;
     Button btn_LoadAndShowNative, btn_LoadAndGetNative, btn_ShowNative;
     Button btn_IAP, btn_Rate, btn_Utils;
-    LinearLayout viewNativeAds;
+    FrameLayout viewNativeAds;
     FrameLayout banner;
     public NativeAd nativeAd;
     public NativeAd nativeAd2;
@@ -360,7 +360,17 @@ public class MainActivity extends AppCompatActivity {
         btn_ShowNative.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AdmodUtils.getInstance().showNativeAdsWithLayout(MainActivity.this, AdsManager.INSTANCE.getNativeHolder(), viewNativeAds, R.layout.ad_template_medium, GoogleENative.UNIFIED_MEDIUM);
+                AdmodUtils.getInstance().showNativeAdsWithLayout(MainActivity.this, AdsManager.INSTANCE.getNativeHolder(), viewNativeAds, R.layout.ad_template_medium, GoogleENative.UNIFIED_MEDIUM, new AdmodUtils.AdsNativeCallBackAdmod() {
+                    @Override
+                    public void NativeLoaded() {
+                        viewNativeAds.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void NativeFailed() {
+                        viewNativeAds.setVisibility(View.GONE);
+                    }
+                });
             }
         });
 

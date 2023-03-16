@@ -473,12 +473,14 @@ public class AdmodUtils {
                 if (shimmerFrameLayout != null) {
                     shimmerFrameLayout.stopShimmer();
                 }
+                nativeHolder.getNative_mutable().removeObservers((LifecycleOwner) activity);
                 viewGroup.addView(adView);
                 callback.NativeLoaded();
             }else {
                 if (shimmerFrameLayout != null) {
                     shimmerFrameLayout.stopShimmer();
                 }
+                nativeHolder.getNative_mutable().removeObservers((LifecycleOwner) activity);
                 callback.NativeFailed();
             }
         }else {
@@ -502,11 +504,13 @@ public class AdmodUtils {
                     }
                     viewGroup.addView(adView);
                     callback.NativeLoaded();
+                    nativeHolder.getNative_mutable().removeObservers((LifecycleOwner) activity);
                 }else {
                     if (shimmerFrameLayout != null) {
                         shimmerFrameLayout.stopShimmer();
                     }
                     callback.NativeFailed();
+                    nativeHolder.getNative_mutable().removeObservers((LifecycleOwner) activity);
                 }
             });
         }
