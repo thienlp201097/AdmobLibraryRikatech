@@ -17,6 +17,7 @@ import com.google.android.gms.ads.AdValue;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.vapp.admobexample.utilsdemp.AdsManager;
 import com.vapp.admobexample.utilsdemp.UtilsDemoActivity;
+import com.vapp.admoblibrary.ads.AOAManager;
 import com.vapp.admoblibrary.ads.AdCallbackNew;
 import com.vapp.admoblibrary.ads.AdLoadCallback;
 import com.vapp.admoblibrary.ads.NativeAdCallback;
@@ -48,8 +49,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
         findbyid();
-        showDialogRate();
+//        showDialogRate();
 
+        AOAManager aoaManager = new AOAManager(this, getString(R.string.test_ads_admob_app_open), () -> Utils.getInstance().showMessenger(MainActivity.this, "onAdClosed"));
+        aoaManager.showAdIfAvailable();
         // AdsConfigModel = Model call by API
 //         Utils.getInstance().adUnitLists = adsConfigModel.getAdUnitList();
 
