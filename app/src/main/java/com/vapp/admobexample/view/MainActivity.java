@@ -167,32 +167,17 @@ public class MainActivity extends AppCompatActivity {
         btn_LoadAndShowInter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AdmodUtils.getInstance().loadAndShowAdInterstitialWithCallback(MainActivity.this, getString(R.string.test_ads_admob_inter_id), 0, new AdCallbackNew() {
-                    @Override
-                    public void onEventClickAdClosed() {
-                        Utils.getInstance().showMessenger(MainActivity.this, "onEventClickAdClosed");
-                    }
-
-                    @Override
-                    public void onAdShowed() {
-                        Utils.getInstance().showMessenger(MainActivity.this, "onAdShowed");
-                    }
-
-                    @Override
-                    public void onAdLoaded() {
-                        Utils.getInstance().showMessenger(MainActivity.this, "onAdLoaded");
-                    }
-
+                AdsManager.INSTANCE.loadAndShowIntersial(MainActivity.this, new AdsManager.AdListener() {
                     @Override
                     public void onAdClosed() {
-                        Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
+                        startActivity(new Intent(MainActivity.this, OtherActivity.class));
                     }
 
                     @Override
-                    public void onAdFail() {
-                        onAdClosed();
+                    public void onFailed() {
+                        startActivity(new Intent(MainActivity.this, OtherActivity.class));
                     }
-                }, true);
+                });
             }
         });
         btn_LoadAndShowReward.setOnClickListener(new View.OnClickListener() {

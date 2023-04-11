@@ -2,6 +2,8 @@ package com.vapp.admobexample.utilsdemp
 
 import android.app.Activity
 import android.content.Context
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.ads.AdValue
 import com.google.android.gms.ads.interstitial.InterstitialAd
@@ -63,10 +65,11 @@ object AdsManager {
                 }
 
                 override fun onStartAction() {
+                    Utils.getInstance().showMessenger(context, "onStartAction")
                     adListener.onAdClosed()
                 }
 
-                override fun onAdFail() {
+                override fun onAdFail(error : String) {
                     interHolder.inter = null
                     loadInter(context,interHolder)
                     adListener.onFailed()
@@ -90,6 +93,29 @@ object AdsManager {
             }, enableLoadingDialog)
     }
 
+    fun loadAndShowIntersial(activity: Activity,adListener: AdListener){
+        AdmodUtils.getInstance().loadAndShowAdInterstitialWithCallbackMultiAds(activity as AppCompatActivity?,"","",object : AdsInterCallBack{
+            override fun onStartAction() {
+            }
+
+            override fun onEventClickAdClosed() {
+            }
+
+            override fun onAdShowed() {
+            }
+
+            override fun onAdLoaded() {
+            }
+
+            override fun onAdFail(error: String) {
+                val log = error.split(":")[0].replace(" ","_")
+                Log.d("===ADS",log)
+            }
+
+            override fun onPaid(adValue: AdValue?) {
+            }
+        },true)
+    }
     interface AdListener {
         fun onAdClosed()
         fun onFailed()
