@@ -1578,12 +1578,7 @@ public class AdmodUtils {
                     AdmodUtils.getInstance().isClick = false;
                     new Handler(Looper.getMainLooper()).postDelayed(() -> {
                         Log.d("===DelayLoad", "delay");
-                        aBoolean.setOnPaidEventListener(new OnPaidEventListener() {
-                            @Override
-                            public void onPaidEvent(@NonNull AdValue adValue) {
-                                adCallback.onPaid(adValue);
-                            }
-                        });
+
                         aBoolean.setFullScreenContentCallback(
                                 new FullScreenContentCallback() {
                                     @Override
@@ -1622,6 +1617,15 @@ public class AdmodUtils {
                                         dismissAdDialog();
                                         isAdShowing = true;
                                         adCallback.onAdShowed();
+                                        try {
+                                            aBoolean.setOnPaidEventListener(new OnPaidEventListener() {
+                                                @Override
+                                                public void onPaidEvent(@NonNull AdValue adValue) {
+                                                    adCallback.onPaid(adValue);
+                                                }
+                                            });
+                                        }catch (Exception e){
+                                        }
                                     }
                                 });
                         showInterstitialAdNew(activity, aBoolean, adCallback);
@@ -1644,7 +1648,6 @@ public class AdmodUtils {
             }
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 Log.d("===DelayLoad", "no-delay");
-                interHolder.getInter().setOnPaidEventListener(adCallback::onPaid);
                 interHolder.getInter().setFullScreenContentCallback(
                         new FullScreenContentCallback() {
                             @Override
@@ -1682,6 +1685,10 @@ public class AdmodUtils {
                                 isAdShowing = true;
                                 dismissAdDialog();
                                 adCallback.onAdShowed();
+                                try {
+                                    interHolder.getInter().setOnPaidEventListener(adCallback::onPaid);
+                                }catch (Exception e){
+                                }
                             }
                         });
                 showInterstitialAdNew(activity, interHolder.getInter(), adCallback);
