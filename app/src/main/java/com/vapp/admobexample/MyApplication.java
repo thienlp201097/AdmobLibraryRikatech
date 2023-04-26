@@ -32,7 +32,7 @@ public class MyApplication extends AdsMultiDexApplication {
 //            AppOpenManager.getInstance().disableAppResumeWithActivity(SplashActivity.class);
         }
 //        ;
-        AdsManager.INSTANCE.loadInter(getApplicationContext(),AdsManager.INSTANCE.getInterholder());
+
 //        AdsManager.INSTANCE.loadInter2(getApplicationContext());
 //        AdsManager.INSTANCE.loadInter3(getApplicationContext());
     }

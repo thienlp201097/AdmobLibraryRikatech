@@ -75,38 +75,7 @@ public class MainActivity extends AppCompatActivity {
         btn_LoadInter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AdmodUtils.getInstance().loadAdInterstitial(MainActivity.this, getString(R.string.test_ads_admob_inter_id), new AdCallbackNew() {
-                    @Override
-                    public void onAdClosed() {
-                        Utils.getInstance().showMessenger(MainActivity.this, "onAdClosed");
-
-                    }
-
-                    @Override
-                    public void onEventClickAdClosed() {
-                        Utils.getInstance().showMessenger(MainActivity.this, "onEventClickAdClosed");
-
-                    }
-
-                    @Override
-                    public void onAdShowed() {
-                        Utils.getInstance().showMessenger(MainActivity.this, "onAdShowed");
-
-                    }
-
-                    @Override
-                    public void onAdLoaded() {
-                        Utils.getInstance().showMessenger(MainActivity.this, "onAdLoaded");
-
-                    }
-
-                    @Override
-                    public void onAdFail() {
-                        Utils.getInstance().showMessenger(MainActivity.this, "onAdFail");
-
-                    }
-                }, false);
-
+                AdsManager.INSTANCE.loadInter(MainActivity.this,AdsManager.INSTANCE.getInterholder());
             }
         });
         btn_ShowInter.setOnClickListener(new View.OnClickListener() {

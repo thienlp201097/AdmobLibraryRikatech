@@ -38,9 +38,19 @@ object AdsManager {
                 }
 
                 override fun onAdLoaded(interstitialAd: InterstitialAd, isLoad: Boolean) {
-                    interholder.inter = interstitialAd
+                    interHolder.inter = interstitialAd
                     interHolder.check = isLoad
                     Utils.getInstance().showMessenger(context, "onAdLoaded")
+                    showInter(context,interHolder,object : AdListener{
+                        override fun onAdClosed() {
+                            TODO("Not yet implemented")
+                        }
+
+                        override fun onFailed() {
+                            TODO("Not yet implemented")
+                        }
+
+                    },true)
                 }
 
                 override fun onAdFail(isLoad: Boolean) {

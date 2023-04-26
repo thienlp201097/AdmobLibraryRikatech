@@ -218,7 +218,7 @@ public class AdmodUtils {
     public interface BannerCallBack{
         void onLoad();
         void onFailed();
-        void onPaid(AdValue adValue);
+        void onPaid(AdValue adValue, AdView mAdView);
     }
 
     public void loadAdBanner(Activity activity, String bannerId, ViewGroup viewGroup,BannerCallBack bannerAdCallback) {
@@ -246,7 +246,7 @@ public class AdmodUtils {
         mAdView.setOnPaidEventListener(new OnPaidEventListener() {
             @Override
             public void onPaidEvent(@NonNull AdValue adValue) {
-                bannerAdCallback.onPaid(adValue);
+                bannerAdCallback.onPaid(adValue,mAdView);
             }
         });
         mAdView.setAdListener(new AdListener() {
@@ -1476,6 +1476,10 @@ public class AdmodUtils {
             adLoadCallback.onAdFail(false);
             return;
         }
+        if (interHolder.getInter() != null){
+            Log.e("===","inter not null");
+            return;
+        }
         interHolder.setCheck(true);
         if (adRequest == null) {
             initAdRequest(timeOut);
@@ -1493,6 +1497,7 @@ public class AdmodUtils {
                 if (AdmodUtils.getInstance().isClick) {
                     interHolder.getMutable().setValue(interstitialAd);
                 }
+
                 Log.i("adLog", "onAdLoaded");
             }
 
@@ -1573,7 +1578,12 @@ public class AdmodUtils {
                     AdmodUtils.getInstance().isClick = false;
                     new Handler(Looper.getMainLooper()).postDelayed(() -> {
                         Log.d("===DelayLoad", "delay");
-                        aBoolean.setOnPaidEventListener(adCallback::onPaid);
+                        aBoolean.setOnPaidEventListener(new OnPaidEventListener() {
+                            @Override
+                            public void onPaidEvent(@NonNull AdValue adValue) {
+                                adCallback.onPaid(adValue);
+                            }
+                        });
                         aBoolean.setFullScreenContentCallback(
                                 new FullScreenContentCallback() {
                                     @Override
@@ -1678,6 +1688,7 @@ public class AdmodUtils {
             }, 400);
         }
     }
+
 
     private void showInterstitialAdNew(Activity activity, InterstitialAd mInterstitialAd, AdsInterCallBack callback) {
         if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED) && mInterstitialAd != null) {
