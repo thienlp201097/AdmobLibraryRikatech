@@ -1556,7 +1556,7 @@ public class AdmodUtils {
         });
     }
 
-    public void showAdInterstitialWithCallbackNotLoadNew(Activity activity, InterHolder interHolder, AdsInterCallBack adCallback, boolean enableLoadingDialog) {
+    public void showAdInterstitialWithCallbackNotLoadNew(Activity activity, InterHolder interHolder,long timeout, AdsInterCallBack adCallback, boolean enableLoadingDialog) {
         AdmodUtils.getInstance().isClick = true;
         if (!isShowAds || !isNetworkConnected(activity)) {
             isAdShowing = false;
@@ -1567,6 +1567,18 @@ public class AdmodUtils {
             return;
         }
         adCallback.onAdLoaded();
+        new Handler().postDelayed(() -> {
+            if (interHolder.getCheck()){
+                if (AppOpenManager.getInstance().isInitialized()) {
+                    AppOpenManager.getInstance().isAppResumeEnabled = true;
+                }
+                AdmodUtils.getInstance().isClick = false;
+                interHolder.getMutable().removeObservers((LifecycleOwner) activity);
+                AdmodUtils.getInstance().isAdShowing = false;
+                dismissAdDialog();
+                adCallback.onAdFail("timeout");
+            }
+        },timeout);
         //check Ads Load
         if (interHolder.getCheck()) {
             if (enableLoadingDialog) {
@@ -1693,6 +1705,8 @@ public class AdmodUtils {
                         });
                 showInterstitialAdNew(activity, interHolder.getInter(), adCallback);
             }, 400);
+
+
         }
     }
 
@@ -1701,9 +1715,7 @@ public class AdmodUtils {
         if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED) && mInterstitialAd != null) {
             AdmodUtils.getInstance().isAdShowing = true;
             new Handler().postDelayed(() -> {
-                if (callback != null) {
-                    callback.onStartAction();
-                }
+                callback.onStartAction();
                 mInterstitialAd.setOnPaidEventListener(callback::onPaid);
                 mInterstitialAd.show(activity);
             }, 400);

@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
         btn_ShowInter1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AdsManager.INSTANCE.showInter(MainActivity.this, AdsManager.INSTANCE.getInterholder(), new AdsManager.AdListener() {
+                AdsManager.INSTANCE.showAdInter(MainActivity.this, AdsManager.INSTANCE.getInterholder(), new AdsManager.AdListener() {
 
                     @Override
                     public void onFailed() {
@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onAdClosed() {
                         Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
                     }
-                },true);
+                });
             }
         });
         btn_LoadAndShowInter.setOnClickListener(new View.OnClickListener() {
@@ -331,22 +331,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        AdmodUtils.getInstance().loadAdBanner(MainActivity.this, getString(R.string.test_ads_admob_banner_id), banner, new AdmodUtils.BannerCallBack() {
-            @Override
-            public void onLoad() {
-                Utils.getInstance().showMessenger(MainActivity.this, "onLoad");
-            }
-
-            @Override
-            public void onFailed() {
-                Utils.getInstance().showMessenger(MainActivity.this, "onFailed");
-            }
-
-            @Override
-            public void onPaid(AdValue adValue) {
-                Utils.getInstance().showMessenger(MainActivity.this, adValue.toString());
-            }
-        });
+//        AdmodUtils.getInstance().loadAdBanner(MainActivity.this, getString(R.string.test_ads_admob_banner_id), banner, new AdmodUtils.BannerCallBack() {
+//            @Override
+//            public void onLoad() {
+//                Utils.getInstance().showMessenger(MainActivity.this, "onLoad");
+//            }
+//
+//            @Override
+//            public void onFailed() {
+//                Utils.getInstance().showMessenger(MainActivity.this, "onFailed");
+//            }
+//
+//            @Override
+//            public void onPaid(AdValue adValue) {
+//                Utils.getInstance().showMessenger(MainActivity.this, adValue.toString());
+//            }
+//        });
 //        AdmodUtils.getInstance().loadAdBannerCollapsible(MainActivity.this, getString(R.string.test_ads_admob_banner_id), CollapsibleBanner.BOTTOM, banner, new BannerAdCallback() {
 //            @Override
 //            public void onBannerAdLoaded(AdSize adSize) {
