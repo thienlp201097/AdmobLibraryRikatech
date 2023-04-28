@@ -60,7 +60,6 @@ object AdsManager {
                 AdsInterCallBack {
                 override fun onStartAction() {
                     callback.onAdClosed()
-
                 }
 
                 override fun onEventClickAdClosed() {
@@ -78,13 +77,14 @@ object AdsManager {
 
                 override fun onAdFail(error: String?) {
                     val log = error?.split(":")?.get(0)?.replace(" ","_")
+                    interHolder.inter = null
+                    loadInter(context, interHolder)
                     callback.onFailed()
                 }
 
                 override fun onPaid(adValue: AdValue?) {
 
                 }
-
             }, true)
     }
 

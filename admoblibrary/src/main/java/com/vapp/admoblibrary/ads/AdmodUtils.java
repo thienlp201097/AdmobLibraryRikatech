@@ -1555,7 +1555,6 @@ public class AdmodUtils {
             }
         });
     }
-
     public void showAdInterstitialWithCallbackNotLoadNew(Activity activity, InterHolder interHolder,long timeout, AdsInterCallBack adCallback, boolean enableLoadingDialog) {
         AdmodUtils.getInstance().isClick = true;
         if (!isShowAds || !isNetworkConnected(activity)) {
@@ -1567,7 +1566,8 @@ public class AdmodUtils {
             return;
         }
         adCallback.onAdLoaded();
-        new Handler().postDelayed(() -> {
+        final Handler handler = new Handler(Looper.getMainLooper());
+        Runnable runnable = () -> {
             if (interHolder.getCheck()){
                 if (AppOpenManager.getInstance().isInitialized()) {
                     AppOpenManager.getInstance().isAppResumeEnabled = true;
@@ -1578,7 +1578,8 @@ public class AdmodUtils {
                 dismissAdDialog();
                 adCallback.onAdFail("timeout");
             }
-        },timeout);
+        };
+        handler.postDelayed(runnable, timeout);
         //check Ads Load
         if (interHolder.getCheck()) {
             if (enableLoadingDialog) {
@@ -1602,6 +1603,7 @@ public class AdmodUtils {
                                         AdmodUtils.getInstance().isClick = false;
                                         //set intersitial
                                         interHolder.getMutable().setValue(null);
+                                        interHolder.setInter(null);
                                         adCallback.onEventClickAdClosed();
                                         dismissAdDialog();
                                         Log.d("TAG", "The ad was dismissed.");
@@ -1616,6 +1618,7 @@ public class AdmodUtils {
                                         //check click showintersitial
                                         AdmodUtils.getInstance().isClick = false;
                                         AdmodUtils.getInstance().isAdShowing = false;
+                                        interHolder.setInter(null);
                                         dismissAdDialog();
                                         Log.e("Admodfail", "onAdFailedToLoad" + adError.getMessage());
                                         Log.e("Admodfail", "errorCodeAds" + adError.getCause());
@@ -1626,6 +1629,7 @@ public class AdmodUtils {
 
                                     @Override
                                     public void onAdShowedFullScreenContent() {
+                                        handler.removeCallbacks(runnable);
                                         dismissAdDialog();
                                         isAdShowing = true;
                                         adCallback.onAdShowed();
@@ -1670,6 +1674,7 @@ public class AdmodUtils {
                                 }
                                 AdmodUtils.getInstance().isClick = false;
                                 interHolder.getMutable().removeObservers((LifecycleOwner) activity);
+                                interHolder.setInter(null);
                                 adCallback.onEventClickAdClosed();
                                 dismissAdDialog();
                                 Log.d("TAG", "The ad was dismissed.");
@@ -1683,6 +1688,7 @@ public class AdmodUtils {
                                     AppOpenManager.getInstance().isAppResumeEnabled = true;
                                 }
                                 AdmodUtils.getInstance().isClick = false;
+                                interHolder.setInter(null);
                                 interHolder.getMutable().removeObservers((LifecycleOwner) activity);
                                 AdmodUtils.getInstance().isAdShowing = false;
                                 dismissAdDialog();
@@ -1705,8 +1711,6 @@ public class AdmodUtils {
                         });
                 showInterstitialAdNew(activity, interHolder.getInter(), adCallback);
             }, 400);
-
-
         }
     }
 
