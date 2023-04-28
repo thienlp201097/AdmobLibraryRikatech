@@ -76,6 +76,7 @@ object AdsManager {
                 }
 
                 override fun onAdFail(error: String?) {
+                    Log.d("===Failed",error.toString())
                     val log = error?.split(":")?.get(0)?.replace(" ","_")
                     interHolder.inter = null
                     loadInter(context, interHolder)

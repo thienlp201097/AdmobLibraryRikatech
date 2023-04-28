@@ -1629,7 +1629,7 @@ public class AdmodUtils {
 
                                     @Override
                                     public void onAdShowedFullScreenContent() {
-                                        handler.removeCallbacks(runnable);
+                                        handler.removeCallbacksAndMessages(null);
                                         dismissAdDialog();
                                         isAdShowing = true;
                                         adCallback.onAdShowed();
@@ -1700,6 +1700,7 @@ public class AdmodUtils {
 
                             @Override
                             public void onAdShowedFullScreenContent() {
+                                handler.removeCallbacksAndMessages(null);
                                 isAdShowing = true;
                                 dismissAdDialog();
                                 adCallback.onAdShowed();
