@@ -2,9 +2,15 @@ package com.vapp.admoblibrary.ads;
 
 import android.app.Activity;
 import android.app.Application;
+import android.app.Dialog;
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Window;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Lifecycle;
@@ -54,6 +60,8 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
 
     private boolean isTimeout = false;
     private static final int TIMEOUT_MSG = 11;
+
+    private Dialog dialogFullScreen;
 
     private Handler timeoutHandler = new Handler(msg -> {
         if (msg.what == TIMEOUT_MSG) {
@@ -220,6 +228,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
     @Override
     public void onActivityResumed(Activity activity) {
         currentActivity = activity;
+
         if (splashActivity == null) {
             if (!activity.getClass().getName().equals(AdActivity.class.getName())) {
                 fetchAd(false);
@@ -251,6 +260,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
     public void showAdIfAvailable(final boolean isSplash) {
         if (!ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
             if (fullScreenContentCallback != null) {
+                dialogFullScreen.dismiss();
                 fullScreenContentCallback.onAdDismissedFullScreenContent();
             }
             return;
@@ -261,6 +271,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                     new FullScreenContentCallback() {
                         @Override
                         public void onAdDismissedFullScreenContent() {
+                            dialogFullScreen.dismiss();
                             // Set the reference to null so isAdAvailable() returns false.
                             appResumeAd = null;
                             if (fullScreenContentCallback != null) {
@@ -273,6 +284,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
 
                         @Override
                         public void onAdFailedToShowFullScreenContent(AdError adError) {
+                            dialogFullScreen.dismiss();
                             if (fullScreenContentCallback != null) {
                                 fullScreenContentCallback.onAdFailedToShowFullScreenContent(adError);
                             }
@@ -307,11 +319,13 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                     if (isSplash) {
                         splashAd.setFullScreenContentCallback(callback);
                         if (currentActivity != null)
+                            showDialog(currentActivity);
                             splashAd.show(currentActivity);
                     } else {
                         if (appResumeAd != null){
                             appResumeAd.setFullScreenContentCallback(callback);
                             if (currentActivity != null)
+                                showDialog(currentActivity);
                                 appResumeAd.show(currentActivity);
                         }
                     }
@@ -384,5 +398,14 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
         showAdIfAvailable(false);
     }
 
+    public void showDialog(Context context){
+        dialogFullScreen = new Dialog(context);
+        dialogFullScreen.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogFullScreen.setContentView(R.layout.dialog_full_screen_onresume);
+        dialogFullScreen.setCancelable(false);
+        dialogFullScreen.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        dialogFullScreen.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        dialogFullScreen.show();
+    }
 }
 
