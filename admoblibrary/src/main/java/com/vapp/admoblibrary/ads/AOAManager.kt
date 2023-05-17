@@ -28,6 +28,10 @@ class AOAManager(private val activity: Activity, val id : String, val appOpenAds
         get() = appOpenAd != null
 
     private fun fetchAd() {
+        var idAoa = id
+        if (AdmodUtils.getInstance().isTesting){
+             idAoa = activity.getString(R.string.test_ads_admob_app_open)
+        }
         if (isAdAvailable) {
             return
         } else {
@@ -48,13 +52,7 @@ class AOAManager(private val activity: Activity, val id : String, val appOpenAds
                 }
             }
             val request = adRequest
-            AppOpenAd.load(
-                activity,
-                id,
-                request,
-                AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT,
-                loadCallback!!
-            )
+            AppOpenAd.load(activity, idAoa, request, AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT, loadCallback!!)
         }
     }
 

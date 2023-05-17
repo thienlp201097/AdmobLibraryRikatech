@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         findbyid();
 //        showDialogRate();
 
-        AOAManager aoaManager = new AOAManager(this, getString(R.string.test_ads_admob_app_open), () -> Utils.getInstance().showMessenger(MainActivity.this, "onAdClosed"));
+        AOAManager aoaManager = new AOAManager(this, "", () -> Utils.getInstance().showMessenger(MainActivity.this, "onAdClosed"));
         aoaManager.showAdIfAvailable();
         // AdsConfigModel = Model call by API
 //         Utils.getInstance().adUnitLists = adsConfigModel.getAdUnitList();
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         btn_Utils.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, UtilsDemoActivity.class));
+                AdsManager.INSTANCE.loadNative(MainActivity.this,AdsManager.INSTANCE.getNativeHolder());
             }
         });
         btn_LoadInter.setOnClickListener(new View.OnClickListener() {
@@ -81,38 +81,17 @@ public class MainActivity extends AppCompatActivity {
         btn_ShowInter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (AdmodUtils.getInstance().mInterstitialAd != null) {
-                    AdmodUtils.getInstance().showAdInterstitialWithCallback(AdmodUtils.getInstance().mInterstitialAd, MainActivity.this, new AdCallbackNew() {
-                        @Override
-                        public void onAdLoaded() {
-                            Utils.getInstance().showMessenger(MainActivity.this, "onAdLoaded");
-                        }
+                AdsManager.INSTANCE.showAdInter(MainActivity.this, AdsManager.INSTANCE.getInterholder(), new AdsManager.AdListener() {
+                    @Override
+                    public void onAdClosed() {
+                        Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
+                    }
 
-                        @Override
-                        public void onAdClosed() {
-                            Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
-                        }
-
-                        @Override
-                        public void onAdFail() {
-                            Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
-                        }
-
-                        @Override
-                        public void onEventClickAdClosed() {
-                            Utils.getInstance().showMessenger(MainActivity.this, "onEventClickAdClosed");
-
-                        }
-
-                        @Override
-                        public void onAdShowed() {
-                            Utils.getInstance().showMessenger(MainActivity.this, "onAdShowed");
-
-                        }
-                    });
-                } else {
-                    Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
-                }
+                    @Override
+                    public void onFailed() {
+                        Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
+                    }
+                });
             }
         });
 
@@ -267,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onAdFail() {
+                    public void onAdFail(String s) {
 
                     }
 
@@ -288,46 +267,14 @@ public class MainActivity extends AppCompatActivity {
         btn_LoadAndGetNative.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                nativeAd = null;
-                AdmodUtils.getInstance().loadAndGetNativeAds(MainActivity.this, AdsManager.INSTANCE.getNativeHolder(), new NativeAdCallback() {
-                    @Override
-                    public void onLoadedAndGetNativeAd(NativeAd ad) {
-                        nativeAd = ad;
-                    }
-
-                    @Override
-                    public void onNativeAdLoaded() {
-                        Utils.getInstance().showMessenger(MainActivity.this, "NativeLoad");
-                    }
-
-                    @Override
-                    public void onAdFail() {
-                        Utils.getInstance().showMessenger(MainActivity.this, "NativeFailed");
-
-                    }
-
-                    @Override
-                    public void onAdPaid(AdValue adValue) {
-                        Utils.getInstance().showMessenger(MainActivity.this, adValue.toString());
-                    }
-                });
+                AdsManager.INSTANCE.loadNative(MainActivity.this,AdsManager.INSTANCE.getNativeHolder());
             }
         });
 
         btn_ShowNative.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AdmodUtils.getInstance().showNativeAdsWithLayout(MainActivity.this, AdsManager.INSTANCE.getNativeHolder(), viewNativeAds, R.layout.ad_template_medium, GoogleENative.UNIFIED_MEDIUM, new AdmodUtils.AdsNativeCallBackAdmod() {
-                    @Override
-                    public void NativeLoaded() {
-                        viewNativeAds.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void NativeFailed() {
-                        viewNativeAds.setVisibility(View.GONE);
-                    }
-                });
+                AdsManager.INSTANCE.showAdNativeWithSize(MainActivity.this,viewNativeAds,AdsManager.INSTANCE.getNativeHolder());
             }
         });
 
