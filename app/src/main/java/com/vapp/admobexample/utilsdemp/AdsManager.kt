@@ -37,7 +37,7 @@ object AdsManager {
     )
 
     fun loadInter(context: Context, interHolder: InterHolder) {
-        AdmodUtils.getInstance().loadAndGetAdInterstitial(context, interHolder, object :
+        AdmodUtils.loadAndGetAdInterstitial(context, interHolder, object :
             AdCallBackInterLoad {
             override fun onAdClosed() {
 
@@ -66,8 +66,8 @@ object AdsManager {
         callback: AdListener,
     ) {
         AppOpenManager.getInstance().isAppResumeEnabled = true
-        AdmodUtils.getInstance().showAdInterstitialWithCallbackNotLoadNew(
-            context as Activity?,
+        AdmodUtils.showAdInterstitialWithCallbackNotLoadNew(
+            context as Activity,
             interHolder,
             10000,
             object :
@@ -104,8 +104,8 @@ object AdsManager {
     }
 
     fun loadAndShowIntersial(activity: Activity, adListener: AdListener) {
-        AdmodUtils.getInstance().loadAndShowAdInterstitialWithCallbackMultiAds(
-            activity as AppCompatActivity?,
+        AdmodUtils.loadAndShowAdInterstitialWithCallbackMultiAds(
+            activity as AppCompatActivity,
             "",
             "",
             object : AdsInterCallBack {
@@ -134,7 +134,7 @@ object AdsManager {
     }
 
     fun loadNative(activity: Context, nativeHolder: NativeHolder) {
-        AdmodUtils.getInstance().loadAndGetNativeAds(activity, nativeHolder, object : NativeAdCallback {
+        AdmodUtils.loadAndGetNativeAds(activity, nativeHolder, object : NativeAdCallback {
                 override fun onLoadedAndGetNativeAd(ad: NativeAd?) {
                 }
 
@@ -157,11 +157,11 @@ object AdsManager {
         nativeAdContainer: ViewGroup,
         nativeHolder: NativeHolder
     ) {
-        if (!AdmodUtils.getInstance().isNetworkConnected(activity)) {
+        if (!AdmodUtils.isNetworkConnected(activity)) {
             nativeAdContainer.visibility = View.GONE
             return
         }
-        AdmodUtils.getInstance().showNativeAdsWithLayout(
+        AdmodUtils.showNativeAdsWithLayout(
             activity,
             nativeHolder,
             nativeAdContainer,

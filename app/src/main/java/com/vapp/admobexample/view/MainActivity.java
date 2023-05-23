@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
 //        showDialogRate();
 
         AOAManager aoaManager = new AOAManager(this, "", () -> Utils.getInstance().showMessenger(MainActivity.this, "onAdClosed"));
-        aoaManager.showAdIfAvailable();
+//        aoaManager.showAdIfAvailable();
         // AdsConfigModel = Model call by API
 //         Utils.getInstance().adUnitLists = adsConfigModel.getAdUnitList();
 
@@ -131,23 +131,23 @@ public class MainActivity extends AppCompatActivity {
         btn_LoadAndShowReward.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AdmodUtils.getInstance().loadAndShowAdRewardWithCallback(MainActivity.this, getString(R.string.test_ads_admob_reward_id), new RewardAdCallback() {
+                AdmodUtils.loadAndShowAdRewardWithCallback(MainActivity.this, getString(R.string.test_ads_admob_reward_id), new RewardAdCallback() {
                     @Override
                     public void onAdClosed() {
-                        if (AdmodUtils.getInstance().mRewardedAd != null) {
-                            AdmodUtils.getInstance().mRewardedAd = null;
+                        if (AdmodUtils.mRewardedAd != null) {
+                            AdmodUtils.mRewardedAd = null;
                         }
-                        AdmodUtils.getInstance().dismissAdDialog();
+                        AdmodUtils.dismissAdDialog();
                         //Utils.getInstance().showMessenger(MainActivity.this, "close ad");
                         startActivity(new Intent(MainActivity.this, OtherActivity.class));
                     }
 
                     @Override
                     public void onEarned() {
-                        if (AdmodUtils.getInstance().mRewardedAd != null) {
-                            AdmodUtils.getInstance().mRewardedAd = null;
+                        if (AdmodUtils.mRewardedAd != null) {
+                            AdmodUtils.mRewardedAd = null;
                         }
-                        AdmodUtils.getInstance().dismissAdDialog();
+                        AdmodUtils.dismissAdDialog();
                         Utils.getInstance().showMessenger(MainActivity.this, "Reward");
 
                     }
@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
         btn_LoadInterReward.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AdmodUtils.getInstance().loadAdInterstitialReward(MainActivity.this, getString(R.string.test_ads_admob_inter_reward_id), new AdLoadCallback() {
+                AdmodUtils.loadAdInterstitialReward(MainActivity.this, getString(R.string.test_ads_admob_inter_reward_id), new AdLoadCallback() {
                     @Override
                     public void onAdFail() {
                         Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
@@ -197,8 +197,8 @@ public class MainActivity extends AppCompatActivity {
         btn_ShowInterReward.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (AdmodUtils.getInstance().mInterstitialRewardAd != null) {
-                    AdmodUtils.getInstance().showAdInterstitialRewardWithCallback(AdmodUtils.getInstance().mInterstitialRewardAd, MainActivity.this, new RewardAdCallback() {
+                if (AdmodUtils.mInterstitialRewardAd != null) {
+                    AdmodUtils.showAdInterstitialRewardWithCallback(AdmodUtils.mInterstitialRewardAd, MainActivity.this, new RewardAdCallback() {
                         @Override
                         public void onAdClosed() {
                             Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
@@ -240,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
         btn_LoadAndShowNative.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AdmodUtils.getInstance().loadAndShowNativeAdsWithLayout(MainActivity.this, getString(R.string.test_ads_admob_native_id), viewNativeAds, R.layout.ad_template_medium, GoogleENative.UNIFIED_MEDIUM, new NativeAdCallback() {
+                AdmodUtils.loadAndShowNativeAdsWithLayout(MainActivity.this, getString(R.string.test_ads_admob_native_id), viewNativeAds, R.layout.ad_template_medium, GoogleENative.UNIFIED_MEDIUM, new NativeAdCallback() {
                     @Override
                     public void onNativeAdLoaded() {
                     }

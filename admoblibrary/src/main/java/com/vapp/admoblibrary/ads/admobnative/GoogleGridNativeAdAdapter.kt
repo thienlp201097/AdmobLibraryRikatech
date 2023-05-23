@@ -57,12 +57,12 @@ class GoogleGridNativeAdAdapter(private val mParam: Param) :
         if (mParam.forceReloadAdOnBind || !adHolder.loaded) {
 
             var idAdmob = ""
-            if (AdmodUtils.getInstance().isTesting){
+            if (AdmodUtils.isTesting){
                 idAdmob = mParam.activity!!.getString(R.string.test_ads_admob_native_id);
             }else{
                 idAdmob = mParam.idAdmob;
             }
-            AdmodUtils.getInstance().loadAndShowNativeAdsWithLayout(mParam.activity!!,
+            AdmodUtils.loadAndShowNativeAdsWithLayout(mParam.activity!!,
                 idAdmob,
                 holder.adFrame,
                 mParam.layout,  GoogleENative.UNIFIED_MEDIUM,object : NativeAdCallback {

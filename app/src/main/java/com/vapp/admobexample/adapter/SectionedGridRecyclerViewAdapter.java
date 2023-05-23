@@ -107,7 +107,7 @@ public class SectionedGridRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder sectionViewHolder, int position) {
         if (isSectionHeaderPosition(position)) {
-            AdmodUtils.getInstance().loadAndShowNativeAdsWithLayout(
+            AdmodUtils.loadAndShowNativeAdsWithLayout(
                     mContext,
                     admobid,
                     ((SectionViewHolder)sectionViewHolder).ads,

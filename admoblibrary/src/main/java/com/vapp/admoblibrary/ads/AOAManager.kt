@@ -29,7 +29,7 @@ class AOAManager(private val activity: Activity, val id : String, val appOpenAds
 
     private fun fetchAd() {
         var idAoa = id
-        if (AdmodUtils.getInstance().isTesting){
+        if (AdmodUtils.isTesting){
              idAoa = activity.getString(R.string.test_ads_admob_app_open)
         }
         if (isAdAvailable) {
