@@ -60,11 +60,7 @@ object AdsManager {
         })
     }
 
-    fun showAdInter(
-        context: Context,
-        interHolder: InterHolder,
-        callback: AdListener,
-    ) {
+    fun showAdInter(context: Context, interHolder: InterHolder, callback: AdListener, ) {
         AppOpenManager.getInstance().isAppResumeEnabled = true
         AdmodUtils.showAdInterstitialWithCallbackNotLoadNew(
             context as Activity,
@@ -104,10 +100,7 @@ object AdsManager {
     }
 
     fun loadAndShowIntersial(activity: Activity, adListener: AdListener) {
-        AdmodUtils.loadAndShowAdInterstitialWithCallbackMultiAds(
-            activity as AppCompatActivity,
-            "",
-            "",
+        AdmodUtils.loadAndShowAdInterstitialWithCallbackMultiAds(activity as AppCompatActivity, "", "",
             object : AdsInterCallBack {
                 override fun onStartAction() {
                 }
@@ -152,23 +145,12 @@ object AdsManager {
             })
     }
 
-    fun showAdNativeWithSize(
-        activity: Activity,
-        nativeAdContainer: ViewGroup,
-        nativeHolder: NativeHolder
-    ) {
+    fun showAdNativeWithSize(activity: Activity, nativeAdContainer: ViewGroup, nativeHolder: NativeHolder) {
         if (!AdmodUtils.isNetworkConnected(activity)) {
             nativeAdContainer.visibility = View.GONE
             return
         }
-        AdmodUtils.showNativeAdsWithLayout(
-            activity,
-            nativeHolder,
-            nativeAdContainer,
-            R.layout.ad_template_medium,
-            GoogleENative.UNIFIED_MEDIUM,
-            object :
-                AdmodUtils.AdsNativeCallBackAdmod {
+        AdmodUtils.showNativeAdsWithLayout(activity, nativeHolder, nativeAdContainer, R.layout.ad_template_medium, GoogleENative.UNIFIED_MEDIUM, object : AdmodUtils.AdsNativeCallBackAdmod {
                 override fun NativeLoaded() {
                     Log.d("===NativeAds", "Native showed")
                     nativeAdContainer.visibility = View.VISIBLE

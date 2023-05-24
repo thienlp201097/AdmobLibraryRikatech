@@ -5,9 +5,11 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.Window
 import android.widget.LinearLayout
+import androidx.lifecycle.LifecycleOwner
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
@@ -15,7 +17,7 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.appopen.AppOpenAd
 import com.vapp.admoblibrary.R
 
-class AOAManager(private val activity: Activity, val id : String, val appOpenAdsListener: AppOpenAdsListener) {
+class AOAManager(private val activity: Activity, val id : String,val timeOut: Long, val appOpenAdsListener: AppOpenAdsListener) {
 
     private var appOpenAd: AppOpenAd? = null
     private var loadCallback: AppOpenAd.AppOpenAdLoadCallback? = null
@@ -58,7 +60,17 @@ class AOAManager(private val activity: Activity, val id : String, val appOpenAds
 
     fun showAdIfAvailable() {
         Log.d("tag", "$isShowingAd - $isAdAvailable")
-
+        val handler = Handler(Looper.getMainLooper())
+        //Check timeout show inter
+        val runnable = Runnable {
+            if (!isShowingAd) {
+                if (AppOpenManager.getInstance().isInitialized) {
+                    AppOpenManager.getInstance().isAppResumeEnabled = true
+                }
+                appOpenAdsListener.onAdClosedOrFail()
+            }
+        }
+        handler.postDelayed(runnable, timeOut)
         if (!isShowingAd && isAdAvailable) {
             Log.d("tag", "will show ad ")
             val fullScreenContentCallback: FullScreenContentCallback =
@@ -79,9 +91,11 @@ class AOAManager(private val activity: Activity, val id : String, val appOpenAds
 
                     override fun onAdShowedFullScreenContent() {
                         isShowingAd = true
+
                     }
                 }
             appOpenAd?.run {
+                handler.removeCallbacksAndMessages(null)
                 this.fullScreenContentCallback = fullScreenContentCallback
                 dialogFullScreen = Dialog(activity)
                 dialogFullScreen?.requestWindowFeature(Window.FEATURE_NO_TITLE)

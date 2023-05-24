@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         findbyid();
 //        showDialogRate();
 
-        AOAManager aoaManager = new AOAManager(this, "", () -> Utils.getInstance().showMessenger(MainActivity.this, "onAdClosed"));
+        AOAManager aoaManager = new AOAManager(this, "",10000, () -> Utils.getInstance().showMessenger(MainActivity.this, "onAdClosed"));
 //        aoaManager.showAdIfAvailable();
         // AdsConfigModel = Model call by API
 //         Utils.getInstance().adUnitLists = adsConfigModel.getAdUnitList();
