@@ -21,7 +21,7 @@ class AOAManager(private val activity: Activity, val id : String,val timeOut: Lo
 
     private var appOpenAd: AppOpenAd? = null
     private var loadCallback: AppOpenAd.AppOpenAdLoadCallback? = null
-    private var isShowingAd = false
+    var isShowingAd = false
     var dialogFullScreen: Dialog? = null
     private val adRequest: AdRequest
         get() = AdRequest.Builder().build()
@@ -62,8 +62,10 @@ class AOAManager(private val activity: Activity, val id : String,val timeOut: Lo
         Log.d("tag", "$isShowingAd - $isAdAvailable")
         val handler = Handler(Looper.getMainLooper())
         //Check timeout show inter
+        isShowingAd = false
         val runnable = Runnable {
             if (!isShowingAd) {
+                isShowingAd = true
                 if (AppOpenManager.getInstance().isInitialized) {
                     AppOpenManager.getInstance().isAppResumeEnabled = true
                 }
@@ -79,19 +81,18 @@ class AOAManager(private val activity: Activity, val id : String,val timeOut: Lo
                     override fun onAdDismissedFullScreenContent() {
                         dialogFullScreen?.dismiss()
                         appOpenAd = null
-                        isShowingAd = false
-//                        fetchAd()
+                        isShowingAd = true
                         appOpenAdsListener.onAdClosedOrFail()
                     }
 
                     override fun onAdFailedToShowFullScreenContent(p0: AdError) {
                         dialogFullScreen?.dismiss()
+                        isShowingAd = true
                         appOpenAdsListener.onAdClosedOrFail()
                     }
 
                     override fun onAdShowedFullScreenContent() {
                         isShowingAd = true
-
                     }
                 }
             appOpenAd?.run {
