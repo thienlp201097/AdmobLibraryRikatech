@@ -79,6 +79,7 @@ class AOAManager(private val activity: Activity, val id : String,val timeOut: Lo
                 object : FullScreenContentCallback() {
 
                     override fun onAdDismissedFullScreenContent() {
+                        handler.removeCallbacksAndMessages(null)
                         dialogFullScreen?.dismiss()
                         appOpenAd = null
                         isShowingAd = true
@@ -86,6 +87,7 @@ class AOAManager(private val activity: Activity, val id : String,val timeOut: Lo
                     }
 
                     override fun onAdFailedToShowFullScreenContent(p0: AdError) {
+                        handler.removeCallbacksAndMessages(null)
                         dialogFullScreen?.dismiss()
                         isShowingAd = true
                         appOpenAdsListener.onAdClosedOrFail()

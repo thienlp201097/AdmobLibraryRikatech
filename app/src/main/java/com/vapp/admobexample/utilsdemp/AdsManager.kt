@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
@@ -77,6 +78,10 @@ object AdsManager {
                 }
 
                 override fun onAdShowed() {
+//                    val txt = AdmodUtils.dialogFullScreen?.findViewById<TextView>(com.vapp.admoblibrary.R.id.txtLoading)
+//                    val gif = AdmodUtils.dialogFullScreen?.findViewById<LottieAnimationView>(com.vapp.admoblibrary.R.id.imageView3)
+//                    txt?.visibility = View.GONE
+//                    gif?.visibility = View.GONE
                     AppOpenManager.getInstance().isAppResumeEnabled = false
                 }
 
