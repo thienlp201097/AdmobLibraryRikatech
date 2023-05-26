@@ -115,6 +115,10 @@ class AOAManager(private val activity: Activity, val id : String,val timeOut: Lo
                     show(activity)
                 },800)
             }
+        }else{
+            dialogFullScreen?.dismiss()
+            isShowingAd = true
+            appOpenAdsListener.onAdClosedOrFail()
         }
     }
 
