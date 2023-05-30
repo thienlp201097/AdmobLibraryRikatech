@@ -16,12 +16,17 @@ import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.appopen.AppOpenAd
 import com.vapp.admoblibrary.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class AOAManager(private val activity: Activity, val id : String,val timeOut: Long, val appOpenAdsListener: AppOpenAdsListener) {
 
     private var appOpenAd: AppOpenAd? = null
     private var loadCallback: AppOpenAd.AppOpenAdLoadCallback? = null
     var isShowingAd = false
+    var isLoading = true
     var dialogFullScreen: Dialog? = null
     private val adRequest: AdRequest
         get() = AdRequest.Builder().build()
@@ -34,21 +39,15 @@ class AOAManager(private val activity: Activity, val id : String,val timeOut: Lo
         if (AdmodUtils.isTesting){
              idAoa = activity.getString(R.string.test_ads_admob_app_open)
         }
-        val handler = Handler(Looper.getMainLooper())
         //Check timeout show inter
-        isShowingAd = false
-        val runnable = Runnable {
-            if (!isShowingAd) {
-                isShowingAd = true
-                if (AppOpenManager.getInstance().isInitialized) {
-                    AppOpenManager.getInstance().isAppResumeEnabled = true
-                }
+        CoroutineScope(Dispatchers.Main).launch() {
+            delay(timeOut)
+            if (isLoading) {
+                isLoading = false
                 appOpenAdsListener.onAdClosedOrFail()
             }
         }
-        handler.postDelayed(runnable, timeOut)
         if (isAdAvailable) {
-            handler.removeCallbacksAndMessages(null)
             appOpenAdsListener.onAdClosedOrFail()
             return
         } else {
@@ -56,14 +55,13 @@ class AOAManager(private val activity: Activity, val id : String,val timeOut: Lo
             loadCallback = object : AppOpenAd.AppOpenAdLoadCallback() {
 
                 override fun onAdFailedToLoad(p0: LoadAdError) {
+                    isLoading = false
                     super.onAdFailedToLoad(p0)
-                    handler.removeCallbacksAndMessages(null)
                     appOpenAdsListener.onAdClosedOrFail()
                     Log.d("tag", "onAppOpenAdFailedToLoad: ")
                 }
 
                 override fun onAdLoaded(ad: AppOpenAd) {
-                    handler.removeCallbacksAndMessages(null)
                     super.onAdLoaded(ad)
                     appOpenAd = ad
                     Log.d("tag", "isAdAvailable = true")
@@ -78,7 +76,7 @@ class AOAManager(private val activity: Activity, val id : String,val timeOut: Lo
     fun showAdIfAvailable() {
         Log.d("tag", "$isShowingAd - $isAdAvailable")
 
-        if (!isShowingAd && isAdAvailable) {
+        if (!isShowingAd && isAdAvailable && isLoading) {
             Log.d("tag", "will show ad ")
             val fullScreenContentCallback: FullScreenContentCallback =
                 object : FullScreenContentCallback() {
@@ -101,6 +99,7 @@ class AOAManager(private val activity: Activity, val id : String,val timeOut: Lo
                     }
                 }
             appOpenAd?.run {
+                isLoading = false
                 this.fullScreenContentCallback = fullScreenContentCallback
                 dialogFullScreen = Dialog(activity)
                 dialogFullScreen?.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -115,10 +114,6 @@ class AOAManager(private val activity: Activity, val id : String,val timeOut: Lo
                     show(activity)
                 },800)
             }
-        }else{
-            dialogFullScreen?.dismiss()
-            isShowingAd = true
-            appOpenAdsListener.onAdClosedOrFail()
         }
     }
 

@@ -51,7 +51,9 @@ public class MainActivity extends AppCompatActivity {
         findbyid();
 //        showDialogRate();
 
-        AOAManager aoaManager = new AOAManager(this, "",10000, () -> Utils.getInstance().showMessenger(MainActivity.this, "onAdClosed"));
+        AOAManager aoaManager = new AOAManager(this, "",5000, () ->{
+            Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
+        });
         aoaManager.loadAndShowAoA();
         // AdsConfigModel = Model call by API
 //         Utils.getInstance().adUnitLists = adsConfigModel.getAdUnitList();
@@ -69,7 +71,8 @@ public class MainActivity extends AppCompatActivity {
         btn_Utils.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AdsManager.INSTANCE.loadNative(MainActivity.this,AdsManager.INSTANCE.getNativeHolder());
+//                AdsManager.INSTANCE.loadNative(MainActivity.this,AdsManager.INSTANCE.getNativeHolder());
+                aoaManager.loadAndShowAoA();
             }
         });
         btn_LoadInter.setOnClickListener(new View.OnClickListener() {

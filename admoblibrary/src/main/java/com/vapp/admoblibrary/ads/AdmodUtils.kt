@@ -793,10 +793,6 @@ object AdmodUtils {
                                         OnPaidEventListener { adValue -> adCallback.onPaid(adValue) }
                                 } catch (e: Exception) {
                                 }
-                                val txt = dialogFullScreen?.findViewById<TextView>(R.id.txtLoading)
-                                val gif = dialogFullScreen?.findViewById<LottieAnimationView>(R.id.imageView3)
-                                txt?.visibility = View.GONE
-                                gif?.visibility = View.GONE
                             }
                         }
                         showInterstitialAdNew(activity, aBoolean, adCallback)
@@ -854,17 +850,9 @@ object AdmodUtils {
                             isAdShowing = true
                             adCallback.onAdShowed()
                             try {
-                                interHolder.inter!!.onPaidEventListener =
-                                    OnPaidEventListener { adValue: AdValue? ->
-                                        adCallback.onPaid(adValue)
-                                    }
+                                interHolder.inter!!.onPaidEventListener = OnPaidEventListener { adValue: AdValue? -> adCallback.onPaid(adValue) }
                             } catch (e: Exception) {
                             }
-
-                            val txt = dialogFullScreen?.findViewById<TextView>(R.id.txtLoading)
-                            val gif = dialogFullScreen?.findViewById<LottieAnimationView>(R.id.imageView3)
-                            txt?.visibility = View.GONE
-                            gif?.visibility = View.GONE
                         }
                     }
                 showInterstitialAdNew(activity, interHolder.inter, adCallback)
