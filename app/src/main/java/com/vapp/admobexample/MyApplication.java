@@ -11,7 +11,7 @@ import com.vapp.admoblibrary.ads.AppOpenManager;
 import com.vapp.admoblibrary.iap.PurchaseUtils;
 
 public class MyApplication extends AdsMultiDexApplication {
-    boolean isShowAds = true;
+    boolean isShowAds = false;
     boolean isShowAdsResume = true;
 
     @Override

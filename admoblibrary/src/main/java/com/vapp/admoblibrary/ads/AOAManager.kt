@@ -39,16 +39,20 @@ class AOAManager(private val activity: Activity, val id : String,val timeOut: Lo
         if (AdmodUtils.isTesting){
              idAoa = activity.getString(R.string.test_ads_admob_app_open)
         }
+        if (!AdmodUtils.isShowAds){
+            appOpenAdsListener.onAdsFailed()
+            return
+        }
         //Check timeout show inter
         CoroutineScope(Dispatchers.Main).launch() {
             delay(timeOut)
             if (isLoading) {
                 isLoading = false
-                appOpenAdsListener.onAdClosedOrFail()
+                appOpenAdsListener.onAdsFailed()
             }
         }
         if (isAdAvailable) {
-            appOpenAdsListener.onAdClosedOrFail()
+            appOpenAdsListener.onAdsFailed()
             return
         } else {
             Log.d("tag", "fetching... ")
@@ -57,7 +61,7 @@ class AOAManager(private val activity: Activity, val id : String,val timeOut: Lo
                 override fun onAdFailedToLoad(p0: LoadAdError) {
                     isLoading = false
                     super.onAdFailedToLoad(p0)
-                    appOpenAdsListener.onAdClosedOrFail()
+                    appOpenAdsListener.onAdsFailed()
                     Log.d("tag", "onAppOpenAdFailedToLoad: ")
                 }
 
@@ -85,13 +89,13 @@ class AOAManager(private val activity: Activity, val id : String,val timeOut: Lo
                         dialogFullScreen?.dismiss()
                         appOpenAd = null
                         isShowingAd = true
-                        appOpenAdsListener.onAdClosedOrFail()
+                        appOpenAdsListener.onAdsClose()
                     }
 
                     override fun onAdFailedToShowFullScreenContent(p0: AdError) {
                         dialogFullScreen?.dismiss()
                         isShowingAd = true
-                        appOpenAdsListener.onAdClosedOrFail()
+                        appOpenAdsListener.onAdsFailed()
                     }
 
                     override fun onAdShowedFullScreenContent() {
@@ -118,7 +122,8 @@ class AOAManager(private val activity: Activity, val id : String,val timeOut: Lo
     }
 
     interface AppOpenAdsListener {
-        fun onAdClosedOrFail()
+        fun onAdsClose()
+        fun onAdsFailed()
     }
 
 }
