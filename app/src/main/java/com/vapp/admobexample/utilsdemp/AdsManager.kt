@@ -155,7 +155,7 @@ object AdsManager {
             nativeAdContainer.visibility = View.GONE
             return
         }
-        AdmodUtils.showNativeAdsWithLayout(activity, nativeHolder, nativeAdContainer, R.layout.ad_template_medium, GoogleENative.UNIFIED_MEDIUM, object : AdmodUtils.AdsNativeCallBackAdmod {
+        AdmodUtils.showNativeAdsWithLayout(activity, nativeHolder, nativeAdContainer, R.layout.ad_template_small, GoogleENative.UNIFIED_SMALL, object : AdmodUtils.AdsNativeCallBackAdmod {
                 override fun NativeLoaded() {
                     Log.d("===NativeAds", "Native showed")
                     nativeAdContainer.visibility = View.VISIBLE
