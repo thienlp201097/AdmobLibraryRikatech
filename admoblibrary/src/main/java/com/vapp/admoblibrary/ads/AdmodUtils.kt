@@ -438,6 +438,7 @@ object AdmodUtils {
                     shimmerFrameLayout?.stopShimmer()
                 }
                 nativeHolder.native_mutable.removeObservers((activity as LifecycleOwner))
+                viewGroup.removeAllViews()
                 viewGroup.addView(adView)
                 callback.NativeLoaded()
             } else {
@@ -459,12 +460,12 @@ object AdmodUtils {
             shimmerFrameLayout?.startShimmer()
             nativeHolder.native_mutable.observe((activity as LifecycleOwner)) { nativeAd: NativeAd? ->
                 if (nativeAd != null) {
-                    val adView = activity.layoutInflater
-                        .inflate(layout, null) as NativeAdView
+                    val adView = activity.layoutInflater.inflate(layout, null) as NativeAdView
                     populateNativeAdView(nativeAd, adView, GoogleENative.UNIFIED_MEDIUM)
                     if (shimmerFrameLayout != null) {
                         shimmerFrameLayout?.stopShimmer()
                     }
+                    viewGroup.removeAllViews()
                     viewGroup.addView(adView)
                     callback.NativeLoaded()
                     nativeHolder.native_mutable.removeObservers((activity as LifecycleOwner))
