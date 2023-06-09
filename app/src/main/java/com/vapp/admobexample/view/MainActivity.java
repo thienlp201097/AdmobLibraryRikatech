@@ -243,7 +243,23 @@ public class MainActivity extends AppCompatActivity {
         btn_Rate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDialogRate();
+                AdmodUtils.loadAdBannerCollapsibleNoShimmer(MainActivity.this, getString(R.string.test_ads_admob_banner_id), CollapsibleBanner.BOTTOM, banner, new BannerAdCallback() {
+                    @Override
+                    public void onBannerAdLoaded(AdSize adSize) {
+                        Toast.makeText(MainActivity.this, String.valueOf(adSize.getHeight()), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onAdFail() {
+
+                    }
+
+                    @Override
+                    public void onAdPaid(AdValue adValue) {
+
+                    }
+                });
+//                showDialogRate();
             }
         });
 //        AdmodUtils.getInstance().loadNativeAdsWithLayout(MainActivity.this, getString(R.string.test_ads_admob_native_id), nativeAds, R.layout.ad_unified_medium);

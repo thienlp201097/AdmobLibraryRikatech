@@ -336,7 +336,6 @@ object AdmodUtils {
         mAdView.adUnitId = bannerId!!
         val adSize = getAdSize(activity)
         mAdView.setAdSize(adSize)
-        viewGroup.removeAllViews()
         viewGroup.addView(mAdView, 0)
         mAdView.onPaidEventListener = OnPaidEventListener { adValue -> callback.onAdPaid(adValue) }
         mAdView.adListener = object : AdListener() {
