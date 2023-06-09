@@ -305,17 +305,22 @@ public class MainActivity extends AppCompatActivity {
 //                Utils.getInstance().showMessenger(MainActivity.this, adValue.toString());
 //            }
 //        });
-//        AdmodUtils.getInstance().loadAdBannerCollapsible(MainActivity.this, getString(R.string.test_ads_admob_banner_id), CollapsibleBanner.BOTTOM, banner, new BannerAdCallback() {
-//            @Override
-//            public void onBannerAdLoaded(AdSize adSize) {
-//                Toast.makeText(MainActivity.this, String.valueOf(adSize.getHeight()), Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @Override
-//            public void onAdFail() {
-//
-//            }
-//        });
+        AdmodUtils.loadAdBannerCollapsibleNoShimmer(MainActivity.this, getString(R.string.test_ads_admob_banner_id), CollapsibleBanner.BOTTOM, banner,2000, new BannerAdCallback() {
+            @Override
+            public void onBannerAdLoaded(AdSize adSize) {
+                Toast.makeText(MainActivity.this, String.valueOf(adSize.getHeight()), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAdFail() {
+
+            }
+
+            @Override
+            public void onAdPaid(AdValue adValue) {
+
+            }
+        });
     }
 
     private void showDialogRate() {

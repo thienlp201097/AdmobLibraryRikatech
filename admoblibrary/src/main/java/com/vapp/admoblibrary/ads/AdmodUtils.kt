@@ -316,6 +316,68 @@ object AdmodUtils {
         Log.e(" Admod", "loadAdBanner")
     }
 
+    @JvmStatic
+    fun loadAdBannerCollapsibleNoShimmer(
+        activity: Activity,
+        bannerId: String?,
+        collapsibleBannersize: CollapsibleBanner,
+        viewGroup: ViewGroup,
+        callback: BannerAdCallback
+    ) {
+        var bannerId = bannerId
+        if (!isShowAds || !isNetworkConnected(activity)) {
+            viewGroup.visibility = View.GONE
+            return
+        }
+        val mAdView = AdView(activity)
+        if (isTesting) {
+            bannerId = activity.getString(R.string.test_ads_admob_banner_id)
+        }
+        mAdView.adUnitId = bannerId!!
+        val adSize = getAdSize(activity)
+        mAdView.setAdSize(adSize)
+        viewGroup.removeAllViews()
+        val tagView = activity.layoutInflater.inflate(R.layout.layoutbanner_loading, null, false)
+        viewGroup.addView(tagView, 0)
+        viewGroup.addView(mAdView, 1)
+        mAdView.onPaidEventListener = OnPaidEventListener { adValue -> callback.onAdPaid(adValue) }
+        mAdView.adListener = object : AdListener() {
+            override fun onAdLoaded() {
+                viewGroup.removeView(tagView)
+                callback.onBannerAdLoaded(adSize)
+            }
+
+            override fun onAdFailedToLoad(adError: LoadAdError) {
+                Log.e(" Admod", "failloadbanner" + adError.message)
+                viewGroup.removeView(tagView)
+                callback.onAdFail()
+            }
+
+            override fun onAdOpened() {}
+            override fun onAdClicked() {
+                // Code to be executed when the user clicks on an ad.
+            }
+
+            override fun onAdClosed() {
+                // Code to be executed when the user is about to return
+                // to the app after tapping on an ad.
+            }
+        }
+        val extras = Bundle()
+        var anchored = "top"
+        anchored = if (collapsibleBannersize === CollapsibleBanner.TOP) {
+            "top"
+        } else {
+            "bottom"
+        }
+        extras.putString("collapsible", anchored)
+        val adRequest2 = AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter::class.java, extras).build()
+        if (adRequest2 != null) {
+            mAdView.loadAd(adRequest2)
+        }
+        Log.e(" Admod", "loadAdBanner")
+    }
+
     private fun getAdSize(context: Activity): AdSize {
         // Step 2 - Determine the screen width (less decorations) to use for the ad width.
         val display = context.windowManager.defaultDisplay
