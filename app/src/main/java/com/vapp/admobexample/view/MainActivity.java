@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
                 Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
             }
         });
-        aoaManager.loadAndShowAoA();
+//        aoaManager.loadAndShowAoA();
         // AdsConfigModel = Model call by API
 //         Utils.getInstance().adUnitLists = adsConfigModel.getAdUnitList();
 
@@ -305,7 +305,7 @@ public class MainActivity extends AppCompatActivity {
 //                Utils.getInstance().showMessenger(MainActivity.this, adValue.toString());
 //            }
 //        });
-        AdmodUtils.loadAdBannerCollapsibleNoShimmer(MainActivity.this, getString(R.string.test_ads_admob_banner_id), CollapsibleBanner.BOTTOM, banner,2000, new BannerAdCallback() {
+        AdmodUtils.loadAdBannerCollapsibleNoShimmer(MainActivity.this, getString(R.string.test_ads_admob_banner_id), CollapsibleBanner.BOTTOM, banner, new BannerAdCallback() {
             @Override
             public void onBannerAdLoaded(AdSize adSize) {
                 Toast.makeText(MainActivity.this, String.valueOf(adSize.getHeight()), Toast.LENGTH_SHORT).show();
@@ -322,7 +322,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
     private void showDialogRate() {
         RatingDialog ratingDialog = new RatingDialog.Builder(this)
                 .session(1)

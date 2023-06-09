@@ -337,19 +337,15 @@ object AdmodUtils {
         val adSize = getAdSize(activity)
         mAdView.setAdSize(adSize)
         viewGroup.removeAllViews()
-        val tagView = activity.layoutInflater.inflate(R.layout.layoutbanner_loading, null, false)
-        viewGroup.addView(tagView, 0)
-        viewGroup.addView(mAdView, 1)
+        viewGroup.addView(mAdView, 0)
         mAdView.onPaidEventListener = OnPaidEventListener { adValue -> callback.onAdPaid(adValue) }
         mAdView.adListener = object : AdListener() {
             override fun onAdLoaded() {
-                viewGroup.removeView(tagView)
                 callback.onBannerAdLoaded(adSize)
             }
 
             override fun onAdFailedToLoad(adError: LoadAdError) {
                 Log.e(" Admod", "failloadbanner" + adError.message)
-                viewGroup.removeView(tagView)
                 callback.onAdFail()
             }
 
