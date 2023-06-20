@@ -11,6 +11,7 @@ import androidx.appcompat.widget.AppCompatButton;
 
 import com.vapp.admobexample.view.MainActivity;
 import com.vapp.admobexample.view.OtherActivity;
+import com.vapp.admoblibrary.ads.AOAManager;
 import com.vapp.admoblibrary.ads.AdCallbackNew;
 import com.vapp.admoblibrary.ads.AdLoadCallback;
 import com.vapp.admoblibrary.ads.AppOpenManager;
@@ -23,63 +24,19 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
-        AppCompatButton btn_next = findViewById(R.id.btn_next);
-        Utils.getInstance().replaceActivity(SplashActivity.this, MainActivity.class);
-
-//        AdmodUtils.getInstance().loadAndShowAdInterstitialWithCallbackMultiAds(this, "", "", "", new AdCallback() {
-//            @Override
-//            public void onAdClosed() {
-//
-//                Utils.getInstance().replaceActivity(SplashActivity.this, MainActivity.class);
-//            }
-//
-//            @Override
-//            public void onAdFail() {
-//                Utils.getInstance().replaceActivity(SplashActivity.this, MainActivity.class);
-//
-//            }
-//        },false);
-//        btn_next.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                AppOpenManager.getInstance().showAdIfAvailable(false);
-//                if(AdmodUtils.getInstance().mInterstitialAd != null) {
-//                    AdmodUtils.getInstance().showAdInterstitialWithCallbackNotLoad(AdmodUtils.getInstance().mInterstitialAd, SplashActivity.this, new AdCallbackNew() {
-//                        @Override
-//                        public void onAdClosed() {
-//                            Utils.getInstance().replaceActivity(SplashActivity.this, MainActivity.class);
-//                        }
-//
-//                        @Override
-//                        public void onAdFail() {
-//                            Utils.getInstance().replaceActivity(SplashActivity.this, MainActivity.class);
-//                        }
-//
-//                        @Override
-//                        public void onEventClickAdClosed() {
-//                            Log.e("===splash","onEventClickAdClosed");
-//                        }
-//
-//                        @Override
-//                        public void onAdShowed() {
-//                            Log.e("===splash","onAdShowed");
-//
-//                        }
-//                    });
-//                } else{
-//                    Utils.getInstance().replaceActivity(SplashActivity.this, MainActivity.class);
-//                }
+        AOAManager aoaManager = new AOAManager(this, "", 10000, new AOAManager.AppOpenAdsListener() {
+            @Override
+            public void onAdsClose() {
+                Utils.getInstance().replaceActivity(SplashActivity.this, MainActivity.class);
             }
-        }
 
-//        AdmodUtils.getInstance().loadAdInterstitial(this, getString(R.string.test_ads_admob_inter_id), new AdLoadCallback() {
-//            @Override
-//            public void onAdFail() {
-//                btn_next.setVisibility(View.VISIBLE);
-//            }//
-//            @Override
-//            public void onAdLoaded() {
-//                btn_next.setVisibility(View.VISIBLE);
-//            }
-//        },false);
+            @Override
+            public void onAdsFailed() {
+                Utils.getInstance().replaceActivity(SplashActivity.this, MainActivity.class);
+            }
+        });
+        aoaManager.loadAndShowAoA();
+    }
+}
+
 

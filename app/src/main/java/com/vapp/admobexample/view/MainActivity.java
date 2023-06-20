@@ -49,18 +49,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
         findbyid();
-        AOAManager aoaManager = new AOAManager(this, "", 10000, new AOAManager.AppOpenAdsListener() {
-            @Override
-            public void onAdsClose() {
-                Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
-            }
 
-            @Override
-            public void onAdsFailed() {
-                Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
-            }
-        });
-        aoaManager.loadAndShowAoA();
         //API data sample
         AdUnitListModel adUnitList = Utils.getInstance().getAdUnitByName("Name AdUnit", "Defaul Id Admob");
         //check Countries (BOOL)
