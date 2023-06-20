@@ -260,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
         btn_ShowNative.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AdsManager.INSTANCE.showAdNativeWithSize(MainActivity.this,viewNativeAds,AdsManager.INSTANCE.getNativeHolder());
+                AdsManager.INSTANCE.showAdNativeMedium(MainActivity.this,viewNativeAds,AdsManager.INSTANCE.getNativeHolder());
             }
         });
         AdsManager.showAdBanner(this,getString(R.string.test_ads_admob_banner_id),findViewById(R.id.banner),findViewById(R.id.line));

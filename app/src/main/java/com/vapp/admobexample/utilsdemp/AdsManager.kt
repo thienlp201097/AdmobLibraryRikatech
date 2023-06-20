@@ -90,7 +90,6 @@ object AdsManager {
 
                         }
                     }, 800)
-                    AppOpenManager.getInstance().isAppResumeEnabled = false
                 }
 
                 override fun onAdLoaded() {
@@ -163,12 +162,12 @@ object AdsManager {
             })
     }
 
-    fun showAdNativeWithSize(activity: Activity, nativeAdContainer: ViewGroup, nativeHolder: NativeHolder) {
+    fun showAdNativeSmall(activity: Activity, nativeAdContainer: ViewGroup, nativeHolder: NativeHolder) {
         if (!AdmodUtils.isNetworkConnected(activity)) {
             nativeAdContainer.visibility = View.GONE
             return
         }
-        AdmodUtils.showNativeAdsWithLayout(activity, nativeHolder, nativeAdContainer, R.layout.ad_template_medium, GoogleENative.UNIFIED_MEDIUM, object : AdmodUtils.AdsNativeCallBackAdmod {
+        AdmodUtils.showNativeAdsWithLayout(activity, nativeHolder, nativeAdContainer, R.layout.ad_template_small, GoogleENative.UNIFIED_SMALL, object : AdmodUtils.AdsNativeCallBackAdmod {
                 override fun NativeLoaded() {
                     Log.d("===NativeAds", "Native showed")
                     nativeAdContainer.visibility = View.VISIBLE
@@ -179,6 +178,25 @@ object AdsManager {
                     nativeAdContainer.visibility = View.GONE
                 }
             }
+        )
+    }
+
+    fun showAdNativeMedium(activity: Activity, nativeAdContainer: ViewGroup, nativeHolder: NativeHolder) {
+        if (!AdmodUtils.isNetworkConnected(activity)) {
+            nativeAdContainer.visibility = View.GONE
+            return
+        }
+        AdmodUtils.showNativeAdsWithLayout(activity, nativeHolder, nativeAdContainer, R.layout.ad_template_medium, GoogleENative.UNIFIED_MEDIUM, object : AdmodUtils.AdsNativeCallBackAdmod {
+            override fun NativeLoaded() {
+                Log.d("===NativeAds", "Native showed")
+                nativeAdContainer.visibility = View.VISIBLE
+            }
+
+            override fun NativeFailed() {
+                Log.d("===NativeAds", "Native false")
+                nativeAdContainer.visibility = View.GONE
+            }
+        }
         )
     }
 
