@@ -45,7 +45,7 @@ public class MyApplication extends Application {
 #  Interstitial
 - loadAdInterstitial
  ```bash 
- 
+  // Hàm loadAdInterstitial sẽ được gọi trước khi show một màn VD: Muốn show Interstitial ở màn IntroActivity thì sẽ gọi trước hàm load từ màn SplashActivity, đến IntroActivity chỉ cần show.
     var interholder = InterHolder(
         "ca-app-pub-3940256099942544/1033173712",
         "ca-app-pub-3940256099942544/1033173712"
@@ -163,7 +163,8 @@ public class MyApplication extends Application {
 ```
 #  AdNative
 - Load AdNative
-```bash 
+```bash
+ // Hàm Load AdNative sẽ được gọi trước khi show một màn VD: Muốn show Interstitial ở màn IntroActivity thì sẽ gọi trước hàm Load từ màn SplashActivity, đến IntroActivity chỉ cần show.
     var nativeHolder = NativeHolder(
         "ca-app-pub-3940256099942544/2247696110",
         "ca-app-pub-3940256099942544/2247696110"
