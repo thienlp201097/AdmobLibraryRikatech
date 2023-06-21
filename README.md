@@ -98,7 +98,7 @@ public class MyApplication extends Application {
                 }
 
                 override fun onEventClickAdClosed() {
-                    // nếu quảng cáo phải lặp lại show nhiều lần thì ở đây phải gọi lại hàm loadInter(context, interHolder)
+                    loadInter(context, interHolder)
                 }
 
                 override fun onAdShowed() {
@@ -117,7 +117,8 @@ public class MyApplication extends Application {
 
                 override fun onAdFail(error: String?) {
                     Log.d("===Failed", error.toString())
-                    // nếu quảng cáo phải lặp lại show nhiều lần thì ở đây phải gọi lại hàm loadInter(context, interHolder)
+                    val log = error?.split(":")?.get(0)?.replace(" ", "_")
+                    loadInter(context, interHolder)
                     callback.onAdClosedOrFailed()
                 }
 
@@ -160,6 +161,7 @@ public class MyApplication extends Application {
            
 ```
 #  AdBanner
+- Load và show Banner thường
 ```bash 
            AdmodUtils.loadAdBanner(activity, adsEnum, viewGroup, object :
                 AdmodUtils.BannerCallBack {
@@ -177,6 +179,34 @@ public class MyApplication extends Application {
                 }
             })
 ```
+- Load và show Banner Collapsible
+```bash 
+            AdmodUtils.loadAdBannerCollapsible(
+                activity,
+                adsEnum,
+                CollapsibleBanner.BOTTOM,
+                viewGroup,
+                object : BannerAdCallback {
+                    override fun onBannerAdLoaded(adSize: AdSize) {
+                        viewGroup.visibility = View.VISIBLE
+                        val params: ViewGroup.LayoutParams = viewGroup.layoutParams
+                        params.height = adSize.getHeightInPixels(activity)
+                        viewGroup.layoutParams = params
+                    }
+
+                    override fun onAdFail() {
+                        viewGroup.visibility = View.GONE
+                    }
+
+                    override fun onAdPaid(adValue: AdValue?) {
+                    }
+                })
+        } else {
+            view.visibility = View.GONE
+            line.visibility = View.GONE
+        }
+```
+
 #  AdNative
 - Load AdNative
 ```bash
