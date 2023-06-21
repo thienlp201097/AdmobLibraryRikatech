@@ -21,7 +21,7 @@ dependencies {
 
 #  init Aplication
 ```bash
-public class MyApplication extends AdsMultiDexApplication {
+public class MyApplication extends Application {
     boolean isShowAds = true;
     boolean isShowAdsResume = true;
 
