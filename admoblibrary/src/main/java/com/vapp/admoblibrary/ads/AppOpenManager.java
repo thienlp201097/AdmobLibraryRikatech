@@ -422,11 +422,12 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
         dialogFullScreen.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
         dialogFullScreen.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         try {
-            dialogFullScreen.show();
+            if (!currentActivity.isFinishing() && dialogFullScreen!=null && !dialogFullScreen.isShowing()){
+                dialogFullScreen.show();
+            }
         }catch (Exception ignored){
 
         }
     }
-
 }
 

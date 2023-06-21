@@ -1766,8 +1766,8 @@ object AdmodUtils {
         return ""
     }
 
-    fun dialogLoading(context: Context?) {
-        dialogFullScreen = Dialog(context!!)
+    fun dialogLoading(context: Activity) {
+        dialogFullScreen = Dialog(context)
         dialogFullScreen?.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialogFullScreen?.setContentView(R.layout.dialog_full_screen)
         dialogFullScreen?.setCancelable(false)
@@ -1776,6 +1776,12 @@ object AdmodUtils {
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.MATCH_PARENT
         )
-        dialogFullScreen?.show()
+        try {
+            if (!context.isFinishing && dialogFullScreen != null && dialogFullScreen?.isShowing == false) {
+                dialogFullScreen?.show()
+            }
+        } catch (ignored: Exception) {
+        }
+
     }
 }

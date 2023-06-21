@@ -5,11 +5,9 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.Window
 import android.widget.LinearLayout
-import androidx.lifecycle.LifecycleOwner
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
@@ -111,8 +109,11 @@ class AOAManager(private val activity: Activity, val id : String,val timeOut: Lo
                 dialogFullScreen?.setCancelable(false)
                 dialogFullScreen?.window?.setBackgroundDrawable(ColorDrawable(Color.WHITE))
                 dialogFullScreen?.window?.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
-                if (!activity.isFinishing) {
-                    dialogFullScreen?.show()
+                try {
+                    if (!activity.isFinishing && dialogFullScreen != null && dialogFullScreen?.isShowing == false) {
+                        dialogFullScreen?.show()
+                    }
+                } catch (ignored: Exception) {
                 }
                 Handler().postDelayed({
                     show(activity)
