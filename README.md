@@ -50,7 +50,7 @@ public class MyApplication extends AdsMultiDexApplication {
         "ca-app-pub-3940256099942544/1033173712",
         "ca-app-pub-3940256099942544/1033173712"
     )
-    //mỗi vị trí native sẽ có 2 id qc
+    //mỗi vị trí Interstitial sẽ có 2 id qc
        
       AdmodUtils.loadAndGetAdInterstitial(context, interHolder, object :
             AdCallBackInterLoad {
