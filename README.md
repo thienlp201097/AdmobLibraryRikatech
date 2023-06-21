@@ -162,9 +162,9 @@ public class MyApplication extends Application {
 ```
 #  AdBanner
 - Load và show Banner thường
-```bash 
-            
-           AdmodUtils.loadAdBanner(activity, adsEnum, viewGroup, object :
+```bash
+           var adId = "ca-app-pub-3940256099942544/6300978111"
+           AdmodUtils.loadAdBanner(activity, adId, viewGroup, object :
                 AdmodUtils.BannerCallBack {
                 override fun onLoad() {
                     viewGroup.visibility = View.VISIBLE
@@ -182,10 +182,11 @@ public class MyApplication extends Application {
             // viewGroup là FrameLayout và để minHeight="50dp"
 ```
 - Load và show Banner Collapsible
-```bash 
+```bash
+            var adId = "ca-app-pub-3940256099942544/6300978111"
             AdmodUtils.loadAdBannerCollapsible(
                 activity,
-                adsEnum,
+                adId,
                 CollapsibleBanner.BOTTOM,
                 viewGroup,
                 object : BannerAdCallback {
