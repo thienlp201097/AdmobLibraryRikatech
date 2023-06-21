@@ -17,13 +17,9 @@ dependencies {
     implementation 'com.github.dktlib:AdmobUtilsLibrary:{version}'
 }
 ```
-```bash
-defaultConfig {
- multiDexEnabled true
-  }
-```
 
-- init Aplication
+
+#  init Aplication
 ```bash
 public class MyApplication extends AdsMultiDexApplication {
     boolean isShowAds = true;
@@ -46,8 +42,8 @@ public class MyApplication extends AdsMultiDexApplication {
    android:name=".MyApplication"
  />
 ```
-- Interstitial
-  + loadAdInterstitial
+#  Interstitial
+- loadAdInterstitial
  ```bash 
  
     var interholder = InterHolder(
@@ -71,7 +67,7 @@ public class MyApplication extends AdsMultiDexApplication {
         })
     
  ```
-  + showAdInterstitialWithCallback
+-  showAdInterstitialWithCallback
   ```bash 
         AppOpenManager.getInstance().isAppResumeEnabled = true
         AdmodUtils.showAdInterstitialWithCallbackNotLoadNew(
@@ -116,7 +112,7 @@ public class MyApplication extends AdsMultiDexApplication {
             true
         )
  ```
-- AdReward
+#  AdReward
 ```bash 
    AdmodUtils.loadAndShowAdRewardWithCallback(MainActivity.this, getString(R.string.test_ads_admob_reward_id), new RewardAdCallback() {
                     @Override
@@ -147,7 +143,7 @@ public class MyApplication extends AdsMultiDexApplication {
                 }, true);
            
 ```
-- AdBanner
+#  AdBanner
 ```bash 
            AdmodUtils.loadAdBanner(activity, adsEnum, viewGroup, object :
                 AdmodUtils.BannerCallBack {
@@ -165,7 +161,7 @@ public class MyApplication extends AdsMultiDexApplication {
                 }
             })
 ```
-
+#  AdNative
 - Load AdNative
 ```bash 
     var nativeHolder = NativeHolder(
