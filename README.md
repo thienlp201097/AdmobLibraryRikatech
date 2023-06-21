@@ -163,6 +163,7 @@ public class MyApplication extends Application {
 #  AdBanner
 - Load và show Banner thường
 ```bash 
+            
            AdmodUtils.loadAdBanner(activity, adsEnum, viewGroup, object :
                 AdmodUtils.BannerCallBack {
                 override fun onLoad() {
@@ -178,6 +179,7 @@ public class MyApplication extends Application {
                 override fun onPaid(adValue: AdValue?, mAdView: AdView?) {
                 }
             })
+            // viewGroup là FrameLayout và để minHeight="50dp"
 ```
 - Load và show Banner Collapsible
 ```bash 
@@ -205,6 +207,7 @@ public class MyApplication extends Application {
             view.visibility = View.GONE
             line.visibility = View.GONE
         }
+        // viewGroup là FrameLayout và để minHeight="50dp"
 ```
 
 #  AdNative
@@ -249,6 +252,7 @@ public class MyApplication extends Application {
         })
         // ad_template_medium, ad_template_small là file xml nằm trong project example
         // GoogleENative.UNIFIED_MEDIUM, GoogleENative.UNIFIED_SMALL dùng để chỉnh kích thước màn loading trước khi show ad
+         // nativeAdContainer là FrameLayout và để minHeight="200dp"
 ```
 
 # PurchaseUtils
