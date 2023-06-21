@@ -1,4 +1,4 @@
-# Admob Utils Library (Download example to copy code, README too long do not update)
+# Admob Utils Library
 
 [![](https://jitpack.io/v/dktlib/AdmobUtilsLibrary.svg)](https://jitpack.io/#dktlib/AdmobUtilsLibrary)
 - Adding the library to your project:
@@ -32,26 +32,11 @@ public class MyApplication extends AdsMultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        PurchaseUtils.getInstance().initBilling(this,getString(R.string.play_console_license));
-        if (PurchaseUtils.getInstance().isPurchased(getString(R.string.premium))) {
-            isShowAds = false;
-        }else {
-            isShowAds = true;
-        }
-
-        AdmodUtils.getInstance().initAdmob(this, BuildConfig.DEBUG, BuildConfig.DEBUG, isShowAds);
-
+        AdmodUtils.initAdmob(this, 10000, true, isShowAds);
         if (isShowAdsResume) {
             AppOpenManager.getInstance().init(this, getString(R.string.ads_admob_app_open));
             AppOpenManager.getInstance().disableAppResumeWithActivity(SplashActivity.class);
         }
-    }
-
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        MultiDex.install(this);
     }
 }
 ```
@@ -62,106 +47,167 @@ public class MyApplication extends AdsMultiDexApplication {
  />
 ```
 - Interstitial
-  + loadAndShowAdInterstitialWithCallback
-
-```bash 
-AdmodUtils.getInstance().loadAndShowAdInterstitialWithCallback(context, admobId, limitTime, 
-      new AdCallback() {
-                    @Override
-                    public void onAdClosed() {
-                      //code here
-                      // Utils.getInstance().replaceActivity(MainActivity.this,OtherActivity.class);
-                      // Utils.getInstance().addActivity(MainActivity.this,OtherActivity.class);
-                    }
-
-                    @Override
-                    public void onAdFail() {
-                      //code here
-                      // Utils.getInstance().replaceActivity(MainActivity.this,OtherActivity.class);
-                      // Utils.getInstance().addActivity(MainActivity.this,OtherActivity.class);
-                    }
-                }, isEnableDialog);
-
-// admobId:String
-// limitTime:Int (milisecond)
-// isEnableDialog:Bool 
-```
   + loadAdInterstitial
  ```bash 
-                AdmodUtils.getInstance().loadAndShowAdInterstitialWithCallback(MainActivity.this, getString(R.string.ads_admob_inter_id), 0, new AdCallback() {
-                    @Override
-                    public void onAdClosed() {
-                      //code here
-                      // Utils.getInstance().replaceActivity(MainActivity.this,OtherActivity.class);
-                      // Utils.getInstance().addActivity(MainActivity.this,OtherActivity.class);
-
-                    }
-
-                    @Override
-                    public void onAdFail() {
-                      //code here
-                      // Utils.getInstance().replaceActivity(MainActivity.this,OtherActivity.class);
-                      // Utils.getInstance().addActivity(MainActivity.this,OtherActivity.class);
-                    }
-                }, true);
+ 
+    var interholder = InterHolder(
+        "ca-app-pub-3940256099942544/1033173712",
+        "ca-app-pub-3940256099942544/1033173712"
+    )
+    //mỗi vị trí native sẽ có 2 id qc
+       
+      AdmodUtils.loadAndGetAdInterstitial(context, interHolder, object :
+            AdCallBackInterLoad {
+            override fun onAdClosed() {
+            }
+            override fun onEventClickAdClosed() {
+            }
+            override fun onAdShowed() {
+            }
+            override fun onAdLoaded(interstitialAd: InterstitialAd?, isLoading: Boolean) {
+            }
+            override fun onAdFail(isLoading: Boolean) {
+            }
+        })
+    
  ```
   + showAdInterstitialWithCallback
   ```bash 
-         AdmodUtils.getInstance().loadAndShowAdRewardWithCallback(MainActivity.this, getString(R.string.ads_admob_reward_id), new AdCallback() {
-                    @Override
-                    public void onAdClosed() {
-                        //code here
-                        Utils.getInstance().showMessenger(MainActivity.this,"Reward");
+        AppOpenManager.getInstance().isAppResumeEnabled = true
+        AdmodUtils.showAdInterstitialWithCallbackNotLoadNew(
+            context as Activity,
+            interHolder,
+            10000,
+            object :
+                AdsInterCallBack {
+                override fun onStartAction() {
+                    callback.onAdClosedOrFailed()
+                }
 
-                    }
+                override fun onEventClickAdClosed() {
+                    loadInter(context, interHolder)
+                }
 
-                    @Override
-                    public void onAdFail() {
-                        //code here
-                        Utils.getInstance().showMessenger(MainActivity.this,"Reward fail");
-                    }
-                }, true);
+                override fun onAdShowed() {
+                    Handler().postDelayed({
+                        try {
+                            AdmodUtils.dismissAdDialog()
+                        } catch (_: Exception) {
+
+                        }
+                    }, 800)
+                }
+
+                override fun onAdLoaded() {
+
+                }
+
+                override fun onAdFail(error: String?) {
+                    Log.d("===Failed", error.toString())
+                    val log = error?.split(":")?.get(0)?.replace(" ", "_")
+                    loadInter(context, interHolder)
+                    callback.onAdClosedOrFailed()
+                }
+
+                override fun onPaid(adValue: AdValue?) {
+
+                }
+            },
+            true
+        )
  ```
 - AdReward
 ```bash 
- AdmodUtils.getInstance().loadAndShowAdRewardWithCallback(MainActivity.this, getString(R.string.ads_admob_reward_id), new AdCallback() {
+   AdmodUtils.loadAndShowAdRewardWithCallback(MainActivity.this, getString(R.string.test_ads_admob_reward_id), new RewardAdCallback() {
                     @Override
                     public void onAdClosed() {
-                        //code here
-                        Utils.getInstance().showMessenger(MainActivity.this,"Reward");
+                        if (AdmodUtils.mRewardedAd != null) {
+                            AdmodUtils.mRewardedAd = null;
+                        }
+                        AdmodUtils.dismissAdDialog();
+                        //Utils.getInstance().showMessenger(MainActivity.this, "close ad");
+                        startActivity(new Intent(MainActivity.this, OtherActivity.class));
+                    }
+
+                    @Override
+                    public void onEarned() {
+                        if (AdmodUtils.mRewardedAd != null) {
+                            AdmodUtils.mRewardedAd = null;
+                        }
+                        AdmodUtils.dismissAdDialog();
+                        Utils.getInstance().showMessenger(MainActivity.this, "Reward");
 
                     }
 
                     @Override
                     public void onAdFail() {
                         //code here
-                        Utils.getInstance().showMessenger(MainActivity.this,"Reward fail");
+                        Utils.getInstance().showMessenger(MainActivity.this, "Reward fail");
                     }
                 }, true);
+           
 ```
 - AdBanner
 ```bash 
-AdmodUtils.getInstance().loadAdBanner(MainActivity.this, getString(R.string.ads_admob_native_id), viewGroup_banner);
+           AdmodUtils.loadAdBanner(activity, adsEnum, viewGroup, object :
+                AdmodUtils.BannerCallBack {
+                override fun onLoad() {
+                    viewGroup.visibility = View.VISIBLE
+                    line.visibility = View.VISIBLE
+                }
+
+                override fun onFailed() {
+                    viewGroup.visibility = View.GONE
+                    line.visibility = View.GONE
+                }
+
+                override fun onPaid(adValue: AdValue?, mAdView: AdView?) {
+                }
+            })
 ```
-- AdNative
+
+- Load AdNative
 ```bash 
-AdmodUtils.getInstance().loadNativeAds(MainActivity.this, getString(R.string.ads_admob_native_id), viewGroup_nativeAds, GoogleENative.UNIFIED_SMALL);
-//GoogleENative = UNIFIED_MEDIUM | UNIFIED_SMALL
+    var nativeHolder = NativeHolder(
+        "ca-app-pub-3940256099942544/2247696110",
+        "ca-app-pub-3940256099942544/2247696110"
+    )
+    //mỗi vị trí native sẽ có 2 id qc
+    
+        AdmodUtils.loadAndGetNativeAds(activity, nativeHolder, object : NativeAdCallback {
+                override fun onLoadedAndGetNativeAd(ad: NativeAd?) {
+                }
+
+                override fun onNativeAdLoaded() {
+                }
+
+                override fun onAdFail(error: String) {
+                    Log.d("===AdsLoadsNative", error)
+                }
+
+                override fun onAdPaid(adValue: AdValue?) {
+
+                }
+            })
 ```
-- AdNative in recyclerview
+
+- Show AdNative
 ```bash 
- recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        MainAdapter mainAdapter = new MainAdapter(itemModel, this::onNavigate);
-        GoogleNativeAdAdapter googleNativeAdAdapter = new GoogleNativeAdAdapter(
-                new GoogleNativeAdAdapter.Param(
-                        NativeRecyclerActivity.this,
-                        mainAdapter, GoogleENative.UNIFIED_SMALL,
-                        2,
-                        R.layout.layout_ad, R.id.layout_ad));
-        recyclerView.setAdapter(googleNativeAdAdapter);
-        //GoogleENative = UNIFIED_MEDIUM | UNIFIED_SMALL
-        //2 is position show ad native
+    AdmodUtils.showNativeAdsWithLayout(activity, nativeHolder, nativeAdContainer, R.layout.ad_template_medium, GoogleENative.UNIFIED_MEDIUM, object : AdmodUtils.AdsNativeCallBackAdmod {
+            override fun NativeLoaded() {
+                Log.d("===NativeAds", "Native showed")
+                nativeAdContainer.visibility = View.VISIBLE
+            }
+
+            override fun NativeFailed() {
+                Log.d("===NativeAds", "Native false")
+                nativeAdContainer.visibility = View.GONE
+            }
+        })
+        // ad_template_medium, ad_template_small là file xml nằm trong project example
+        // GoogleENative.UNIFIED_MEDIUM, GoogleENative.UNIFIED_SMALL dùng để chỉnh kích thước màn loading trước khi show ad
 ```
+
 # PurchaseUtils
 - init
 ```bash
