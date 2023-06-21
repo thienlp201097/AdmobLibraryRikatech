@@ -42,6 +42,23 @@ public class MyApplication extends Application {
    android:name=".MyApplication"
  />
 ```
+#  AOA (App Open Ads)
+ ```bash 
+       //AOA thường dùng để load QC ở màn Splash
+       String idAOA = "ca-app-pub-3940256099942544/3419835294";
+       AOAManager aoaManager = new AOAManager(this, idAOA, 10000, new AOAManager.AppOpenAdsListener() {
+            @Override
+            public void onAdsClose() {
+                Utils.getInstance().replaceActivity(SplashActivity.this, MainActivity.class);
+            }
+
+            @Override
+            public void onAdsFailed() {
+                Utils.getInstance().replaceActivity(SplashActivity.this, MainActivity.class);
+            }
+        });
+        aoaManager.loadAndShowAoA();
+ ```
 #  Interstitial
 - loadAdInterstitial
  ```bash 
