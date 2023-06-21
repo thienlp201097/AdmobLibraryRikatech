@@ -98,7 +98,7 @@ public class MyApplication extends Application {
                 }
 
                 override fun onEventClickAdClosed() {
-                    loadInter(context, interHolder)
+                    // nếu quảng cáo phải lặp lại show nhiều lần thì ở đây phải gọi lại hàm loadInter(context, interHolder)
                 }
 
                 override fun onAdShowed() {
@@ -117,8 +117,7 @@ public class MyApplication extends Application {
 
                 override fun onAdFail(error: String?) {
                     Log.d("===Failed", error.toString())
-                    val log = error?.split(":")?.get(0)?.replace(" ", "_")
-                    loadInter(context, interHolder)
+                    // nếu quảng cáo phải lặp lại show nhiều lần thì ở đây phải gọi lại hàm loadInter(context, interHolder)
                     callback.onAdClosedOrFailed()
                 }
 
