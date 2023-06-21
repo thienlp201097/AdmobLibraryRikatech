@@ -173,7 +173,6 @@ public class MyApplication extends Application {
 
                 override fun onFailed() {
                     viewGroup.visibility = View.GONE
-                    line.visibility = View.GONE
                 }
 
                 override fun onPaid(adValue: AdValue?, mAdView: AdView?) {
@@ -206,7 +205,6 @@ public class MyApplication extends Application {
                 })
         } else {
             view.visibility = View.GONE
-            line.visibility = View.GONE
         }
         // viewGroup là FrameLayout và để minHeight="50dp"
 ```
