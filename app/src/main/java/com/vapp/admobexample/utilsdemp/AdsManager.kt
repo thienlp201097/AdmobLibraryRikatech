@@ -79,7 +79,7 @@ object AdsManager {
                 }
 
                 override fun onEventClickAdClosed() {
-                    loadInter(context, interHolder)
+//                    loadInter(context, interHolder)
                 }
 
                 override fun onAdShowed() {
@@ -99,7 +99,7 @@ object AdsManager {
                 override fun onAdFail(error: String?) {
                     Log.d("===Failed", error.toString())
                     val log = error?.split(":")?.get(0)?.replace(" ", "_")
-                    loadInter(context, interHolder)
+//                    loadInter(context, interHolder)
                     callback.onAdClosedOrFailed()
                 }
 

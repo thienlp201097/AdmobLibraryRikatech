@@ -5,6 +5,6 @@ import com.google.android.gms.ads.interstitial.InterstitialAd
 
 open class InterHolder(var ads: String,var ads2: String) {
     var inter: InterstitialAd? = null
-    val mutable: MutableLiveData<InterstitialAd> = MutableLiveData()
+    val mutable: MutableLiveData<InterstitialAd> = MutableLiveData(null)
     var check = false
 }

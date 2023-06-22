@@ -807,6 +807,8 @@ object AdmodUtils {
                                 isClick = false
                                 //Set inter = null
                                 interHolder.inter = null
+                                interHolder.mutable.removeObservers((activity as LifecycleOwner))
+                                interHolder.mutable.value = null
                                 adCallback.onEventClickAdClosed()
                                 dismissAdDialog()
                                 Log.d("TAG", "The ad was dismissed.")
@@ -825,6 +827,7 @@ object AdmodUtils {
                                 Log.e("Admodfail", "onAdFailedToLoad" + adError.message)
                                 Log.e("Admodfail", "errorCodeAds" + adError.cause)
                                 interHolder.mutable.removeObservers((activity as LifecycleOwner))
+                                interHolder.mutable.value = null
                                 adCallback.onAdFail(adError.message)
                             }
 
