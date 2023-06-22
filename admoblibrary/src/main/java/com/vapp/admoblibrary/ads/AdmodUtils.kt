@@ -692,19 +692,10 @@ object AdmodUtils {
                 }
 
                 override fun onAdFailedToLoad(loadAdError: LoadAdError) {
-                    isAdShowing = false
-                    isAdShowing = false
-                    if (mInterstitialAd != null) {
-                        mInterstitialAd = null
-                    }
-                    if (isClick) {
-                        interHolder.mutable.value = null
-                    }
                     loadAndGetAdInterstitialId2(
                         activity,
                         idLoadInter2,
                         adLoadCallback,
-                        interHolder.mutable,
                         interHolder
                     )
                 }
@@ -717,7 +708,6 @@ object AdmodUtils {
         activity: Context,
         admobId2: String,
         adLoadCallback: AdCallBackInterLoad,
-        isAdsLoaded: MutableLiveData<InterstitialAd>,
         interHolder: InterHolder
     ) {
         var admobId2 = admobId2
@@ -740,9 +730,6 @@ object AdmodUtils {
             object : InterstitialAdLoadCallback() {
                 override fun onAdLoaded(interstitialAd: InterstitialAd) {
                     if (isClick) {
-                        isAdsLoaded.value = interstitialAd
-                    }
-                    if (isClick) {
                         interHolder.mutable.value = interstitialAd
                     }
                     interHolder.inter = interstitialAd
@@ -753,14 +740,13 @@ object AdmodUtils {
 
                 override fun onAdFailedToLoad(loadAdError: LoadAdError) {
                     isAdShowing = false
-                    isAdShowing = false
                     if (mInterstitialAd != null) {
                         mInterstitialAd = null
                     }
-                    if (isClick) {
-                        isAdsLoaded.value = null
-                    }
                     interHolder.check = false
+                    if (isClick) {
+                        interHolder.mutable.value = null
+                    }
                     adLoadCallback.onAdFail(false)
                 }
             })
@@ -1719,8 +1705,6 @@ object AdmodUtils {
     }
 
     //Update New Lib
-    var isAdsLoaded = MutableLiveData<InterstitialAd>()
-    var loading = false
     private fun checkIdTest(activity: Activity, admobId: String?) {
 //        if (admobId.equals(activity.getString(R.string.test_ads_admob_inter_id)) && !BuildConfig.DEBUG) {
 //            if (dialog != null) {
