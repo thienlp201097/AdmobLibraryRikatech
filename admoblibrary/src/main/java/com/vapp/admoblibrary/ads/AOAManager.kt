@@ -50,7 +50,6 @@ class AOAManager(private val activity: Activity, val id : String,val timeOut: Lo
             }
         }
         if (isAdAvailable) {
-            isLoading = false
             appOpenAdsListener.onAdsFailed()
             return
         } else {
@@ -66,7 +65,6 @@ class AOAManager(private val activity: Activity, val id : String,val timeOut: Lo
 
                 override fun onAdLoaded(ad: AppOpenAd) {
                     super.onAdLoaded(ad)
-                    isLoading = false
                     appOpenAd = ad
                     Log.d("tag", "isAdAvailable = true")
                     showAdIfAvailable()
@@ -86,7 +84,6 @@ class AOAManager(private val activity: Activity, val id : String,val timeOut: Lo
                 object : FullScreenContentCallback() {
 
                     override fun onAdDismissedFullScreenContent() {
-                        isLoading = false
                         dialogFullScreen?.dismiss()
                         appOpenAd = null
                         isShowingAd = true
@@ -94,14 +91,12 @@ class AOAManager(private val activity: Activity, val id : String,val timeOut: Lo
                     }
 
                     override fun onAdFailedToShowFullScreenContent(p0: AdError) {
-                        isLoading = false
                         dialogFullScreen?.dismiss()
                         isShowingAd = true
                         appOpenAdsListener.onAdsFailed()
                     }
 
                     override fun onAdShowedFullScreenContent() {
-                        isLoading = false
                         isShowingAd = true
                     }
                 }

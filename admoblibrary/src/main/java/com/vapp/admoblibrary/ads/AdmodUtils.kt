@@ -401,11 +401,12 @@ object AdmodUtils {
             Log.d("===AdsLoadsNative", "Native not null")
             return
         }
+        val adLoader: AdLoader
         if (isTesting) {
             nativeHolder.ads = context.getString(R.string.test_ads_admob_native_id)
         }
         nativeHolder.isLoad = true
-        val adLoader: AdLoader = AdLoader.Builder(context, nativeHolder.ads)
+        adLoader = AdLoader.Builder(context, nativeHolder.ads)
             .forNativeAd { nativeAd ->
                 nativeHolder.nativeAd = nativeAd
                 nativeHolder.isLoad = false
@@ -414,7 +415,7 @@ object AdmodUtils {
                 adCallback.onLoadedAndGetNativeAd(nativeAd)
             }.withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(adError: LoadAdError) {
-                    adCallback.onAdFail("nativeErrorCodeAds_1_" + adError.cause)
+                    adCallback.onAdFail("errorId1_"+adError.cause)
                     Log.e("Admodfail", "onAdFailedToLoad" + adError.message)
                     Log.e("Admodfail", "errorCodeAds" + adError.cause)
                     loadAndGetNativeAds2(context, nativeHolder, adCallback)
@@ -454,7 +455,7 @@ object AdmodUtils {
                     nativeHolder.nativeAd = null
                     nativeHolder.isLoad = false
                     nativeHolder.native_mutable.value = null
-                    adCallback.onAdFail("nativeErrorCodeAds_2_" + adError.cause)
+                    adCallback.onAdFail("errorId2_"+adError.cause)
                 }
             })
             .withNativeAdOptions(NativeAdOptions.Builder().build()).build()
@@ -488,7 +489,8 @@ object AdmodUtils {
         viewGroup.removeAllViews()
         if (!nativeHolder.isLoad) {
             if (nativeHolder.nativeAd != null) {
-                val adView = activity.layoutInflater.inflate(layout, null) as NativeAdView
+                val adView = activity.layoutInflater
+                    .inflate(layout, null) as NativeAdView
                 populateNativeAdView(nativeHolder.nativeAd!!, adView, GoogleENative.UNIFIED_MEDIUM)
                 if (shimmerFrameLayout != null) {
                     shimmerFrameLayout?.stopShimmer()
