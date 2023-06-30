@@ -152,8 +152,8 @@ object AdsManager {
 
                 }
 
-                override fun onAdFail(error: String) {
-                    Log.d("===AdsLoadsNative", error)
+                override fun onAdFail(error: String?, type: Boolean) {
+                    error?.let { Log.d("===AdsLoadsNative", it) }
                 }
 
                 override fun onAdPaid(adValue: AdValue?) {

@@ -393,7 +393,7 @@ object AdmodUtils {
         adCallback: NativeAdCallback
     ) {
         if (!isShowAds || !isNetworkConnected(context)) {
-            adCallback.onAdFail("No internet")
+            adCallback.onAdFail("No internet",true)
             return
         }
         //If native is loaded return
@@ -401,12 +401,11 @@ object AdmodUtils {
             Log.d("===AdsLoadsNative", "Native not null")
             return
         }
-        val adLoader: AdLoader
         if (isTesting) {
             nativeHolder.ads = context.getString(R.string.test_ads_admob_native_id)
         }
         nativeHolder.isLoad = true
-        adLoader = AdLoader.Builder(context, nativeHolder.ads)
+        val adLoader: AdLoader = AdLoader.Builder(context, nativeHolder.ads)
             .forNativeAd { nativeAd ->
                 nativeHolder.nativeAd = nativeAd
                 nativeHolder.isLoad = false
@@ -415,6 +414,7 @@ object AdmodUtils {
                 adCallback.onLoadedAndGetNativeAd(nativeAd)
             }.withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(adError: LoadAdError) {
+                    adCallback.onAdFail("nativeErrorCodeAds_1" + adError.cause,false)
                     Log.e("Admodfail", "onAdFailedToLoad" + adError.message)
                     Log.e("Admodfail", "errorCodeAds" + adError.cause)
                     loadAndGetNativeAds2(context, nativeHolder, adCallback)
@@ -454,7 +454,7 @@ object AdmodUtils {
                     nativeHolder.nativeAd = null
                     nativeHolder.isLoad = false
                     nativeHolder.native_mutable.value = null
-                    adCallback.onAdFail(adError.message)
+                    adCallback.onAdFail("nativeErrorCodeAds_2" + adError.cause,true)
                 }
             })
             .withNativeAdOptions(NativeAdOptions.Builder().build()).build()
@@ -488,8 +488,7 @@ object AdmodUtils {
         viewGroup.removeAllViews()
         if (!nativeHolder.isLoad) {
             if (nativeHolder.nativeAd != null) {
-                val adView = activity.layoutInflater
-                    .inflate(layout, null) as NativeAdView
+                val adView = activity.layoutInflater.inflate(layout, null) as NativeAdView
                 populateNativeAdView(nativeHolder.nativeAd!!, adView, GoogleENative.UNIFIED_MEDIUM)
                 if (shimmerFrameLayout != null) {
                     shimmerFrameLayout?.stopShimmer()
@@ -580,7 +579,7 @@ object AdmodUtils {
                     Log.e("Admodfail", "errorCodeAds" + adError.cause)
                     shimmerFrameLayout.stopShimmer()
                     viewGroup.removeAllViews()
-                    adCallback.onAdFail(adError.message)
+                    adCallback.onAdFail(adError.message,true)
                 }
             })
             .withNativeAdOptions(NativeAdOptions.Builder().build()).build()
@@ -640,7 +639,7 @@ object AdmodUtils {
                     Log.e("Admodfail", "errorCodeAds" + adError.cause)
                     shimmerFrameLayout.stopShimmer()
                     viewGroup.removeAllViews()
-                    adCallback.onAdFail(adError.message)
+                    adCallback.onAdFail(adError.message,true)
                 }
             })
             .withNativeAdOptions(NativeAdOptions.Builder().build()).build()
