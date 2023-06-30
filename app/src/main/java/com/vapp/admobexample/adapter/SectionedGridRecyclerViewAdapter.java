@@ -124,7 +124,7 @@ public class SectionedGridRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
                         }
 
                         @Override
-                        public void onAdFail(String s) {
+                        public void onAdFail(String s,boolean f) {
 
                         }
 

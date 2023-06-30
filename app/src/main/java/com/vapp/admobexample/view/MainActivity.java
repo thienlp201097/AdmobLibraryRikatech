@@ -221,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onAdFail(String s) {
+                    public void onAdFail(String s,boolean f) {
 
                     }
 
