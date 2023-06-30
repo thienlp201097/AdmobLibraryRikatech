@@ -393,7 +393,7 @@ object AdmodUtils {
         adCallback: NativeAdCallback
     ) {
         if (!isShowAds || !isNetworkConnected(context)) {
-            adCallback.onAdFail("No internet",true)
+            adCallback.onAdFail("No internet")
             return
         }
         //If native is loaded return
@@ -414,7 +414,7 @@ object AdmodUtils {
                 adCallback.onLoadedAndGetNativeAd(nativeAd)
             }.withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(adError: LoadAdError) {
-                    adCallback.onAdFail("nativeErrorCodeAds_1" + adError.cause,false)
+                    adCallback.onAdFail("nativeErrorCodeAds_1_" + adError.cause)
                     Log.e("Admodfail", "onAdFailedToLoad" + adError.message)
                     Log.e("Admodfail", "errorCodeAds" + adError.cause)
                     loadAndGetNativeAds2(context, nativeHolder, adCallback)
@@ -454,7 +454,7 @@ object AdmodUtils {
                     nativeHolder.nativeAd = null
                     nativeHolder.isLoad = false
                     nativeHolder.native_mutable.value = null
-                    adCallback.onAdFail("nativeErrorCodeAds_2" + adError.cause,true)
+                    adCallback.onAdFail("nativeErrorCodeAds_2_" + adError.cause)
                 }
             })
             .withNativeAdOptions(NativeAdOptions.Builder().build()).build()
@@ -579,7 +579,7 @@ object AdmodUtils {
                     Log.e("Admodfail", "errorCodeAds" + adError.cause)
                     shimmerFrameLayout.stopShimmer()
                     viewGroup.removeAllViews()
-                    adCallback.onAdFail(adError.message,true)
+                    adCallback.onAdFail(adError.message)
                 }
             })
             .withNativeAdOptions(NativeAdOptions.Builder().build()).build()
@@ -639,7 +639,7 @@ object AdmodUtils {
                     Log.e("Admodfail", "errorCodeAds" + adError.cause)
                     shimmerFrameLayout.stopShimmer()
                     viewGroup.removeAllViews()
-                    adCallback.onAdFail(adError.message,true)
+                    adCallback.onAdFail(adError.message)
                 }
             })
             .withNativeAdOptions(NativeAdOptions.Builder().build()).build()
