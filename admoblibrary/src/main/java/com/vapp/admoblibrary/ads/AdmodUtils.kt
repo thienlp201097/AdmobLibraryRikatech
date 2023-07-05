@@ -392,21 +392,20 @@ object AdmodUtils {
         nativeHolder: NativeHolder,
         adCallback: NativeAdCallback
     ) {
-//        if (!isShowAds || !isNetworkConnected(context)) {
-//            adCallback.onAdFail("No internet")
-//            return
-//        }
+        if (!isShowAds || !isNetworkConnected(context)) {
+            adCallback.onAdFail("No internet")
+            return
+        }
         //If native is loaded return
         if (nativeHolder.nativeAd != null) {
             Log.d("===AdsLoadsNative", "Native not null")
             return
         }
-        val adLoader: AdLoader
         if (isTesting) {
             nativeHolder.ads = context.getString(R.string.test_ads_admob_native_id)
         }
         nativeHolder.isLoad = true
-        adLoader = AdLoader.Builder(context, nativeHolder.ads)
+        val adLoader: AdLoader = AdLoader.Builder(context, nativeHolder.ads)
             .forNativeAd { nativeAd ->
                 nativeHolder.nativeAd = nativeAd
                 nativeHolder.isLoad = false
