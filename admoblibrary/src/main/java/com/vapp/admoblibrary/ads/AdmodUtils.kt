@@ -392,10 +392,10 @@ object AdmodUtils {
         nativeHolder: NativeHolder,
         adCallback: NativeAdCallback
     ) {
-        if (!isShowAds || !isNetworkConnected(context)) {
-            adCallback.onAdFail("No internet")
-            return
-        }
+//        if (!isShowAds || !isNetworkConnected(context)) {
+//            adCallback.onAdFail("No internet")
+//            return
+//        }
         //If native is loaded return
         if (nativeHolder.nativeAd != null) {
             Log.d("===AdsLoadsNative", "Native not null")
@@ -415,7 +415,7 @@ object AdmodUtils {
                 adCallback.onLoadedAndGetNativeAd(nativeAd)
             }.withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(adError: LoadAdError) {
-                    adCallback.onAdFail("errorId1_"+adError.cause)
+                    adCallback.onAdFail("errorId1_"+adError.message)
                     Log.e("Admodfail", "onAdFailedToLoad" + adError.message)
                     Log.e("Admodfail", "errorCodeAds" + adError.cause)
                     loadAndGetNativeAds2(context, nativeHolder, adCallback)
@@ -455,7 +455,7 @@ object AdmodUtils {
                     nativeHolder.nativeAd = null
                     nativeHolder.isLoad = false
                     nativeHolder.native_mutable.value = null
-                    adCallback.onAdFail("errorId2_"+adError.cause)
+                    adCallback.onAdFail("errorId2_"+adError.message)
                 }
             })
             .withNativeAdOptions(NativeAdOptions.Builder().build()).build()
@@ -849,7 +849,6 @@ object AdmodUtils {
             }
             return
         }
-
         //Load inter done
         if (interHolder.inter == null) {
             if (adCallback != null) {

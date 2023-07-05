@@ -34,12 +34,12 @@ object AdsManager {
     var check_inter1 = false
 
     var nativeHolder = NativeHolder(
-        "ca-app-pub-3940256099942544/2247696110",
-        "ca-app-pub-3940256099942544/2247696110"
+        "",
+        ""
     )
     var interholder = InterHolder(
-        "ca-app-pub-3940256099942544/1033173712",
-        "ca-app-pub-3940256099942544/1033173712"
+        "",
+        ""
     )
 
     fun loadInter(context: Context, interHolder: InterHolder) {
@@ -153,7 +153,7 @@ object AdsManager {
                 }
 
                 override fun onAdFail(error: String) {
-                    Log.d("===AdsLoadsNative", error)
+                    Log.d("===AdsLoadsNative", error.replace(":","").replace(" ", "_").replace(".","").replace("?","").replace("!",""))
                 }
 
                 override fun onAdPaid(adValue: AdValue?) {
