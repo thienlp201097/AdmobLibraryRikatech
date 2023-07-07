@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/gnt_outline_shape">
+    android:background="@drawable/bg_native_ads_lib">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ad_container"
