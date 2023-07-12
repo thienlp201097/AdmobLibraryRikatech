@@ -255,6 +255,9 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
     @Override
     public void onActivityDestroyed(Activity activity) {
         currentActivity = null;
+        if (dialogFullScreen != null && dialogFullScreen.isShowing()){
+            dialogFullScreen.dismiss();
+        }
     }
 
     public void showAdIfAvailable(final boolean isSplash) {
@@ -353,41 +356,6 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     public void onResume() {
-//        if(AdmodUtils.mInterstitialAd != null && !AdmodUtils.isAdShowing){
-//            AdmodUtils.mInterstitialAd.show(currentActivity);
-//            AdmodUtils.mInterstitialAd = null;
-//            AdmodUtils.isAdShowing = true;
-//            return;
-//        }
-//        else if(AdmodUtils.mRewardedAd != null){
-//            AdmodUtils.mRewardedAd.show(currentActivity, new OnUserEarnedRewardListener() {
-//                @Override
-//                public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
-//                    // Handle the reward.
-//                    new RewardAdCallback() {
-//                        @Override
-//                        public void onAdClosed() {
-//
-//                        }
-//
-//                        @Override
-//                        public void onAdFail() {
-//
-//                        }
-//
-//                        @Override
-//                        public void onEarned() {
-//
-//                        }
-//                    };
-//                }
-//            });
-//            AdmodUtils.mRewardedAd = null;
-//            return;
-//        }
-//        else{
-//            AdmodUtils.dismissAdDialog();
-//        }
         if (currentActivity == null) {
             return;
         }

@@ -20,11 +20,12 @@ import com.vapp.admoblibrary.ads.AdCallback;
 import com.vapp.admoblibrary.ads.AdmodUtils;
 
 public class SplashActivity extends AppCompatActivity {
+    AOAManager aoaManager;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
-        AOAManager aoaManager = new AOAManager(this, "", 10000, new AOAManager.AppOpenAdsListener() {
+        aoaManager = new AOAManager(this, "", 10000, new AOAManager.AppOpenAdsListener() {
             @Override
             public void onAdsClose() {
                 Utils.getInstance().replaceActivity(SplashActivity.this, MainActivity.class);
@@ -36,6 +37,12 @@ public class SplashActivity extends AppCompatActivity {
             }
         });
         aoaManager.loadAndShowAoA();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        aoaManager.onAoaDestroyed();
     }
 }
 
