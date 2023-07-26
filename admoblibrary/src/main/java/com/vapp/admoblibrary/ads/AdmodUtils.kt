@@ -17,14 +17,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.LinearLayout
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ProcessLifecycleOwner
-import com.airbnb.lottie.LottieAnimationView
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.ads.mediation.admob.AdMobAdapter
 import com.google.android.gms.ads.AdError
@@ -246,14 +243,18 @@ object AdmodUtils {
         }
         Log.e(" Admod", "loadAdBanner")
     }
-
+    interface BannerCollapsibleAdCallback {
+        fun onBannerAdLoaded(adSize: AdSize)
+        fun onAdFail()
+        fun onAdPaid(adValue: AdValue, mAdView: AdView)
+    }
     @JvmStatic
     fun loadAdBannerCollapsible(
         activity: Activity,
         bannerId: String?,
         collapsibleBannersize: CollapsibleBanner,
         viewGroup: ViewGroup,
-        callback: BannerAdCallback
+        callback: BannerCollapsibleAdCallback
     ) {
         var bannerId = bannerId
         if (!isShowAds || !isNetworkConnected(activity)) {
@@ -273,9 +274,10 @@ object AdmodUtils {
         viewGroup.addView(mAdView, 1)
         shimmerFrameLayout = tagView.findViewById(R.id.shimmer_view_container)
         shimmerFrameLayout?.startShimmer()
-        mAdView.onPaidEventListener = OnPaidEventListener { adValue -> callback.onAdPaid(adValue) }
+
         mAdView.adListener = object : AdListener() {
             override fun onAdLoaded() {
+                mAdView.onPaidEventListener = OnPaidEventListener { adValue -> callback.onAdPaid(adValue,mAdView) }
                 shimmerFrameLayout?.stopShimmer()
                 viewGroup.removeView(tagView)
                 callback.onBannerAdLoaded(adSize)

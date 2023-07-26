@@ -208,7 +208,7 @@ object AdsManager {
                 adsEnum,
                 CollapsibleBanner.BOTTOM,
                 view,
-                object : BannerAdCallback {
+                object : AdmodUtils.BannerCollapsibleAdCallback {
                     override fun onBannerAdLoaded(adSize: AdSize) {
                         view.visibility = View.VISIBLE
                         line.visibility = View.VISIBLE
@@ -222,7 +222,7 @@ object AdsManager {
                         line.visibility = View.GONE
                     }
 
-                    override fun onAdPaid(adValue: AdValue?) {
+                    override fun onAdPaid(adValue: AdValue, mAdView: AdView) {
 
                     }
                 })
