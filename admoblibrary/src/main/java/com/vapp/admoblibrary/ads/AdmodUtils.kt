@@ -601,7 +601,7 @@ object AdmodUtils {
         adCallback: NativeAdCallback
     ) {
         Log.d("===Native","Native1")
-        val s = nativeHolder.ads
+        var s = nativeHolder.ads
         val tagView: View = if (size === GoogleENative.UNIFIED_MEDIUM) {
             activity.layoutInflater.inflate(R.layout.layoutnative_loading_medium, null, false)
         } else {
@@ -616,7 +616,7 @@ object AdmodUtils {
             return
         }
         if (isTesting) {
-//            s = activity.getString(R.string.test_ads_admob_native_id)
+            s = activity.getString(R.string.test_ads_admob_native_id)
         }
         val adLoader: AdLoader = AdLoader.Builder(activity, s)
             .forNativeAd { nativeAd ->
