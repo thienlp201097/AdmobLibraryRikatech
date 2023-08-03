@@ -41,7 +41,63 @@ public class MyApplication extends Application {
 <application
    android:name=".MyApplication"
  />
+
 ```
+
+-## New Update : Remote config banner Collapsible or Normal Banner and auto reload 
+```bash
+
+    - Step 1: Create RemoteConfigManager (Add firebase library).
+
+    internal object RemoteConfigManager {
+
+        private val gson by lazy { Gson() }
+
+        fun initRemoteConfig(listener: OnCompleteListener<Boolean>) {
+            val mFirebaseRemoteConfig: FirebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
+            val configSettings: FirebaseRemoteConfigSettings = FirebaseRemoteConfigSettings.Builder().setMinimumFetchIntervalInSeconds(3600).build()
+            mFirebaseRemoteConfig.setConfigSettingsAsync(configSettings)
+            mFirebaseRemoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
+            mFirebaseRemoteConfig.fetchAndActivate().addOnCompleteListener(listener)
+        }
+
+        fun getBannerConfig(key: String): BannerPlugin.BannerConfig? {
+            return getConfig<BannerPlugin.BannerConfig>(key)
+        }
+
+        private inline fun <reified T> getConfig(configName: String): T? {
+            return try {
+                val data = FirebaseRemoteConfig.getInstance().getString(configName)
+                gson.fromJson<T>(data, object : TypeToken<T>() {}.type)
+            } catch (ignored: Throwable) {
+                null
+            }
+        }
+    }
+    - Step 2: .
+
+    fun loadAndShowBannerRemote(activity: Activity, id : String ,bannerConfig: BannerPlugin.BannerConfig?, view: ViewGroup, line: View){
+        BannerPlugin(activity, view,id,bannerConfig,object : BannerRemoteConfig{
+                override fun onBannerAdLoaded(adSize: AdSize?) {
+                    view.visibility = View.VISIBLE
+                    line.visibility = View.VISIBLE
+                }
+
+                override fun onAdFail() {
+                    view.visibility = View.GONE
+                    line.visibility = View.GONE
+                }
+
+                override fun onAdPaid(adValue: AdValue, mAdView: AdView) {
+                }
+            }
+        )
+    }
+
+    AdsManager.INSTANCE.loadAndShowBannerRemote(this,"", RemoteConfigManager.INSTANCE.getBannerConfig("test_banner_2"), findViewById(R.id.banner),findViewById(R.id.line));
+
+```
+
 #  AOA (App Open Ads)
  ```bash 
        //AOA thường dùng để load QC ở màn Splash
@@ -253,6 +309,8 @@ public class MyApplication extends Application {
         // GoogleENative.UNIFIED_MEDIUM, GoogleENative.UNIFIED_SMALL dùng để chỉnh kích thước màn loading trước khi show ad
          // nativeAdContainer là FrameLayout và để minHeight="200dp"
 ```
+
+
 
 # PurchaseUtils
 - init
