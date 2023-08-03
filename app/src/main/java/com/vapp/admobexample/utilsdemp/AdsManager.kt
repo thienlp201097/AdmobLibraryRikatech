@@ -26,6 +26,8 @@ import com.vapp.admoblibrary.ads.admobnative.enumclass.GoogleENative
 import com.vapp.admoblibrary.ads.model.BannerAdCallback
 import com.vapp.admoblibrary.ads.model.InterHolder
 import com.vapp.admoblibrary.ads.model.NativeHolder
+import com.vapp.admoblibrary.ads.remote.BannerPlugin
+import com.vapp.admoblibrary.ads.remote.BannerRemoteConfig
 import com.vapp.admoblibrary.utils.Utils
 
 object AdsManager {
@@ -41,7 +43,23 @@ object AdsManager {
         "",
         ""
     )
+    fun loadAndShowBannerRemote(activity: Activity, id : String ,bannerConfig: BannerPlugin.BannerConfig?, view: ViewGroup, line: View){
+        BannerPlugin(activity, view,id,bannerConfig,object : BannerRemoteConfig{
+                override fun onBannerAdLoaded(adSize: AdSize?) {
+                    view.visibility = View.VISIBLE
+                    line.visibility = View.VISIBLE
+                }
 
+                override fun onAdFail() {
+                    view.visibility = View.GONE
+                    line.visibility = View.GONE
+                }
+
+                override fun onAdPaid(adValue: AdValue, mAdView: AdView) {
+                }
+            }
+        )
+    }
     fun loadInter(context: Context, interHolder: InterHolder) {
         AdmodUtils.loadAndGetAdInterstitial(context, interHolder, object :
             AdCallBackInterLoad {

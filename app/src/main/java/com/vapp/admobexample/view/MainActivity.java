@@ -16,6 +16,7 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdValue;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.vapp.admobexample.utilsdemp.AdsManager;
+import com.vapp.admobexample.utilsdemp.RemoteConfigManager;
 import com.vapp.admobexample.utilsdemp.UtilsDemoActivity;
 import com.vapp.admoblibrary.ads.AOAManager;
 import com.vapp.admoblibrary.ads.AdCallbackNew;
@@ -252,7 +253,8 @@ public class MainActivity extends AppCompatActivity {
                 AdsManager.INSTANCE.showAdNativeMedium(MainActivity.this,viewNativeAds,AdsManager.INSTANCE.getNativeHolder());
             }
         });
-        AdsManager.showAdBanner(this,getString(R.string.test_ads_admob_banner_id),findViewById(R.id.banner),findViewById(R.id.line));
+        AdsManager.INSTANCE.loadAndShowBannerRemote(this,"", RemoteConfigManager.INSTANCE.getBannerConfig("test_banner_2"), findViewById(R.id.banner),findViewById(R.id.line));
+
 //        AdsManager.showAdBannerCollapsible(this,getString(R.string.test_ads_admob_banner_id),findViewById(R.id.banner),findViewById(R.id.line));
     }
     private void showDialogRate() {

@@ -5,10 +5,14 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.vapp.admobexample.utilsdemp.RemoteConfigManager;
 import com.vapp.admobexample.view.MainActivity;
 import com.vapp.admobexample.view.OtherActivity;
 import com.vapp.admoblibrary.ads.AOAManager;
@@ -25,6 +29,9 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
+        RemoteConfigManager.INSTANCE.initRemoteConfig(task -> {
+
+        });
         aoaManager = new AOAManager(this, "", 10000, new AOAManager.AppOpenAdsListener() {
             @Override
             public void onAdsClose() {
