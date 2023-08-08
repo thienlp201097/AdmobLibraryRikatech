@@ -632,7 +632,7 @@ object AdmodUtils {
                 override fun onAdFailedToLoad(adError: LoadAdError) {
                     Log.e("Admodfail", "onAdFailedToLoad" + adError.message)
                     Log.e("Admodfail", "errorCodeAds" + adError.cause)
-                    loadAndShowNativeAdsWithLayout2(activity,nativeHolder.ads2,viewGroup,layout,shimmerFrameLayout,adCallback)
+                    loadAndShowNativeAdsWithLayout2(activity,nativeHolder.ads2,nativeHolder,viewGroup,layout,shimmerFrameLayout,adCallback)
                 }
             })
             .withNativeAdOptions(NativeAdOptions.Builder().build()).build()
@@ -644,7 +644,7 @@ object AdmodUtils {
     @JvmStatic
     fun loadAndShowNativeAdsWithLayout2(
         activity: Activity,
-        s: String?,
+        s: String?,nativeHolder: NativeHolder,
         viewGroup: ViewGroup,
         layout: Int,shimmerFrameLayout: ShimmerFrameLayout,
         adCallback: NativeAdCallback
@@ -667,6 +667,7 @@ object AdmodUtils {
                 shimmerFrameLayout.stopShimmer()
                 viewGroup.removeAllViews()
                 viewGroup.addView(adView)
+                nativeHolder.isLoad = false
                 //viewGroup.setVisibility(View.VISIBLE);
             }.withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(adError: LoadAdError) {
@@ -674,6 +675,7 @@ object AdmodUtils {
                     Log.e("Admodfail", "errorCodeAds" + adError.cause)
                     shimmerFrameLayout.stopShimmer()
                     viewGroup.removeAllViews()
+                    nativeHolder.isLoad = false
                     adCallback.onAdFail(adError.message)
                 }
             })
@@ -683,6 +685,69 @@ object AdmodUtils {
         }
         Log.e("Admod", "loadAdNativeAds")
     }
+
+    @JvmStatic
+    fun loadAndShowNativeAdsWithLayoutMultiAdsWithOnResume(
+        activity: Activity,
+        nativeHolder: NativeHolder,
+        viewGroup: ViewGroup,
+        layout: Int,
+        size: GoogleENative,
+        adCallback: NativeAdCallback
+    ) {
+        if (ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) && !AppOpenManager.getInstance().isShowingAdsOnResume){
+            if (nativeHolder.isLoad){
+                adCallback.onAdFail("native is loading...")
+                return
+            }
+            viewGroup.removeAllViews()
+            nativeHolder.isLoad = true
+            Log.d("===Native","Native1")
+            var s = nativeHolder.ads
+            val tagView: View = if (size === GoogleENative.UNIFIED_MEDIUM) {
+                activity.layoutInflater.inflate(R.layout.layoutnative_loading_medium, null, false)
+            } else {
+                activity.layoutInflater.inflate(R.layout.layoutnative_loading_small, null, false)
+            }
+            viewGroup.addView(tagView, 0)
+            val shimmerFrameLayout =
+                tagView.findViewById<ShimmerFrameLayout>(R.id.shimmer_view_container)
+            shimmerFrameLayout.startShimmer()
+            if (!isShowAds || !isNetworkConnected(activity)) {
+                viewGroup.visibility = View.GONE
+                return
+            }
+            if (isTesting) {
+                s = activity.getString(R.string.test_ads_admob_native_id)
+            }
+            val adLoader: AdLoader = AdLoader.Builder(activity, s)
+                .forNativeAd { nativeAd ->
+                    nativeHolder.isLoad = false
+                    adCallback.onNativeAdLoaded()
+                    val adView = activity.layoutInflater
+                        .inflate(layout, null) as NativeAdView
+                    populateNativeAdView(nativeAd, adView, GoogleENative.UNIFIED_MEDIUM)
+                    shimmerFrameLayout.stopShimmer()
+                    viewGroup.removeAllViews()
+                    viewGroup.addView(adView)
+                    //viewGroup.setVisibility(View.VISIBLE);
+                }.withAdListener(object : AdListener() {
+                    override fun onAdFailedToLoad(adError: LoadAdError) {
+                        Log.e("Admodfail", "onAdFailedToLoad" + adError.message)
+                        Log.e("Admodfail", "errorCodeAds" + adError.cause)
+                        loadAndShowNativeAdsWithLayout2(activity,nativeHolder.ads2,nativeHolder,viewGroup,layout,shimmerFrameLayout,adCallback)
+                    }
+                })
+                .withNativeAdOptions(NativeAdOptions.Builder().build()).build()
+            if (adRequest != null) {
+                adLoader.loadAd(adRequest!!)
+            }
+        }else{
+            AppOpenManager.getInstance().isShowingAdsOnResume = false
+        }
+        Log.e("Admod", "loadAdNativeAds")
+    }
+
 
     // ads native
     @SuppressLint("StaticFieldLeak")

@@ -48,6 +48,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
     private Application myApplication;
 
     private static boolean isShowingAd = false;
+    public boolean isShowingAdsOnResume = false;
     private long appResumeLoadTime = 0;
     private long splashLoadTime = 0;
     private int splashTimeout = 0;
@@ -126,6 +127,9 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
      */
     public boolean isShowingAd() {
         return isShowingAd;
+    }
+    public boolean isShowingAdsOnResume() {
+        return isShowingAdsOnResume;
     }
 
     /**
@@ -383,6 +387,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
     }
 
     public void showDialog(Context context){
+        isShowingAdsOnResume = true;
         dialogFullScreen = new Dialog(context);
         dialogFullScreen.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialogFullScreen.setContentView(R.layout.dialog_full_screen_onresume);

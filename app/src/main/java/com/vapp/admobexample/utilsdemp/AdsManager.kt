@@ -60,6 +60,30 @@ object AdsManager {
             }
         )
     }
+
+    fun loadAndShowNative(activity: Activity, nativeAdContainer: ViewGroup, nativeHolder: NativeHolder){
+        if (!AdmodUtils.isNetworkConnected(activity)) {
+            nativeAdContainer.visibility = View.GONE
+            return
+        }
+        AdmodUtils.loadAndShowNativeAdsWithLayoutMultiAdsWithOnResume(activity,nativeHolder, nativeAdContainer,R.layout.ad_template_medium,GoogleENative.UNIFIED_MEDIUM,object : NativeAdCallback{
+            override fun onLoadedAndGetNativeAd(ad: NativeAd?) {
+            }
+
+            override fun onNativeAdLoaded() {
+                Log.d("===nativeload","true")
+                nativeAdContainer.visibility = View.VISIBLE
+            }
+
+            override fun onAdFail(error: String?) {
+                nativeAdContainer.visibility = View.GONE
+            }
+
+            override fun onAdPaid(adValue: AdValue?) {
+            }
+        })
+    }
+
     fun loadInter(context: Context, interHolder: InterHolder) {
         AdmodUtils.loadAndGetAdInterstitial(context, interHolder, object :
             AdCallBackInterLoad {

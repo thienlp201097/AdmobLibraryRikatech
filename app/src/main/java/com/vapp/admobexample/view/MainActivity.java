@@ -321,7 +321,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        AdsManager.INSTANCE.loadAndShowNative(this,viewNativeAds,AdsManager.INSTANCE.getNativeHolder());
     }
-
-
 }
