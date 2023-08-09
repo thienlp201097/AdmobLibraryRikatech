@@ -43,8 +43,35 @@ public class MyApplication extends Application {
  />
 
 ```
+-## New Update : Load and show native in onresume
+```bash
+    fun loadAndShowNative(activity: Activity, nativeAdContainer: ViewGroup, nativeHolder: NativeHolder){
+        if (!AdmodUtils.isNetworkConnected(activity)) {
+            nativeAdContainer.visibility = View.GONE
+            return
+        }
+        AdmodUtils.loadAndShowNativeAdsWithLayoutMultiAdsWithOnResume(activity,nativeHolder, nativeAdContainer,R.layout.ad_template_medium,GoogleENative.UNIFIED_MEDIUM,object : NativeAdCallback{
+            override fun onLoadedAndGetNativeAd(ad: NativeAd?) {
+            }
 
--## New Update : Remote config banner Collapsible or Normal Banner and auto reload 
+            override fun onNativeAdLoaded() {
+                Log.d("===nativeload","true")
+                nativeAdContainer.visibility = View.VISIBLE
+            }
+
+            override fun onAdFail(error: String?) {
+                nativeAdContainer.visibility = View.GONE
+            }
+
+            override fun onAdPaid(adValue: AdValue?) {
+            }
+        })
+    }
+
+    - Call in class
+    AdsManager.INSTANCE.loadAndShowNative(this,viewNativeAds,AdsManager.INSTANCE.getNativeHolder());
+```
+-Remote config banner Collapsible or Normal Banner and auto reload 
 ```bash
 
     - Step 1: Create RemoteConfigManager (Add firebase library).
