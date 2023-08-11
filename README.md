@@ -43,7 +43,88 @@ public class MyApplication extends Application {
  />
 
 ```
--## New Update : Load and show native in onresume
+
+-## New Update 6.9.8-beta2: Load 2 sàn AOA, Banner
+```bash
+    - AOA:
+
+    aoaManager = new AOAManager(this, "", "", 10000, new AOAManager.AppOpenAdsListener() {
+            @Override
+            public void onAdsClose() {
+                Utils.getInstance().replaceActivity(SplashActivity.this, MainActivity.class);
+            }
+
+            @Override
+            public void onAdsFailed() {
+                Utils.getInstance().replaceActivity(SplashActivity.this, MainActivity.class);
+            }
+        });
+        aoaManager.loadAndShowAoA();
+
+    -Banner Thường:
+     @JvmStatic
+    fun showAdBanner(activity: Activity, adsEnum: String, adsEnum2: String, view: ViewGroup, line: View) {
+        if (AdmodUtils.isNetworkConnected(activity)) {
+            AdmodUtils.loadAdBannerMultiAds(activity, adsEnum,adsEnum2, view, object :
+                AdmodUtils.BannerCallBack {
+                override fun onLoad() {
+                    view.visibility = View.VISIBLE
+                    line.visibility = View.VISIBLE
+                }
+
+                override fun onFailed() {
+                    view.visibility = View.GONE
+                    line.visibility = View.GONE
+                }
+
+                override fun onPaid(adValue: AdValue?, mAdView: AdView?) {
+                }
+            })
+        } else {
+            view.visibility = View.GONE
+            line.visibility = View.GONE
+        }
+    }
+
+    -BannerCollapsible:
+
+    @JvmStatic
+    fun showAdBannerCollapsible(activity: Activity, adsEnum: String, adsEnum2: String, view: ViewGroup, line: View) {
+        if (AdmodUtils.isNetworkConnected(activity)) {
+            AdmodUtils.loadAdBannerCollapsibleMultiAds(
+                activity,
+                adsEnum,adsEnum2,
+                CollapsibleBanner.BOTTOM,
+                view,
+                object : AdmodUtils.BannerCollapsibleAdCallback {
+                    override fun onBannerAdLoaded(adSize: AdSize) {
+                        view.visibility = View.VISIBLE
+                        line.visibility = View.VISIBLE
+                        val params: ViewGroup.LayoutParams = view.layoutParams
+                        params.height = adSize.getHeightInPixels(activity)
+                        view.layoutParams = params
+                    }
+
+                    override fun onAdFail() {
+                        view.visibility = View.GONE
+                        line.visibility = View.GONE
+                    }
+
+                    override fun onAdPaid(adValue: AdValue, mAdView: AdView) {
+
+                    }
+                })
+        } else {
+            view.visibility = View.GONE
+            line.visibility = View.GONE
+        }
+    }
+
+    -Banner Remote:
+    AdmodUtils.loadAndShowBannerRemote(this,"","", RemoteConfigManager.INSTANCE.getBannerConfig("test_banner_2"), findViewById(R.id.banner),findViewById(R.id.line));
+
+```
+-## Load and show native in onresume
 ```bash
     fun loadAndShowNative(activity: Activity, nativeAdContainer: ViewGroup, nativeHolder: NativeHolder){
         if (!AdmodUtils.isNetworkConnected(activity)) {
