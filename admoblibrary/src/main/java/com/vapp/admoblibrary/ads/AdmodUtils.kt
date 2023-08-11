@@ -391,6 +391,8 @@ object AdmodUtils {
         viewGroup: ViewGroup,
         callback: BannerCollapsibleAdCallback
     ) {
+        Log.d("===Test",AppOpenManager.getInstance().isShowingAdsOnResumeBanner.toString() +"|"+AdmodUtils.interIsShowingWithBanner +"|"+ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED).toString())
+
         if (ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) && !AppOpenManager.getInstance().isShowingAdsOnResumeBanner && !interIsShowingWithBanner){
             var bannerId = bannerId
             var bannerId2 = bannerId2

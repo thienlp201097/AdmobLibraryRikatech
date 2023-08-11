@@ -6,6 +6,7 @@ import androidx.multidex.MultiDex;
 
 import com.vapp.admobexample.utilsdemp.AdsManager;
 import com.vapp.admobexample.view.MainActivity;
+import com.vapp.admobexample.view.OtherActivity;
 import com.vapp.admoblibrary.AdsMultiDexApplication;
 import com.vapp.admoblibrary.ads.AdmodUtils;
 import com.vapp.admoblibrary.ads.AppOpenManager;
@@ -32,6 +33,7 @@ public class MyApplication extends AdsMultiDexApplication {
             AppOpenManager.getInstance().init(this, getString(R.string.test_ads_admob_app_open));
             AppOpenManager.getInstance().disableAppResumeWithActivity(SplashActivity.class);
             AppOpenManager.getInstance().disableAppResumeWithActivity(MainActivity.class);
+            AppOpenManager.getInstance().disableAppResumeWithActivity(OtherActivity.class);
         }
 //        ;
 
@@ -43,5 +45,14 @@ public class MyApplication extends AdsMultiDexApplication {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
+    }
+
+    @Override
+    public void onTrimMemory(int level) {
+        super.onTrimMemory(level);
+        if (level == TRIM_MEMORY_UI_HIDDEN) {
+            AppOpenManager.getInstance().isShowingAdsOnResumeBanner = true;
+            AppOpenManager.getInstance().isShowingAdsOnResume = true;
+        }
     }
 }

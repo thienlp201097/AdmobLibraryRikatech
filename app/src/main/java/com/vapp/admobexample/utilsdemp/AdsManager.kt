@@ -244,6 +244,7 @@ object AdsManager {
 
     @JvmStatic
     fun showAdBannerCollapsible(activity: Activity, adsEnum: String, adsEnum2: String, view: ViewGroup, line: View) {
+
         if (AdmodUtils.isNetworkConnected(activity)) {
             AdmodUtils.loadAdBannerCollapsibleMultiAds(
                 activity,

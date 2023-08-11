@@ -267,6 +267,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
 
     public void showAdIfAvailable(final boolean isSplash) {
         if (!ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+            Log.d("===Onresume", "STARTED");
             if (fullScreenContentCallback != null) {
                 try {
                     dialogFullScreen.dismiss();
@@ -278,7 +279,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
             }
             return;
         }
-
+        Log.d("===Onresume", "FullScreenContentCallback");
         if (!isShowingAd && isAdAvailable(isSplash)) {
             FullScreenContentCallback callback =
                     new FullScreenContentCallback() {
@@ -361,6 +362,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     public void onResume() {
+        Log.d("===Onresume", "onresume");
         if (currentActivity == null) {
             return;
         }
@@ -372,6 +374,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
         }
 
         if (!isAppResumeEnabled) {
+            Log.d("===Onresume", "isAppResumeEnabled");
             return;
         } else {
             if(AdmodUtils.dialog != null && AdmodUtils.dialog.isShowing())
