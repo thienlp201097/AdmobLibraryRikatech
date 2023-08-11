@@ -607,6 +607,7 @@ object AdmodUtils {
             interIsShowingWithBanner = false
         }
     }
+    @JvmStatic
     fun loadAndShowBannerRemote(activity: Activity, id : String, id2 : String, bannerConfig: BannerPlugin.BannerConfig?, view: ViewGroup, line: View){
         if (ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) && !AppOpenManager.getInstance().isShowingAdsOnResumeBanner && !interIsShowingWithBanner){
             var bannerPlugin : BannerPlugin?= null
@@ -1295,6 +1296,10 @@ object AdmodUtils {
                                 interHolder.mutable.removeObservers((activity as LifecycleOwner))
                                 interHolder.mutable.value = null
                                 adCallback.onEventClickAdClosed()
+                                Handler().postDelayed({
+                                    interIsShowingWithNative = false
+                                    interIsShowingWithBanner = false
+                                },200)
                                 dismissAdDialog()
                                 Log.d("TAG", "The ad was dismissed.")
                             }
@@ -1314,6 +1319,10 @@ object AdmodUtils {
                                 interHolder.mutable.removeObservers((activity as LifecycleOwner))
                                 interHolder.mutable.value = null
                                 adCallback.onAdFail(adError.message)
+                                Handler().postDelayed({
+                                    interIsShowingWithNative = false
+                                    interIsShowingWithBanner = false
+                                },200)
                             }
 
                             override fun onAdShowedFullScreenContent() {
@@ -1360,6 +1369,10 @@ object AdmodUtils {
                             interHolder.mutable.removeObservers((activity as LifecycleOwner))
                             interHolder.inter = null
                             adCallback.onEventClickAdClosed()
+                            Handler().postDelayed({
+                                interIsShowingWithNative = false
+                                interIsShowingWithBanner = false
+                            },200)
                             dismissAdDialog()
                         }
 
@@ -1374,6 +1387,10 @@ object AdmodUtils {
                             isAdShowing = false
                             dismissAdDialog()
                             adCallback.onAdFail(adError.message)
+                            Handler().postDelayed({
+                                interIsShowingWithNative = false
+                                interIsShowingWithBanner = false
+                            },200)
                             Log.e("Admodfail", "onAdFailedToLoad" + adError.message)
                             Log.e("Admodfail", "errorCodeAds" + adError.cause)
                         }

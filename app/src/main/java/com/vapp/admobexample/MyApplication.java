@@ -5,6 +5,7 @@ import android.content.Context;
 import androidx.multidex.MultiDex;
 
 import com.vapp.admobexample.utilsdemp.AdsManager;
+import com.vapp.admobexample.view.MainActivity;
 import com.vapp.admoblibrary.AdsMultiDexApplication;
 import com.vapp.admoblibrary.ads.AdmodUtils;
 import com.vapp.admoblibrary.ads.AppOpenManager;
@@ -30,6 +31,7 @@ public class MyApplication extends AdsMultiDexApplication {
         if (isShowAdsResume) {
             AppOpenManager.getInstance().init(this, getString(R.string.test_ads_admob_app_open));
             AppOpenManager.getInstance().disableAppResumeWithActivity(SplashActivity.class);
+            AppOpenManager.getInstance().disableAppResumeWithActivity(MainActivity.class);
         }
 //        ;
 
