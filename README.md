@@ -46,6 +46,17 @@ public class MyApplication extends Application {
 
 -## New Update 6.9.8-beta2: Load 2 sàn AOA, Banner
 ```bash
+    -Add function to Application class
+
+    @Override
+    public void onTrimMemory(int level) {
+        super.onTrimMemory(level);
+        if (level == TRIM_MEMORY_UI_HIDDEN) {
+            AppOpenManager.getInstance().isShowingAdsOnResumeBanner = true;
+            AppOpenManager.getInstance().isShowingAdsOnResume = true;
+        }
+    }
+    
     - AOA:
 
     aoaManager = new AOAManager(this, "", "", 10000, new AOAManager.AppOpenAdsListener() {
