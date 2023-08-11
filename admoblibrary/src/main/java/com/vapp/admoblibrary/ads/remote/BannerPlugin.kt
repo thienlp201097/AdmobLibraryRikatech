@@ -23,9 +23,7 @@ class BannerPlugin(
     var bannerRemoteConfig: BannerRemoteConfig
 ) {
     companion object {
-        //        fun fetchAndActivateRemoteConfig() {
-//            RemoteConfigManager.fetchAndActivate()
-//        }
+
         var shimmerFrameLayout: ShimmerFrameLayout? = null
         private var LOG_ENABLED = true
 
@@ -43,7 +41,6 @@ class BannerPlugin(
     class Config {
         lateinit var defaultAdUnitId: String
         lateinit var defaultBannerType: BannerType
-
         /**
          * Remote config key to retrieve banner config data remotely
          * */

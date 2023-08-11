@@ -56,6 +56,8 @@ import com.vapp.admoblibrary.ads.admobnative.enumclass.GoogleENative
 import com.vapp.admoblibrary.ads.model.BannerAdCallback
 import com.vapp.admoblibrary.ads.model.InterHolder
 import com.vapp.admoblibrary.ads.model.NativeHolder
+import com.vapp.admoblibrary.ads.remote.BannerPlugin
+import com.vapp.admoblibrary.ads.remote.BannerRemoteConfig
 import com.vapp.admoblibrary.utils.DialogCallback
 import com.vapp.admoblibrary.utils.DialogType
 import com.vapp.admoblibrary.utils.SweetAlert.SweetAlertDialog
@@ -93,6 +95,8 @@ object AdmodUtils {
     var shimmerFrameLayout: ShimmerFrameLayout?=null
     //id thật
     var idIntersitialReal: String? = null
+    var interIsShowingWithNative = false
+    var interIsShowingWithBanner = false
     //Hàm Khởi tạo admob
     @JvmStatic
     fun initAdmob(context: Context?, timeout: Int, isDebug: Boolean, isEnableAds: Boolean) {
@@ -187,67 +191,348 @@ object AdmodUtils {
         fun onPaid(adValue: AdValue?, mAdView: AdView?)
     }
     @JvmStatic
+    fun loadAdBannerMultiAds(
+        activity: Activity,
+        bannerId: String?,bannerId2: String?,
+        viewGroup: ViewGroup,
+        bannerAdCallback: BannerCallBack
+    ) {
+        if (ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) && !AppOpenManager.getInstance().isShowingAdsOnResumeBanner && !interIsShowingWithBanner){
+            Log.d("===Checked","LoadBanner")
+            var bannerId = bannerId
+            var bannerId2 = bannerId2
+            if (!isShowAds || !isNetworkConnected(activity)) {
+                viewGroup.visibility = View.GONE
+                bannerAdCallback.onFailed()
+                return
+            }
+            val mAdView = AdView(activity)
+            if (isTesting) {
+                bannerId = activity.getString(R.string.test_ads_admob_banner_id)
+                bannerId2 = activity.getString(R.string.test_ads_admob_banner_id)
+            }
+            mAdView.adUnitId = bannerId!!
+            val adSize = getAdSize(activity)
+            mAdView.setAdSize(adSize)
+            viewGroup.removeAllViews()
+            val tagView = activity.layoutInflater.inflate(R.layout.layoutbanner_loading, null, false)
+            viewGroup.addView(tagView, 0)
+            viewGroup.addView(mAdView, 1)
+            shimmerFrameLayout = tagView.findViewById(R.id.shimmer_view_container)
+            shimmerFrameLayout?.startShimmer()
+            mAdView.onPaidEventListener =
+                OnPaidEventListener { adValue -> bannerAdCallback.onPaid(adValue, mAdView) }
+            mAdView.adListener = object : AdListener() {
+                override fun onAdLoaded() {
+                    shimmerFrameLayout?.stopShimmer()
+                    viewGroup.removeView(tagView)
+                    bannerAdCallback.onLoad()
+                }
+
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    loadAdBanner2(activity,bannerId2,viewGroup,bannerAdCallback)
+                }
+
+                override fun onAdOpened() {}
+                override fun onAdClicked() {
+                    // Code to be executed when the user clicks on an ad.
+                }
+
+                override fun onAdClosed() {
+                    // Code to be executed when the user is about to return
+                    // to the app after tapping on an ad.
+                }
+            }
+            if (adRequest != null) {
+                mAdView.loadAd(adRequest!!)
+            }
+            Log.e(" Admod", "loadAdBanner")
+        }else {
+            AppOpenManager.getInstance().isShowingAdsOnResumeBanner = false
+            interIsShowingWithBanner = false
+        }
+    }
+
+    @JvmStatic
+    fun loadAdBanner2(
+        activity: Activity,
+        bannerId: String?,
+        viewGroup: ViewGroup,
+        bannerAdCallback: BannerCallBack
+    ) {
+        if (ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) && !AppOpenManager.getInstance().isShowingAdsOnResumeBanner && !interIsShowingWithBanner){
+            var bannerId = bannerId
+            if (!isShowAds || !isNetworkConnected(activity)) {
+                viewGroup.visibility = View.GONE
+                bannerAdCallback.onFailed()
+                return
+            }
+            val mAdView = AdView(activity)
+            if (isTesting) {
+                bannerId = activity.getString(R.string.test_ads_admob_banner_id)
+            }
+            mAdView.adUnitId = bannerId!!
+            val adSize = getAdSize(activity)
+            mAdView.setAdSize(adSize)
+            viewGroup.removeAllViews()
+            val tagView = activity.layoutInflater.inflate(R.layout.layoutbanner_loading, null, false)
+            viewGroup.addView(tagView, 0)
+            viewGroup.addView(mAdView, 1)
+            shimmerFrameLayout = tagView.findViewById(R.id.shimmer_view_container)
+            shimmerFrameLayout?.startShimmer()
+            mAdView.onPaidEventListener =
+                OnPaidEventListener { adValue -> bannerAdCallback.onPaid(adValue, mAdView) }
+            mAdView.adListener = object : AdListener() {
+                override fun onAdLoaded() {
+                    shimmerFrameLayout?.stopShimmer()
+                    viewGroup.removeView(tagView)
+                    bannerAdCallback.onLoad()
+                }
+
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    Log.e(" Admod", "failloadbanner" + adError.message)
+                    shimmerFrameLayout?.stopShimmer()
+                    viewGroup.removeView(tagView)
+                    bannerAdCallback.onFailed()
+                }
+
+                override fun onAdOpened() {}
+                override fun onAdClicked() {
+                    // Code to be executed when the user clicks on an ad.
+                }
+
+                override fun onAdClosed() {
+                    // Code to be executed when the user is about to return
+                    // to the app after tapping on an ad.
+                }
+            }
+            if (adRequest != null) {
+                mAdView.loadAd(adRequest!!)
+            }
+            Log.e(" Admod", "loadAdBanner")
+        }else {
+            AppOpenManager.getInstance().isShowingAdsOnResumeBanner = false
+            interIsShowingWithBanner = false
+        }
+    }
+
+    @JvmStatic
     fun loadAdBanner(
         activity: Activity,
         bannerId: String?,
         viewGroup: ViewGroup,
         bannerAdCallback: BannerCallBack
     ) {
-        var bannerId = bannerId
-        if (!isShowAds || !isNetworkConnected(activity)) {
-            viewGroup.visibility = View.GONE
-            bannerAdCallback.onFailed()
-            return
-        }
-        val mAdView = AdView(activity)
-        if (isTesting) {
-            bannerId = activity.getString(R.string.test_ads_admob_banner_id)
-        }
-        mAdView.adUnitId = bannerId!!
-        val adSize = getAdSize(activity)
-        mAdView.setAdSize(adSize)
-        viewGroup.removeAllViews()
-        val tagView = activity.layoutInflater.inflate(R.layout.layoutbanner_loading, null, false)
-        viewGroup.addView(tagView, 0)
-        viewGroup.addView(mAdView, 1)
-        shimmerFrameLayout = tagView.findViewById(R.id.shimmer_view_container)
-        shimmerFrameLayout?.startShimmer()
-        mAdView.onPaidEventListener =
-            OnPaidEventListener { adValue -> bannerAdCallback.onPaid(adValue, mAdView) }
-        mAdView.adListener = object : AdListener() {
-            override fun onAdLoaded() {
-                shimmerFrameLayout?.stopShimmer()
-                viewGroup.removeView(tagView)
-                bannerAdCallback.onLoad()
-            }
-
-            override fun onAdFailedToLoad(adError: LoadAdError) {
-                Log.e(" Admod", "failloadbanner" + adError.message)
-                shimmerFrameLayout?.stopShimmer()
-                viewGroup.removeView(tagView)
+        if (ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) && !AppOpenManager.getInstance().isShowingAdsOnResumeBanner && !interIsShowingWithBanner){
+            var bannerId = bannerId
+            if (!isShowAds || !isNetworkConnected(activity)) {
+                viewGroup.visibility = View.GONE
                 bannerAdCallback.onFailed()
+                return
             }
+            val mAdView = AdView(activity)
+            if (isTesting) {
+                bannerId = activity.getString(R.string.test_ads_admob_banner_id)
+            }
+            mAdView.adUnitId = bannerId!!
+            val adSize = getAdSize(activity)
+            mAdView.setAdSize(adSize)
+            viewGroup.removeAllViews()
+            val tagView = activity.layoutInflater.inflate(R.layout.layoutbanner_loading, null, false)
+            viewGroup.addView(tagView, 0)
+            viewGroup.addView(mAdView, 1)
+            shimmerFrameLayout = tagView.findViewById(R.id.shimmer_view_container)
+            shimmerFrameLayout?.startShimmer()
+            mAdView.onPaidEventListener =
+                OnPaidEventListener { adValue -> bannerAdCallback.onPaid(adValue, mAdView) }
+            mAdView.adListener = object : AdListener() {
+                override fun onAdLoaded() {
+                    shimmerFrameLayout?.stopShimmer()
+                    viewGroup.removeView(tagView)
+                    bannerAdCallback.onLoad()
+                }
 
-            override fun onAdOpened() {}
-            override fun onAdClicked() {
-                // Code to be executed when the user clicks on an ad.
-            }
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    Log.e(" Admod", "failloadbanner" + adError.message)
+                    shimmerFrameLayout?.stopShimmer()
+                    viewGroup.removeView(tagView)
+                    bannerAdCallback.onFailed()
+                }
 
-            override fun onAdClosed() {
-                // Code to be executed when the user is about to return
-                // to the app after tapping on an ad.
+                override fun onAdOpened() {}
+                override fun onAdClicked() {
+                    // Code to be executed when the user clicks on an ad.
+                }
+
+                override fun onAdClosed() {
+                    // Code to be executed when the user is about to return
+                    // to the app after tapping on an ad.
+                }
             }
+            if (adRequest != null) {
+                mAdView.loadAd(adRequest!!)
+            }
+            Log.e(" Admod", "loadAdBanner")
+        }else {
+            AppOpenManager.getInstance().isShowingAdsOnResumeBanner = false
+            interIsShowingWithBanner = false
         }
-        if (adRequest != null) {
-            mAdView.loadAd(adRequest!!)
-        }
-        Log.e(" Admod", "loadAdBanner")
     }
     interface BannerCollapsibleAdCallback {
         fun onBannerAdLoaded(adSize: AdSize)
         fun onAdFail()
         fun onAdPaid(adValue: AdValue, mAdView: AdView)
     }
+    @JvmStatic
+    fun loadAdBannerCollapsibleMultiAds(
+        activity: Activity,
+        bannerId: String?,bannerId2: String?,
+        collapsibleBannersize: CollapsibleBanner,
+        viewGroup: ViewGroup,
+        callback: BannerCollapsibleAdCallback
+    ) {
+        if (ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) && !AppOpenManager.getInstance().isShowingAdsOnResumeBanner && !interIsShowingWithBanner){
+            var bannerId = bannerId
+            var bannerId2 = bannerId2
+            Log.d("===Checked","LoadBannerCollapsible")
+            if (!isShowAds || !isNetworkConnected(activity)) {
+                viewGroup.visibility = View.GONE
+                return
+            }
+            val mAdView = AdView(activity)
+            if (isTesting) {
+                bannerId = activity.getString(R.string.test_ads_admob_banner_id)
+                bannerId2 = activity.getString(R.string.test_ads_admob_banner_id)
+            }
+            mAdView.adUnitId = bannerId!!
+            val adSize = getAdSize(activity)
+            mAdView.setAdSize(adSize)
+            viewGroup.removeAllViews()
+            val tagView = activity.layoutInflater.inflate(R.layout.layoutbanner_loading, null, false)
+            viewGroup.addView(tagView, 0)
+            viewGroup.addView(mAdView, 1)
+            shimmerFrameLayout = tagView.findViewById(R.id.shimmer_view_container)
+            shimmerFrameLayout?.startShimmer()
+
+            mAdView.adListener = object : AdListener() {
+                override fun onAdLoaded() {
+                    mAdView.onPaidEventListener = OnPaidEventListener { adValue -> callback.onAdPaid(adValue,mAdView) }
+                    shimmerFrameLayout?.stopShimmer()
+                    viewGroup.removeView(tagView)
+                    callback.onBannerAdLoaded(adSize)
+                }
+
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    loadAdBannerCollapsible2(activity,bannerId2,collapsibleBannersize,viewGroup,callback)
+                }
+
+                override fun onAdOpened() {}
+                override fun onAdClicked() {
+                    // Code to be executed when the user clicks on an ad.
+                }
+
+                override fun onAdClosed() {
+                    // Code to be executed when the user is about to return
+                    // to the app after tapping on an ad.
+                }
+            }
+            val extras = Bundle()
+            var anchored = "top"
+            anchored = if (collapsibleBannersize === CollapsibleBanner.TOP) {
+                "top"
+            } else {
+                "bottom"
+            }
+            extras.putString("collapsible", anchored)
+            val adRequest2 = AdRequest.Builder().addNetworkExtrasBundle(
+                AdMobAdapter::class.java, extras
+            )
+                .build()
+            if (adRequest2 != null) {
+                mAdView.loadAd(adRequest2)
+            }
+            Log.e(" Admod", "loadAdBanner")
+        }else {
+            AppOpenManager.getInstance().isShowingAdsOnResumeBanner = false
+            interIsShowingWithBanner = false
+        }
+    }
+
+    @JvmStatic
+    fun loadAdBannerCollapsible2(
+        activity: Activity,
+        bannerId: String?,
+        collapsibleBannersize: CollapsibleBanner,
+        viewGroup: ViewGroup,
+        callback: BannerCollapsibleAdCallback
+    ) {
+        if (ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) && !AppOpenManager.getInstance().isShowingAdsOnResumeBanner && !interIsShowingWithBanner){
+            var bannerId = bannerId
+            if (!isShowAds || !isNetworkConnected(activity)) {
+                viewGroup.visibility = View.GONE
+                return
+            }
+            val mAdView = AdView(activity)
+            if (isTesting) {
+                bannerId = activity.getString(R.string.test_ads_admob_banner_id)
+            }
+            mAdView.adUnitId = bannerId!!
+            val adSize = getAdSize(activity)
+            mAdView.setAdSize(adSize)
+            viewGroup.removeAllViews()
+            val tagView = activity.layoutInflater.inflate(R.layout.layoutbanner_loading, null, false)
+            viewGroup.addView(tagView, 0)
+            viewGroup.addView(mAdView, 1)
+            shimmerFrameLayout = tagView.findViewById(R.id.shimmer_view_container)
+            shimmerFrameLayout?.startShimmer()
+
+            mAdView.adListener = object : AdListener() {
+                override fun onAdLoaded() {
+                    mAdView.onPaidEventListener = OnPaidEventListener { adValue -> callback.onAdPaid(adValue,mAdView) }
+                    shimmerFrameLayout?.stopShimmer()
+                    viewGroup.removeView(tagView)
+                    callback.onBannerAdLoaded(adSize)
+                }
+
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    Log.e(" Admod", "failloadbanner" + adError.message)
+                    shimmerFrameLayout?.stopShimmer()
+                    viewGroup.removeView(tagView)
+                    callback.onAdFail()
+                }
+
+                override fun onAdOpened() {}
+                override fun onAdClicked() {
+                    // Code to be executed when the user clicks on an ad.
+                }
+
+                override fun onAdClosed() {
+                    // Code to be executed when the user is about to return
+                    // to the app after tapping on an ad.
+                }
+            }
+            val extras = Bundle()
+            var anchored = "top"
+            anchored = if (collapsibleBannersize === CollapsibleBanner.TOP) {
+                "top"
+            } else {
+                "bottom"
+            }
+            extras.putString("collapsible", anchored)
+            val adRequest2 = AdRequest.Builder().addNetworkExtrasBundle(
+                AdMobAdapter::class.java, extras
+            )
+                .build()
+            if (adRequest2 != null) {
+                mAdView.loadAd(adRequest2)
+            }
+            Log.e(" Admod", "loadAdBanner")
+        }else {
+            AppOpenManager.getInstance().isShowingAdsOnResumeBanner = false
+            interIsShowingWithBanner = false
+        }
+    }
+
     @JvmStatic
     fun loadAdBannerCollapsible(
         activity: Activity,
@@ -256,66 +541,107 @@ object AdmodUtils {
         viewGroup: ViewGroup,
         callback: BannerCollapsibleAdCallback
     ) {
-        var bannerId = bannerId
-        if (!isShowAds || !isNetworkConnected(activity)) {
-            viewGroup.visibility = View.GONE
-            return
-        }
-        val mAdView = AdView(activity)
-        if (isTesting) {
-            bannerId = activity.getString(R.string.test_ads_admob_banner_id)
-        }
-        mAdView.adUnitId = bannerId!!
-        val adSize = getAdSize(activity)
-        mAdView.setAdSize(adSize)
-        viewGroup.removeAllViews()
-        val tagView = activity.layoutInflater.inflate(R.layout.layoutbanner_loading, null, false)
-        viewGroup.addView(tagView, 0)
-        viewGroup.addView(mAdView, 1)
-        shimmerFrameLayout = tagView.findViewById(R.id.shimmer_view_container)
-        shimmerFrameLayout?.startShimmer()
-
-        mAdView.adListener = object : AdListener() {
-            override fun onAdLoaded() {
-                mAdView.onPaidEventListener = OnPaidEventListener { adValue -> callback.onAdPaid(adValue,mAdView) }
-                shimmerFrameLayout?.stopShimmer()
-                viewGroup.removeView(tagView)
-                callback.onBannerAdLoaded(adSize)
+        if (ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) && !AppOpenManager.getInstance().isShowingAdsOnResumeBanner && !interIsShowingWithBanner){
+            var bannerId = bannerId
+            if (!isShowAds || !isNetworkConnected(activity)) {
+                viewGroup.visibility = View.GONE
+                return
             }
-
-            override fun onAdFailedToLoad(adError: LoadAdError) {
-                Log.e(" Admod", "failloadbanner" + adError.message)
-                shimmerFrameLayout?.stopShimmer()
-                viewGroup.removeView(tagView)
-                callback.onAdFail()
+            val mAdView = AdView(activity)
+            if (isTesting) {
+                bannerId = activity.getString(R.string.test_ads_admob_banner_id)
             }
+            mAdView.adUnitId = bannerId!!
+            val adSize = getAdSize(activity)
+            mAdView.setAdSize(adSize)
+            viewGroup.removeAllViews()
+            val tagView = activity.layoutInflater.inflate(R.layout.layoutbanner_loading, null, false)
+            viewGroup.addView(tagView, 0)
+            viewGroup.addView(mAdView, 1)
+            shimmerFrameLayout = tagView.findViewById(R.id.shimmer_view_container)
+            shimmerFrameLayout?.startShimmer()
 
-            override fun onAdOpened() {}
-            override fun onAdClicked() {
-                // Code to be executed when the user clicks on an ad.
-            }
+            mAdView.adListener = object : AdListener() {
+                override fun onAdLoaded() {
+                    mAdView.onPaidEventListener = OnPaidEventListener { adValue -> callback.onAdPaid(adValue,mAdView) }
+                    shimmerFrameLayout?.stopShimmer()
+                    viewGroup.removeView(tagView)
+                    callback.onBannerAdLoaded(adSize)
+                }
 
-            override fun onAdClosed() {
-                // Code to be executed when the user is about to return
-                // to the app after tapping on an ad.
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    Log.e(" Admod", "failloadbanner" + adError.message)
+                    shimmerFrameLayout?.stopShimmer()
+                    viewGroup.removeView(tagView)
+                    callback.onAdFail()
+                }
+
+                override fun onAdOpened() {}
+                override fun onAdClicked() {
+                    // Code to be executed when the user clicks on an ad.
+                }
+
+                override fun onAdClosed() {
+                    // Code to be executed when the user is about to return
+                    // to the app after tapping on an ad.
+                }
             }
+            val extras = Bundle()
+            var anchored = "top"
+            anchored = if (collapsibleBannersize === CollapsibleBanner.TOP) {
+                "top"
+            } else {
+                "bottom"
+            }
+            extras.putString("collapsible", anchored)
+            val adRequest2 = AdRequest.Builder().addNetworkExtrasBundle(
+                AdMobAdapter::class.java, extras
+            )
+                .build()
+            if (adRequest2 != null) {
+                mAdView.loadAd(adRequest2)
+            }
+            Log.e(" Admod", "loadAdBanner")
+        }else {
+            AppOpenManager.getInstance().isShowingAdsOnResumeBanner = false
+            interIsShowingWithBanner = false
         }
-        val extras = Bundle()
-        var anchored = "top"
-        anchored = if (collapsibleBannersize === CollapsibleBanner.TOP) {
-            "top"
-        } else {
-            "bottom"
+    }
+    fun loadAndShowBannerRemote(activity: Activity, id : String, id2 : String, bannerConfig: BannerPlugin.BannerConfig?, view: ViewGroup, line: View){
+        if (ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) && !AppOpenManager.getInstance().isShowingAdsOnResumeBanner && !interIsShowingWithBanner){
+            var bannerPlugin : BannerPlugin?= null
+            Log.d("===Banner", "Banner1")
+            bannerPlugin = BannerPlugin(activity, view,id,bannerConfig,object : BannerRemoteConfig {
+                override fun onBannerAdLoaded(adSize: AdSize?) {
+                    view.visibility = View.VISIBLE
+                    line.visibility = View.VISIBLE
+                }
+
+                override fun onAdFail() {
+                    Log.d("===Banner", "Banner2")
+                    bannerPlugin = BannerPlugin(activity, view,id2,bannerConfig,object : BannerRemoteConfig {
+                        override fun onBannerAdLoaded(adSize: AdSize?) {
+                            view.visibility = View.VISIBLE
+                            line.visibility = View.VISIBLE
+                        }
+
+                        override fun onAdFail() {
+                            view.visibility = View.GONE
+                            line.visibility = View.GONE
+                        }
+
+                        override fun onAdPaid(adValue: AdValue, mAdView: AdView) {
+                        }
+                    })
+                }
+
+                override fun onAdPaid(adValue: AdValue, mAdView: AdView) {
+                }
+            })
+        }else {
+            AppOpenManager.getInstance().isShowingAdsOnResumeBanner = false
+            interIsShowingWithBanner = false
         }
-        extras.putString("collapsible", anchored)
-        val adRequest2 = AdRequest.Builder().addNetworkExtrasBundle(
-            AdMobAdapter::class.java, extras
-        )
-            .build()
-        if (adRequest2 != null) {
-            mAdView.loadAd(adRequest2)
-        }
-        Log.e(" Admod", "loadAdBanner")
     }
 
     @JvmStatic
@@ -695,14 +1021,14 @@ object AdmodUtils {
         size: GoogleENative,
         adCallback: NativeAdCallback
     ) {
-        if (ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) && !AppOpenManager.getInstance().isShowingAdsOnResume){
+        if (ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) && !AppOpenManager.getInstance().isShowingAdsOnResume && !interIsShowingWithNative){
             if (nativeHolder.isLoad){
                 adCallback.onAdFail("native is loading...")
                 return
             }
             viewGroup.removeAllViews()
             nativeHolder.isLoad = true
-            Log.d("===Native","Native1")
+            Log.d("===Checked","LoadNative")
             var s = nativeHolder.ads
             val tagView: View = if (size === GoogleENative.UNIFIED_MEDIUM) {
                 activity.layoutInflater.inflate(R.layout.layoutnative_loading_medium, null, false)
@@ -710,8 +1036,7 @@ object AdmodUtils {
                 activity.layoutInflater.inflate(R.layout.layoutnative_loading_small, null, false)
             }
             viewGroup.addView(tagView, 0)
-            val shimmerFrameLayout =
-                tagView.findViewById<ShimmerFrameLayout>(R.id.shimmer_view_container)
+            val shimmerFrameLayout = tagView.findViewById<ShimmerFrameLayout>(R.id.shimmer_view_container)
             shimmerFrameLayout.startShimmer()
             if (!isShowAds || !isNetworkConnected(activity)) {
                 viewGroup.visibility = View.GONE
@@ -744,6 +1069,7 @@ object AdmodUtils {
             }
         }else{
             AppOpenManager.getInstance().isShowingAdsOnResume = false
+            interIsShowingWithNative = false
         }
         Log.e("Admod", "loadAdNativeAds")
     }
@@ -991,6 +1317,8 @@ object AdmodUtils {
                             }
 
                             override fun onAdShowedFullScreenContent() {
+                                interIsShowingWithNative = true
+                                interIsShowingWithBanner = true
                                 handler.removeCallbacksAndMessages(null)
                                 isAdShowing = true
                                 adCallback.onAdShowed()
@@ -1051,6 +1379,8 @@ object AdmodUtils {
                         }
 
                         override fun onAdShowedFullScreenContent() {
+                            interIsShowingWithNative = true
+                            interIsShowingWithBanner = true
                             handler.removeCallbacksAndMessages(null)
                             isAdShowing = true
                             adCallback.onAdShowed()
@@ -1894,6 +2224,8 @@ object AdmodUtils {
         return md5(android_id).uppercase(Locale.getDefault())
     }
 
+
+
     fun md5(s: String): String {
         try {
             // Create MD5 Hash
@@ -1912,6 +2244,7 @@ object AdmodUtils {
     }
 
     fun dialogLoading(context: Activity) {
+
         dialogFullScreen = Dialog(context)
         dialogFullScreen?.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialogFullScreen?.setContentView(R.layout.dialog_full_screen)

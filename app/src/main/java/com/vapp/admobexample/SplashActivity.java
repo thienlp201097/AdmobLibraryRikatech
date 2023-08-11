@@ -32,7 +32,7 @@ public class SplashActivity extends AppCompatActivity {
         RemoteConfigManager.INSTANCE.initRemoteConfig(task -> {
 
         });
-        aoaManager = new AOAManager(this, "", 10000, new AOAManager.AppOpenAdsListener() {
+        aoaManager = new AOAManager(this, "", "", 10000, new AOAManager.AppOpenAdsListener() {
             @Override
             public void onAdsClose() {
                 Utils.getInstance().replaceActivity(SplashActivity.this, MainActivity.class);

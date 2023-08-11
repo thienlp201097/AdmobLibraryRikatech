@@ -243,11 +243,11 @@ object AdsManager {
     }
 
     @JvmStatic
-    fun showAdBannerCollapsible(activity: Activity, adsEnum: String, view: ViewGroup, line: View) {
+    fun showAdBannerCollapsible(activity: Activity, adsEnum: String, adsEnum2: String, view: ViewGroup, line: View) {
         if (AdmodUtils.isNetworkConnected(activity)) {
-            AdmodUtils.loadAdBannerCollapsible(
+            AdmodUtils.loadAdBannerCollapsibleMultiAds(
                 activity,
-                adsEnum,
+                adsEnum,adsEnum2,
                 CollapsibleBanner.BOTTOM,
                 view,
                 object : AdmodUtils.BannerCollapsibleAdCallback {
@@ -275,9 +275,9 @@ object AdsManager {
     }
 
     @JvmStatic
-    fun showAdBanner(activity: Activity, adsEnum: String, view: ViewGroup, line: View) {
+    fun showAdBanner(activity: Activity, adsEnum: String, adsEnum2: String, view: ViewGroup, line: View) {
         if (AdmodUtils.isNetworkConnected(activity)) {
-            AdmodUtils.loadAdBanner(activity, adsEnum, view, object :
+            AdmodUtils.loadAdBannerMultiAds(activity, adsEnum,adsEnum2, view, object :
                 AdmodUtils.BannerCallBack {
                 override fun onLoad() {
                     view.visibility = View.VISIBLE

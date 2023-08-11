@@ -253,8 +253,7 @@ public class MainActivity extends AppCompatActivity {
                 AdsManager.INSTANCE.showAdNativeMedium(MainActivity.this,viewNativeAds,AdsManager.INSTANCE.getNativeHolder());
             }
         });
-        AdsManager.INSTANCE.loadAndShowBannerRemote(this,"", RemoteConfigManager.INSTANCE.getBannerConfig("test_banner_2"), findViewById(R.id.banner),findViewById(R.id.line));
-
+        AdmodUtils.INSTANCE.loadAndShowBannerRemote(this,"","", RemoteConfigManager.INSTANCE.getBannerConfig("test_banner_2"), findViewById(R.id.banner),findViewById(R.id.line));
 //        AdsManager.showAdBannerCollapsible(this,getString(R.string.test_ads_admob_banner_id),findViewById(R.id.banner),findViewById(R.id.line));
     }
     private void showDialogRate() {
