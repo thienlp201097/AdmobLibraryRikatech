@@ -197,7 +197,7 @@ object AdmodUtils {
         viewGroup: ViewGroup,
         bannerAdCallback: BannerCallBack
     ) {
-        if (ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) && !AppOpenManager.getInstance().isShowingAdsOnResumeBanner && !interIsShowingWithBanner){
+        if (!AppOpenManager.getInstance().isShowingAdsOnResumeBanner && !interIsShowingWithBanner){
             Log.d("===Checked","LoadBanner")
             var bannerId = bannerId
             var bannerId2 = bannerId2
@@ -260,7 +260,7 @@ object AdmodUtils {
         viewGroup: ViewGroup,
         bannerAdCallback: BannerCallBack
     ) {
-        if (ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) && !AppOpenManager.getInstance().isShowingAdsOnResumeBanner && !interIsShowingWithBanner){
+        if (!AppOpenManager.getInstance().isShowingAdsOnResumeBanner && !interIsShowingWithBanner){
             var bannerId = bannerId
             if (!isShowAds || !isNetworkConnected(activity)) {
                 viewGroup.visibility = View.GONE
@@ -323,7 +323,7 @@ object AdmodUtils {
         viewGroup: ViewGroup,
         bannerAdCallback: BannerCallBack
     ) {
-        if (ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) && !AppOpenManager.getInstance().isShowingAdsOnResumeBanner && !interIsShowingWithBanner){
+        if (!AppOpenManager.getInstance().isShowingAdsOnResumeBanner && !interIsShowingWithBanner){
             var bannerId = bannerId
             if (!isShowAds || !isNetworkConnected(activity)) {
                 viewGroup.visibility = View.GONE
@@ -393,7 +393,7 @@ object AdmodUtils {
     ) {
         Log.d("===Test",AppOpenManager.getInstance().isShowingAdsOnResumeBanner.toString() +"|"+AdmodUtils.interIsShowingWithBanner +"|"+ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED).toString())
 
-        if (ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) && !AppOpenManager.getInstance().isShowingAdsOnResumeBanner && !interIsShowingWithBanner){
+        if (!AppOpenManager.getInstance().isShowingAdsOnResumeBanner && !interIsShowingWithBanner){
             var bannerId = bannerId
             var bannerId2 = bannerId2
             Log.d("===Checked","LoadBannerCollapsible")
@@ -468,7 +468,7 @@ object AdmodUtils {
         viewGroup: ViewGroup,
         callback: BannerCollapsibleAdCallback
     ) {
-        if (ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) && !AppOpenManager.getInstance().isShowingAdsOnResumeBanner && !interIsShowingWithBanner){
+        if (!AppOpenManager.getInstance().isShowingAdsOnResumeBanner && !interIsShowingWithBanner){
             var bannerId = bannerId
             if (!isShowAds || !isNetworkConnected(activity)) {
                 viewGroup.visibility = View.GONE
@@ -543,7 +543,7 @@ object AdmodUtils {
         viewGroup: ViewGroup,
         callback: BannerCollapsibleAdCallback
     ) {
-        if (ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) && !AppOpenManager.getInstance().isShowingAdsOnResumeBanner && !interIsShowingWithBanner){
+        if (!AppOpenManager.getInstance().isShowingAdsOnResumeBanner && !interIsShowingWithBanner){
             var bannerId = bannerId
             if (!isShowAds || !isNetworkConnected(activity)) {
                 viewGroup.visibility = View.GONE
@@ -611,7 +611,7 @@ object AdmodUtils {
     }
     @JvmStatic
     fun loadAndShowBannerRemote(activity: Activity, id : String, id2 : String, bannerConfig: BannerPlugin.BannerConfig?, view: ViewGroup, line: View){
-        if (ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) && !AppOpenManager.getInstance().isShowingAdsOnResumeBanner && !interIsShowingWithBanner){
+        if (!AppOpenManager.getInstance().isShowingAdsOnResumeBanner && !interIsShowingWithBanner){
             var bannerPlugin : BannerPlugin?= null
             Log.d("===Banner", "Banner1")
             bannerPlugin = BannerPlugin(activity, view,id,bannerConfig,object : BannerRemoteConfig {
@@ -1024,7 +1024,7 @@ object AdmodUtils {
         size: GoogleENative,
         adCallback: NativeAdCallback
     ) {
-        if (ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) && !AppOpenManager.getInstance().isShowingAdsOnResume && !interIsShowingWithNative){
+        if (!AppOpenManager.getInstance().isShowingAdsOnResume && !interIsShowingWithNative){
             if (nativeHolder.isLoad){
                 adCallback.onAdFail("native is loading...")
                 return
