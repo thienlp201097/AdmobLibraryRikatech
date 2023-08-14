@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.codemybrainsout.ratingdialog.RatingDialog
 import com.vapp.admobexample.R
 import com.vapp.admobexample.databinding.ActivityOtherBinding
+import com.vapp.admobexample.utilsdemp.AdsManager
 import com.vapp.admobexample.utilsdemp.AdsManager.loadAndShowNative
 import com.vapp.admobexample.utilsdemp.AdsManager.nativeHolder
 import com.vapp.admobexample.utilsdemp.AdsManager.showAdBanner
@@ -21,6 +22,8 @@ class OtherActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityOtherBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
+        setResult(5)
+
         //        if (AdmodUtils.getInstance().dialog != null) {
 //            if (AdmodUtils.getInstance().dialog.isShowing()) {
 //                AdmodUtils.getInstance().dialog.dismiss();
@@ -51,6 +54,10 @@ class OtherActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         loadAndShowNative(this@OtherActivity, binding!!.nativeAds, nativeHolder)
-        showAdBannerCollapsible(this@OtherActivity, "", "", binding!!.banner, binding!!.line)
+        showAdBannerCollapsible(this@OtherActivity, AdsManager.bannerHolder, binding!!.banner, binding!!.line)
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
     }
 }

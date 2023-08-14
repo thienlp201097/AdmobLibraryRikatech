@@ -1,5 +1,6 @@
 package com.vapp.admobexample.view;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +9,10 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.codemybrainsout.ratingdialog.MaybeLaterCallback;
@@ -45,6 +50,13 @@ public class MainActivity extends AppCompatActivity {
     public NativeAd nativeAd2;
     public NativeAd nativeAd3;
 
+    ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == 5) {
+                    AdsManager.INSTANCE.loadAndShowNative(this,viewNativeAds,AdsManager.INSTANCE.getNativeHolder());
+                    AdsManager.showAdBanner(this,AdsManager.INSTANCE.getBannerHolder(), findViewById(R.id.banner),findViewById(R.id.line));
+                }
+            });
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 //                AdsManager.INSTANCE.loadNative(MainActivity.this,AdsManager.INSTANCE.getNativeHolder());
 //                aoaManager.loadAndShowAoA();
+                mStartForResult.launch(new Intent(MainActivity.this, OtherActivity.class));
             }
         });
         btn_LoadInter.setOnClickListener(new View.OnClickListener() {
@@ -254,7 +267,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 //        AdmodUtils.loadAndShowBannerRemote(this,"","", RemoteConfigManager.INSTANCE.getBannerConfig("test_banner_2"), findViewById(R.id.banner),findViewById(R.id.line));
-        AdsManager.showAdBannerCollapsible(this,getString(R.string.test_ads_admob_banner_id),getString(R.string.test_ads_admob_banner_id),findViewById(R.id.banner),findViewById(R.id.line));
     }
     private void showDialogRate() {
         RatingDialog ratingDialog = new RatingDialog.Builder(this)
@@ -320,6 +332,5 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        AdsManager.INSTANCE.loadAndShowNative(this,viewNativeAds,AdsManager.INSTANCE.getNativeHolder());
     }
 }

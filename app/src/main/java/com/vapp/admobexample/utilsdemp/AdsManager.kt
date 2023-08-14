@@ -24,6 +24,7 @@ import com.vapp.admoblibrary.ads.NativeAdCallback
 import com.vapp.admoblibrary.ads.admobnative.enumclass.CollapsibleBanner
 import com.vapp.admoblibrary.ads.admobnative.enumclass.GoogleENative
 import com.vapp.admoblibrary.ads.model.BannerAdCallback
+import com.vapp.admoblibrary.ads.model.BannerHolder
 import com.vapp.admoblibrary.ads.model.InterHolder
 import com.vapp.admoblibrary.ads.model.NativeHolder
 import com.vapp.admoblibrary.ads.remote.BannerPlugin
@@ -36,6 +37,10 @@ object AdsManager {
     var check_inter1 = false
 
     var nativeHolder = NativeHolder(
+        "",
+        ""
+    )
+    var bannerHolder = BannerHolder(
         "",
         ""
     )
@@ -66,7 +71,7 @@ object AdsManager {
             nativeAdContainer.visibility = View.GONE
             return
         }
-        AdmodUtils.loadAndShowNativeAdsWithLayoutMultiAdsWithOnResume(activity,nativeHolder, nativeAdContainer,R.layout.ad_template_medium,GoogleENative.UNIFIED_MEDIUM,object : NativeAdCallback{
+        AdmodUtils.loadAndShowNativeAdsWithLayoutMultiAds(activity,nativeHolder, nativeAdContainer,R.layout.ad_template_medium,GoogleENative.UNIFIED_MEDIUM,object : NativeAdCallback{
             override fun onLoadedAndGetNativeAd(ad: NativeAd?) {
             }
 
@@ -243,12 +248,11 @@ object AdsManager {
     }
 
     @JvmStatic
-    fun showAdBannerCollapsible(activity: Activity, adsEnum: String, adsEnum2: String, view: ViewGroup, line: View) {
-
+    fun showAdBannerCollapsible(activity: Activity, bannerHolder: BannerHolder, view: ViewGroup, line: View) {
         if (AdmodUtils.isNetworkConnected(activity)) {
             AdmodUtils.loadAdBannerCollapsibleMultiAds(
                 activity,
-                adsEnum,adsEnum2,
+                bannerHolder,
                 CollapsibleBanner.BOTTOM,
                 view,
                 object : AdmodUtils.BannerCollapsibleAdCallback {
@@ -276,9 +280,9 @@ object AdsManager {
     }
 
     @JvmStatic
-    fun showAdBanner(activity: Activity, adsEnum: String, adsEnum2: String, view: ViewGroup, line: View) {
+    fun showAdBanner(activity: Activity, bannerHolder: BannerHolder, view: ViewGroup, line: View) {
         if (AdmodUtils.isNetworkConnected(activity)) {
-            AdmodUtils.loadAdBannerMultiAds(activity, adsEnum,adsEnum2, view, object :
+            AdmodUtils.loadAdBannerMultiAds(activity, bannerHolder, view, object :
                 AdmodUtils.BannerCallBack {
                 override fun onLoad() {
                     view.visibility = View.VISIBLE
