@@ -63,7 +63,7 @@ public class MyApplication extends Application {
 
     = AOA:
     
-    aoaManager = new AOAManager(this, "", "", 10000, new AOAManager.AppOpenAdsListener() {
+    aoaManager = new AOAManager(this, AdsManager.INSTANCE.getAoaHolder(), 20000, new AOAManager.AppOpenAdsListener() {
             @Override
             public void onAdsClose() {
                 Utils.getInstance().replaceActivity(SplashActivity.this, MainActivity.class);
