@@ -46,19 +46,12 @@ public class MyApplication extends Application {
 
 -## New Update 6.9.8-beta2: Load 2 sàn AOA, Banner
 ```bash
-    -Add function to Application class
+    ==Create :
 
-    @Override
-    public void onTrimMemory(int level) {
-        super.onTrimMemory(level);
-        if (level == TRIM_MEMORY_UI_HIDDEN) {
-            AppOpenManager.getInstance().isShowingAdsOnResumeBanner = true;
-            AppOpenManager.getInstance().isShowingAdsOnResume = true;
-        }
-    }
+    var bannerHolder = BannerHolder("", "")
+
+    = AOA:
     
-    - AOA:
-
     aoaManager = new AOAManager(this, "", "", 10000, new AOAManager.AppOpenAdsListener() {
             @Override
             public void onAdsClose() {
@@ -72,11 +65,12 @@ public class MyApplication extends Application {
         });
         aoaManager.loadAndShowAoA();
 
-    -Banner Thường:
-     @JvmStatic
-    fun showAdBanner(activity: Activity, adsEnum: String, adsEnum2: String, view: ViewGroup, line: View) {
+    = Banner Thường:
+
+    @JvmStatic
+    fun showAdBanner(activity: Activity, bannerHolder: BannerHolder, view: ViewGroup, line: View) {
         if (AdmodUtils.isNetworkConnected(activity)) {
-            AdmodUtils.loadAdBannerMultiAds(activity, adsEnum,adsEnum2, view, object :
+            AdmodUtils.loadAdBannerMultiAds(activity, bannerHolder, view, object :
                 AdmodUtils.BannerCallBack {
                 override fun onLoad() {
                     view.visibility = View.VISIBLE
@@ -97,14 +91,14 @@ public class MyApplication extends Application {
         }
     }
 
-    -BannerCollapsible:
+    =BannerCollapsible:
 
     @JvmStatic
-    fun showAdBannerCollapsible(activity: Activity, adsEnum: String, adsEnum2: String, view: ViewGroup, line: View) {
+    fun showAdBannerCollapsible(activity: Activity, bannerHolder: BannerHolder, view: ViewGroup, line: View) {
         if (AdmodUtils.isNetworkConnected(activity)) {
             AdmodUtils.loadAdBannerCollapsibleMultiAds(
                 activity,
-                adsEnum,adsEnum2,
+                bannerHolder,
                 CollapsibleBanner.BOTTOM,
                 view,
                 object : AdmodUtils.BannerCollapsibleAdCallback {
@@ -135,14 +129,14 @@ public class MyApplication extends Application {
     AdmodUtils.loadAndShowBannerRemote(this,"","", RemoteConfigManager.INSTANCE.getBannerConfig("test_banner_2"), findViewById(R.id.banner),findViewById(R.id.line));
 
 ```
--## Load and show native in onresume
+-## Load and show native 
 ```bash
     fun loadAndShowNative(activity: Activity, nativeAdContainer: ViewGroup, nativeHolder: NativeHolder){
         if (!AdmodUtils.isNetworkConnected(activity)) {
             nativeAdContainer.visibility = View.GONE
             return
         }
-        AdmodUtils.loadAndShowNativeAdsWithLayoutMultiAdsWithOnResume(activity,nativeHolder, nativeAdContainer,R.layout.ad_template_medium,GoogleENative.UNIFIED_MEDIUM,object : NativeAdCallback{
+        AdmodUtils.loadAndShowNativeAdsWithLayoutMultiAds(activity,nativeHolder, nativeAdContainer,R.layout.ad_template_medium,GoogleENative.UNIFIED_MEDIUM,object : NativeAdCallback{
             override fun onLoadedAndGetNativeAd(ad: NativeAd?) {
             }
 
