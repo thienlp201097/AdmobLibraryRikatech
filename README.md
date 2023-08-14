@@ -46,7 +46,7 @@ public class MyApplication extends Application {
 
 -## New Update 6.9.8: Load 2 sàn AOA, Banner
 ```bash
-    ==Load lại qc banner và native:
+    ==Load lại qc banner và native khi chuyển màn quay lại:
 
     ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             result -> {
