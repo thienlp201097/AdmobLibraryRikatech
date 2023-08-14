@@ -13,6 +13,7 @@ import androidx.appcompat.widget.AppCompatButton;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.vapp.admobexample.utilsdemp.AdsManager;
 import com.vapp.admobexample.utilsdemp.RemoteConfigManager;
 import com.vapp.admobexample.view.MainActivity;
 import com.vapp.admobexample.view.OtherActivity;
@@ -37,7 +38,7 @@ public class SplashActivity extends AppCompatActivity {
         RemoteConfigManager.INSTANCE.initRemoteConfig(task -> {
 
         });
-        aoaManager = new AOAManager(this, "", "", 10000, new AOAManager.AppOpenAdsListener() {
+        aoaManager = new AOAManager(this, AdsManager.INSTANCE.getAoaHolder(), 20000, new AOAManager.AppOpenAdsListener() {
             @Override
             public void onAdsClose() {
                 Utils.getInstance().replaceActivity(SplashActivity.this, MainActivity.class);

@@ -14,12 +14,13 @@ import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.appopen.AppOpenAd
 import com.vapp.admoblibrary.R
+import com.vapp.admoblibrary.ads.model.AppOpenAppHolder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class AOAManager(private val activity: Activity, val id : String, val id2 : String,val timeOut: Long, val appOpenAdsListener: AppOpenAdsListener) {
+class AOAManager(private val activity: Activity,val appOpenAppHolder: AppOpenAppHolder,val timeOut: Long, val appOpenAdsListener: AppOpenAdsListener) {
     private var appOpenAd: AppOpenAd? = null
     private var loadCallback: AppOpenAd.AppOpenAdLoadCallback? = null
     var isShowingAd = true
@@ -34,7 +35,7 @@ class AOAManager(private val activity: Activity, val id : String, val id2 : Stri
 
     fun loadAndShowAoA() {
         Log.d("===Load","id1")
-        var idAoa = id
+        var idAoa = appOpenAppHolder.ads
         if (AdmodUtils.isTesting){
              idAoa = activity.getString(R.string.test_ads_admob_app_open)
         }
@@ -62,7 +63,7 @@ class AOAManager(private val activity: Activity, val id : String, val id2 : Stri
 
                 override fun onAdFailedToLoad(p0: LoadAdError) {
                     super.onAdFailedToLoad(p0)
-                    loadAndShowAoA2(id2)
+                    loadAndShowAoA2(appOpenAppHolder.ads2)
                     Log.d("====Timeout", "onAppOpenAdFailedToLoad: ")
                 }
 
@@ -89,15 +90,7 @@ class AOAManager(private val activity: Activity, val id : String, val id2 : Stri
             return
         }
         //Check timeout show inter
-        CoroutineScope(Dispatchers.Main).launch() {
-            delay(timeOut)
-            if (isLoading && isStart) {
-                isStart = false
-                isLoading = false
-                appOpenAdsListener.onAdsFailed()
-                Log.d("====Timeout", "TimeOut")
-            }
-        }
+
         if (isAdAvailable) {
             appOpenAdsListener.onAdsFailed()
             return

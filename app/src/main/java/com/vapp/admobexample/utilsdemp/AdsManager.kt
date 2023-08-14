@@ -23,6 +23,7 @@ import com.vapp.admoblibrary.ads.AppOpenManager
 import com.vapp.admoblibrary.ads.NativeAdCallback
 import com.vapp.admoblibrary.ads.admobnative.enumclass.CollapsibleBanner
 import com.vapp.admoblibrary.ads.admobnative.enumclass.GoogleENative
+import com.vapp.admoblibrary.ads.model.AppOpenAppHolder
 import com.vapp.admoblibrary.ads.model.BannerAdCallback
 import com.vapp.admoblibrary.ads.model.BannerHolder
 import com.vapp.admoblibrary.ads.model.InterHolder
@@ -40,10 +41,8 @@ object AdsManager {
         "",
         ""
     )
-    var bannerHolder = BannerHolder(
-        "",
-        ""
-    )
+    var bannerHolder = BannerHolder("", "")
+    var aoaHolder = AppOpenAppHolder("", "")
     var interholder = InterHolder(
         "",
         ""
