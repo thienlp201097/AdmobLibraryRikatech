@@ -55,6 +55,7 @@ public class MyApplication extends Application {
                     AdsManager.showAdBanner(this,AdsManager.INSTANCE.getBannerHolder(), findViewById(R.id.banner),findViewById(R.id.line));
                 }
             });
+    mStartForResult.launch(new Intent(MainActivity.this, OtherActivity.class));
 
     ==Create :
 
