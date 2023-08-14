@@ -44,8 +44,18 @@ public class MyApplication extends Application {
 
 ```
 
--## New Update 6.9.8-beta2: Load 2 sàn AOA, Banner
+-## New Update 6.9.8: Load 2 sàn AOA, Banner
 ```bash
+    ==Load lại qc banner và native:
+
+    ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == 5) {
+                    AdsManager.INSTANCE.loadAndShowNative(this,viewNativeAds,AdsManager.INSTANCE.getNativeHolder());
+                    AdsManager.showAdBanner(this,AdsManager.INSTANCE.getBannerHolder(), findViewById(R.id.banner),findViewById(R.id.line));
+                }
+            });
+
     ==Create :
 
     var bannerHolder = BannerHolder("", "")
