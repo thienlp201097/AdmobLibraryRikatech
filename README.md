@@ -49,6 +49,7 @@ public class MyApplication extends Application {
     ==Create :
 
     var bannerHolder = BannerHolder("", "")
+    var aoaHolder = AppOpenAppHolder("", "")
 
     = AOA:
     
