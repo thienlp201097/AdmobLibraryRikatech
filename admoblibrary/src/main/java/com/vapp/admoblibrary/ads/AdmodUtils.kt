@@ -57,6 +57,7 @@ import com.vapp.admoblibrary.ads.model.BannerAdCallback
 import com.vapp.admoblibrary.ads.model.BannerHolder
 import com.vapp.admoblibrary.ads.model.InterHolder
 import com.vapp.admoblibrary.ads.model.NativeHolder
+import com.vapp.admoblibrary.ads.remote.BannerAdView
 import com.vapp.admoblibrary.ads.remote.BannerPlugin
 import com.vapp.admoblibrary.ads.remote.BannerRemoteConfig
 import com.vapp.admoblibrary.utils.DialogCallback
@@ -500,8 +501,7 @@ object AdmodUtils {
             "bottom"
         }
         extras.putString("collapsible", anchored)
-        val adRequest2 =
-            AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter::class.java, extras).build()
+        val adRequest2 = AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter::class.java, extras).build()
         mAdView.loadAd(adRequest2)
         Log.e(" Admod", "loadAdBanner")
     }
@@ -568,9 +568,7 @@ object AdmodUtils {
             "bottom"
         }
         extras.putString("collapsible", anchored)
-        val adRequest2 = AdRequest.Builder().addNetworkExtrasBundle(
-            AdMobAdapter::class.java, extras
-        ).build()
+        val adRequest2 = AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter::class.java, extras).build()
         mAdView.loadAd(adRequest2)
         Log.e(" Admod", "loadAdBanner")
     }
@@ -585,6 +583,52 @@ object AdmodUtils {
     ) {
         var bannerPlugin: BannerPlugin? = null
         Log.d("===Banner", "Banner1")
+
+        bannerPlugin = BannerPlugin(
+            activity, view, bannerHolder.ads, bannerConfig, object : BannerRemoteConfig {
+                override fun onBannerAdLoaded(adSize: AdSize?) {
+                    view.visibility = View.VISIBLE
+                    line.visibility = View.VISIBLE
+                }
+
+                override fun onAdFail() {
+                    Log.d("===Banner", "Banner2")
+                    bannerPlugin = BannerPlugin(activity,
+                        view,
+                        bannerHolder.ads2,
+                        bannerConfig,
+                        object : BannerRemoteConfig {
+                            override fun onBannerAdLoaded(adSize: AdSize?) {
+                                view.visibility = View.VISIBLE
+                                line.visibility = View.VISIBLE
+                            }
+
+                            override fun onAdFail() {
+                                view.visibility = View.GONE
+                                line.visibility = View.GONE
+                            }
+
+                            override fun onAdPaid(adValue: AdValue, mAdView: AdView) {
+                            }
+                        })
+                }
+
+                override fun onAdPaid(adValue: AdValue, mAdView: AdView) {
+                }
+            })
+    }
+
+    @JvmStatic
+    fun loadAndShowBannerRemoteNoShowFirst(
+        activity: Activity,
+        bannerHolder: BannerHolder,
+        bannerConfig: BannerPlugin.BannerConfig?,
+        view: ViewGroup,
+        line: View
+    ) {
+        var bannerPlugin: BannerPlugin? = null
+        Log.d("===Banner", "Banner1")
+        BannerAdView.lastCBRequestTime = System.currentTimeMillis()
         bannerPlugin = BannerPlugin(
             activity, view, bannerHolder.ads, bannerConfig, object : BannerRemoteConfig {
                 override fun onBannerAdLoaded(adSize: AdSize?) {

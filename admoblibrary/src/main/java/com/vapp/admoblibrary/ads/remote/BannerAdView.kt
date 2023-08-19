@@ -25,8 +25,9 @@ internal class BannerAdView(
     refreshRateSec: Int?,
     private val cbFetchIntervalSec: Int,val bannerRemoteConfig: BannerRemoteConfig
 ) : BaseAdView(activity, refreshRateSec) {
-
-    private var lastCBRequestTime = 0L
+    companion object{
+        var lastCBRequestTime = 0L
+    }
     private val adView: AdView = AdView(activity)
     private var hasSetAdSize = false
 
