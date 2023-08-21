@@ -16,12 +16,13 @@ import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.appopen.AppOpenAd
 import com.vapp.admoblibrary.R
+import com.vapp.admoblibrary.ads.model.AppOpenAppHolder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class AOAManager(private val activity: Activity,val appOpen: String,val timeOut: Long, val appOpenAdsListener: AppOpenAdsListener) {
+class AOAManagerMultiAds(private val activity: Activity, val appOpenAppHolder: AppOpenAppHolder, val timeOut: Long, val appOpenAdsListener: AppOpenAdsListener) {
     private var appOpenAd: AppOpenAd? = null
     private var loadCallback: AppOpenAd.AppOpenAdLoadCallback? = null
     var isShowingAd = true
@@ -36,7 +37,7 @@ class AOAManager(private val activity: Activity,val appOpen: String,val timeOut:
 
     fun loadAndShowAoA() {
         Log.d("===Load","id1")
-        var idAoa = appOpen
+        var idAoa = appOpenAppHolder.ads
         if (AdmodUtils.isTesting){
              idAoa = activity.getString(R.string.test_ads_admob_app_open)
         }
@@ -54,6 +55,44 @@ class AOAManager(private val activity: Activity,val appOpen: String,val timeOut:
                 Log.d("====Timeout", "TimeOut")
             }
         }
+        if (isAdAvailable) {
+            appOpenAdsListener.onAdsFailed()
+            return
+        } else {
+            Log.d("====Timeout", "fetching... ")
+            isShowingAd = false
+            loadCallback = object : AppOpenAd.AppOpenAdLoadCallback() {
+
+                override fun onAdFailedToLoad(p0: LoadAdError) {
+                    super.onAdFailedToLoad(p0)
+                    loadAndShowAoA2(appOpenAppHolder.ads2)
+                    Log.d("====Timeout", "onAppOpenAdFailedToLoad: ")
+                }
+
+                override fun onAdLoaded(ad: AppOpenAd) {
+                    super.onAdLoaded(ad)
+                    appOpenAd = ad
+                    Log.d("====Timeout", "isAdAvailable = true")
+                    showAdIfAvailable()
+                }
+            }
+            val request = adRequest
+            AppOpenAd.load(activity, idAoa, request, AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT, loadCallback!!)
+        }
+    }
+
+    fun loadAndShowAoA2(id2 : String) {
+        Log.d("===Load","id2")
+        var id2 = id2
+        if (AdmodUtils.isTesting){
+            id2 = activity.getString(R.string.test_ads_admob_app_open)
+        }
+        if (!AdmodUtils.isShowAds){
+            appOpenAdsListener.onAdsFailed()
+            return
+        }
+        //Check timeout show inter
+
         if (isAdAvailable) {
             appOpenAdsListener.onAdsFailed()
             return
@@ -81,9 +120,10 @@ class AOAManager(private val activity: Activity,val appOpen: String,val timeOut:
                 }
             }
             val request = adRequest
-            AppOpenAd.load(activity, idAoa, request, AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT, loadCallback!!)
+            AppOpenAd.load(activity, id2, request, AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT, loadCallback!!)
         }
     }
+
 
     fun showAdIfAvailable() {
         Log.d("====Timeout", "$isShowingAd - $isAdAvailable")
