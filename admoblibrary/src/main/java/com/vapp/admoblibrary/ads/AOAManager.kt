@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.View
 import android.view.Window
 import android.widget.LinearLayout
+import android.widget.TextView
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
@@ -142,7 +143,7 @@ class AOAManager(private val activity: Activity,val appOpen: String,val timeOut:
                     if (!AppOpenManager.getInstance().isShowingAd && !isShowingAd){
                         try {
                             val img = dialogFullScreen?.findViewById<LottieAnimationView>(R.id.imageView3)
-                            val txt = dialogFullScreen?.findViewById<LottieAnimationView>(R.id.txtLoading)
+                            val txt = dialogFullScreen?.findViewById<TextView>(R.id.txtLoading)
                             img?.visibility = View.INVISIBLE
                             txt?.visibility = View.INVISIBLE
                         } catch (ignored: Exception) {
