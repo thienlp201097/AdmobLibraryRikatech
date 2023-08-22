@@ -64,6 +64,10 @@ import com.vapp.admoblibrary.utils.DialogCallback
 import com.vapp.admoblibrary.utils.DialogType
 import com.vapp.admoblibrary.utils.SweetAlert.SweetAlertDialog
 import com.vapp.admoblibrary.utils.Utils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.util.Date
@@ -403,8 +407,7 @@ object AdmodUtils {
 
         mAdView.adListener = object : AdListener() {
             override fun onAdLoaded() {
-                mAdView.onPaidEventListener =
-                    OnPaidEventListener { adValue -> callback.onAdPaid(adValue, mAdView) }
+                mAdView.onPaidEventListener = OnPaidEventListener { adValue -> callback.onAdPaid(adValue, mAdView) }
                 shimmerFrameLayout?.stopShimmer()
                 viewGroup.removeView(tagView)
                 callback.onBannerAdLoaded(adSize)
@@ -614,6 +617,7 @@ object AdmodUtils {
                 }
 
                 override fun onAdPaid(adValue: AdValue, mAdView: AdView) {
+
                 }
             })
     }
@@ -913,6 +917,7 @@ object AdmodUtils {
         }
         val adLoader: AdLoader = AdLoader.Builder(activity, s!!)
             .forNativeAd { nativeAd ->
+                nativeAd.setOnPaidEventListener { adValue: AdValue -> adCallback.onAdPaid(adValue) }
                 adCallback.onNativeAdLoaded()
                 val adView = activity.layoutInflater
                     .inflate(layout, null) as NativeAdView
@@ -966,6 +971,7 @@ object AdmodUtils {
         }
         val adLoader: AdLoader = AdLoader.Builder(activity, s)
             .forNativeAd { nativeAd ->
+                nativeAd.setOnPaidEventListener { adValue: AdValue -> adCallback.onAdPaid(adValue) }
                 adCallback.onNativeAdLoaded()
                 val adView = activity.layoutInflater
                     .inflate(layout, null) as NativeAdView
@@ -1006,6 +1012,7 @@ object AdmodUtils {
         }
         val adLoader: AdLoader = AdLoader.Builder(activity, s!!)
             .forNativeAd { nativeAd ->
+                nativeAd.setOnPaidEventListener { adValue: AdValue -> adCallback.onAdPaid(adValue) }
                 adCallback.onNativeAdLoaded()
                 val adView = activity.layoutInflater
                     .inflate(layout, null) as NativeAdView
@@ -1315,10 +1322,6 @@ object AdmodUtils {
                                 interHolder.mutable.removeObservers((activity as LifecycleOwner))
                                 interHolder.mutable.value = null
                                 adCallback.onEventClickAdClosed()
-                                Handler().postDelayed({
-                                    interIsShowingWithNative = false
-                                    interIsShowingWithBanner = false
-                                },200)
                                 dismissAdDialog()
                                 Log.d("TAG", "The ad was dismissed.")
                             }
@@ -1338,15 +1341,9 @@ object AdmodUtils {
                                 interHolder.mutable.removeObservers((activity as LifecycleOwner))
                                 interHolder.mutable.value = null
                                 adCallback.onAdFail(adError.message)
-                                Handler().postDelayed({
-                                    interIsShowingWithNative = false
-                                    interIsShowingWithBanner = false
-                                },200)
                             }
 
                             override fun onAdShowedFullScreenContent() {
-                                interIsShowingWithNative = true
-                                interIsShowingWithBanner = true
                                 handler.removeCallbacksAndMessages(null)
                                 isAdShowing = true
                                 adCallback.onAdShowed()
@@ -1388,10 +1385,6 @@ object AdmodUtils {
                             interHolder.mutable.removeObservers((activity as LifecycleOwner))
                             interHolder.inter = null
                             adCallback.onEventClickAdClosed()
-                            Handler().postDelayed({
-                                interIsShowingWithNative = false
-                                interIsShowingWithBanner = false
-                            },200)
                             dismissAdDialog()
                         }
 
@@ -1406,24 +1399,14 @@ object AdmodUtils {
                             isAdShowing = false
                             dismissAdDialog()
                             adCallback.onAdFail(adError.message)
-                            Handler().postDelayed({
-                                interIsShowingWithNative = false
-                                interIsShowingWithBanner = false
-                            },200)
                             Log.e("Admodfail", "onAdFailedToLoad" + adError.message)
                             Log.e("Admodfail", "errorCodeAds" + adError.cause)
                         }
 
                         override fun onAdShowedFullScreenContent() {
-                            interIsShowingWithNative = true
-                            interIsShowingWithBanner = true
                             handler.removeCallbacksAndMessages(null)
                             isAdShowing = true
                             adCallback.onAdShowed()
-                            try {
-                                interHolder.inter!!.onPaidEventListener = OnPaidEventListener { adValue: AdValue? -> adCallback.onPaid(adValue) }
-                            } catch (e: Exception) {
-                            }
                         }
                     }
                 showInterstitialAdNew(activity, interHolder.inter, adCallback)
@@ -1439,22 +1422,20 @@ object AdmodUtils {
     ) {
         if (ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) && mInterstitialAd != null) {
             isAdShowing = true
-            Handler().postDelayed({
-
-                //Start activity before showing the ad
+            CoroutineScope(Dispatchers.Main).launch {
+                delay(400)
                 callback!!.onStartAction()
-                mInterstitialAd.onPaidEventListener =
-                    OnPaidEventListener { adValue: AdValue? -> callback.onPaid(adValue) }
+                mInterstitialAd.onPaidEventListener = OnPaidEventListener { adValue: AdValue? -> callback.onPaid(adValue) }
                 //Showing the ads
                 mInterstitialAd.show(activity)
-            }, 400)
+            }
         } else {
             isAdShowing = false
             if (AppOpenManager.getInstance().isInitialized) {
                 AppOpenManager.getInstance().isAppResumeEnabled = true
             }
             dismissAdDialog()
-            callback!!.onAdFail("onResum")
+            callback!!.onAdFail("onResume")
         }
     }
 

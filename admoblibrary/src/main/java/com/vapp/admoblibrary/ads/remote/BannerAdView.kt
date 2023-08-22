@@ -109,10 +109,9 @@ internal class BannerAdView(
         if (isCollapsibleBannerRequest) {
             lastCBRequestTime = System.currentTimeMillis()
         }
-
+        adView.onPaidEventListener = OnPaidEventListener { adValue -> bannerRemoteConfig.onAdPaid(adValue,adView) }
         adView.adListener = object : AdListener() {
             override fun onAdLoaded() {
-                adView.onPaidEventListener = OnPaidEventListener { adValue -> bannerRemoteConfig.onAdPaid(adValue,adView) }
                 adView.adListener = object : AdListener() {}
                 onDone()
                 BannerPlugin.shimmerFrameLayout?.stopShimmer()

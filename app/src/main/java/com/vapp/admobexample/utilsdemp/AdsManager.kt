@@ -84,6 +84,7 @@ object AdsManager {
             }
 
             override fun onAdPaid(adValue: AdValue?) {
+                Log.d("===AdValue", "${adValue?.currencyCode}|${adValue?.valueMicros}")
             }
         })
     }
@@ -129,6 +130,7 @@ object AdsManager {
                 }
 
                 override fun onAdShowed() {
+                    Log.d("===AdValue", "Show" )
                     Handler().postDelayed({
                         try {
                             AdmodUtils.dismissAdDialog()
@@ -149,8 +151,8 @@ object AdsManager {
                     callback.onAdClosedOrFailed()
                 }
 
-                override fun onPaid(adValue: AdValue?) {
-
+                override fun onPaid(adValue: AdValue) {
+                    Log.d("===AdValue", "${adValue.currencyCode}|${adValue.valueMicros}" )
                 }
             },
             true
@@ -202,8 +204,8 @@ object AdsManager {
                     Log.d("===AdsLoadsNative", error.replace(":","").replace(" ", "_").replace(".","").replace("?","").replace("!",""))
                 }
 
-                override fun onAdPaid(adValue: AdValue?) {
-
+                override fun onAdPaid(adValue: AdValue) {
+                    Log.d("===AdValue", "${adValue.currencyCode}|${adValue.valueMicros}")
                 }
             })
     }
@@ -269,7 +271,7 @@ object AdsManager {
                     }
 
                     override fun onAdPaid(adValue: AdValue, mAdView: AdView) {
-
+                        Log.d("===AdValue", "${adValue.currencyCode}|${adValue.valueMicros}")
                     }
                 })
         } else {
@@ -294,6 +296,7 @@ object AdsManager {
                 }
 
                 override fun onPaid(adValue: AdValue?, mAdView: AdView?) {
+                    Log.d("===AdValue", "${adValue?.currencyCode}|${adValue?.valueMicros}")
                 }
             })
         } else {

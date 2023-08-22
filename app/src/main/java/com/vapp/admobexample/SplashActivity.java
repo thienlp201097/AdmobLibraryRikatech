@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
+import com.google.android.gms.ads.AdValue;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.vapp.admobexample.utilsdemp.AdsManager;
@@ -39,6 +40,11 @@ public class SplashActivity extends AppCompatActivity {
 
         });
         aoaManager = new AOAManager(this, AdsManager.INSTANCE.getAoaHolder().getAds(), 20000, new AOAManager.AppOpenAdsListener() {
+            @Override
+            public void onAdPaid(@NonNull AdValue adValue) {
+                Log.d("===AdValue", adValue.getCurrencyCode()+"|"+adValue.getValueMicros());
+            }
+
             @Override
             public void onAdsClose() {
                 Utils.getInstance().replaceActivity(SplashActivity.this, MainActivity.class);

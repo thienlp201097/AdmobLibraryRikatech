@@ -23,7 +23,6 @@ class OtherActivity : AppCompatActivity() {
         binding = ActivityOtherBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
         setResult(5)
-
         //        if (AdmodUtils.getInstance().dialog != null) {
 //            if (AdmodUtils.getInstance().dialog.isShowing()) {
 //                AdmodUtils.getInstance().dialog.dismiss();
