@@ -43,8 +43,10 @@ public class MyApplication extends Application {
  />
 
 ```
-
--## New Update 6.9.8: Load 2 sàn AOA, Banner
+```bash
+    New Update 7.0.0-beta2: Add AdValue Banner, Native and AOA 
+```
+-## Load 2 sàn AOA, Banner
 ```bash
     ==Load lại qc banner và native khi chuyển màn quay lại:
 
