@@ -71,7 +71,7 @@ class GoogleGridNativeAdAdapter(private val mParam: Param) :
 
                     override fun onNativeAdLoaded() {}
                     override fun onAdFail(error: String?) {}
-                    override fun onAdPaid(adValue: AdValue?) {
+                    override fun onAdPaid(adValue: AdValue?, adUnitAds: String?) {
                     }
                 })
             adHolder.loaded = true
