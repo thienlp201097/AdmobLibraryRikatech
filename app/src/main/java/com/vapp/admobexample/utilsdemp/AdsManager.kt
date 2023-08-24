@@ -6,8 +6,6 @@ import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.ads.AdSize
@@ -24,13 +22,11 @@ import com.vapp.admoblibrary.ads.NativeAdCallback
 import com.vapp.admoblibrary.ads.admobnative.enumclass.CollapsibleBanner
 import com.vapp.admoblibrary.ads.admobnative.enumclass.GoogleENative
 import com.vapp.admoblibrary.ads.model.AppOpenAppHolder
-import com.vapp.admoblibrary.ads.model.BannerAdCallback
 import com.vapp.admoblibrary.ads.model.BannerHolder
 import com.vapp.admoblibrary.ads.model.InterHolder
 import com.vapp.admoblibrary.ads.model.NativeHolder
 import com.vapp.admoblibrary.ads.remote.BannerPlugin
 import com.vapp.admoblibrary.ads.remote.BannerRemoteConfig
-import com.vapp.admoblibrary.utils.Utils
 
 object AdsManager {
     var interAds1: InterstitialAd? = null
@@ -83,7 +79,7 @@ object AdsManager {
                 nativeAdContainer.visibility = View.GONE
             }
 
-            override fun onAdPaid(adValue: AdValue?) {
+            override fun onAdPaid(adValue: AdValue?, adUnitAds: String?) {
                 Log.d("===AdValue", "${adValue?.currencyCode}|${adValue?.valueMicros}")
             }
         })
@@ -151,8 +147,8 @@ object AdsManager {
                     callback.onAdClosedOrFailed()
                 }
 
-                override fun onPaid(adValue: AdValue) {
-                    Log.d("===AdValue", "${adValue.currencyCode}|${adValue.valueMicros}" )
+                override fun onPaid(adValue: AdValue?, adUnitAds: String?) {
+                    Log.d("===AdValue", "${adValue?.currencyCode}|${adValue?.valueMicros}")
                 }
             },
             true
@@ -184,7 +180,7 @@ object AdsManager {
                     adListener.onAdClosedOrFailed()
                 }
 
-                override fun onPaid(adValue: AdValue?) {
+                override fun onPaid(adValue: AdValue?, adUnitAds: String?) {
                 }
             },
             true
@@ -196,18 +192,21 @@ object AdsManager {
                 override fun onLoadedAndGetNativeAd(ad: NativeAd?) {
                 }
 
-                override fun onNativeAdLoaded() {
+            override fun onNativeAdLoaded() {
 
-                }
+            }
 
-                override fun onAdFail(error: String) {
-                    Log.d("===AdsLoadsNative", error.replace(":","").replace(" ", "_").replace(".","").replace("?","").replace("!",""))
-                }
+            override fun onAdFail(error: String) {
+                Log.d("===AdsLoadsNative",
+                    error.replace(":", "").replace(" ", "_").replace(".", "").replace("?", "")
+                        .replace("!", "")
+                )
+            }
 
-                override fun onAdPaid(adValue: AdValue) {
-                    Log.d("===AdValue", "${adValue.currencyCode}|${adValue.valueMicros}")
-                }
-            })
+            override fun onAdPaid(adValue: AdValue?, adUnitAds: String?) {
+                Log.d("===AdValue", "${adValue?.currencyCode}|${adValue?.valueMicros}")
+            }
+        })
     }
 
     fun showAdNativeSmall(activity: Activity, nativeAdContainer: ViewGroup, nativeHolder: NativeHolder) {
@@ -225,7 +224,11 @@ object AdsManager {
                     Log.d("===NativeAds", "Native false")
                     nativeAdContainer.visibility = View.GONE
                 }
+
+            override fun onPaidNative(adValue: AdValue, adUnitAds: String) {
+
             }
+        }
         )
     }
 
@@ -243,6 +246,10 @@ object AdsManager {
             override fun NativeFailed() {
                 Log.d("===NativeAds", "Native false")
                 nativeAdContainer.visibility = View.GONE
+            }
+
+            override fun onPaidNative(adValue: AdValue, adUnitAds: String) {
+
             }
         }
         )

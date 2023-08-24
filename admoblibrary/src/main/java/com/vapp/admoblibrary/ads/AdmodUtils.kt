@@ -761,7 +761,7 @@ object AdmodUtils {
                 nativeHolder.nativeAd = nativeAd
                 nativeHolder.isLoad = false
                 nativeHolder.native_mutable.value = nativeAd
-                nativeAd.setOnPaidEventListener { adValue: AdValue? -> adCallback.onAdPaid(adValue) }
+                nativeAd.setOnPaidEventListener { adValue: AdValue? -> adCallback.onAdPaid(adValue,nativeHolder.ads) }
                 adCallback.onLoadedAndGetNativeAd(nativeAd)
             }.withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(adError: LoadAdError) {
@@ -795,7 +795,7 @@ object AdmodUtils {
                 nativeHolder.nativeAd = nativeAd
                 nativeHolder.isLoad = false
                 nativeHolder.native_mutable.value = nativeAd
-                nativeAd.setOnPaidEventListener { adValue: AdValue? -> adCallback.onAdPaid(adValue) }
+                nativeAd.setOnPaidEventListener { adValue: AdValue? -> adCallback.onAdPaid(adValue,nativeHolder.ads2) }
                 adCallback.onLoadedAndGetNativeAd(nativeAd)
                 //viewGroup.setVisibility(View.VISIBLE);
             }.withAdListener(object : AdListener() {
@@ -818,6 +818,7 @@ object AdmodUtils {
     interface AdsNativeCallBackAdmod {
         fun NativeLoaded()
         fun NativeFailed()
+        fun onPaidNative(adValue : AdValue, adUnitAds : String)
     }
 
     @JvmStatic
@@ -868,6 +869,10 @@ object AdmodUtils {
             shimmerFrameLayout?.startShimmer()
             nativeHolder.native_mutable.observe((activity as LifecycleOwner)) { nativeAd: NativeAd? ->
                 if (nativeAd != null) {
+                    nativeAd.setOnPaidEventListener {
+                        callback.onPaidNative(it , nativeHolder.ads)
+                        callback.onPaidNative(it , nativeHolder.ads2)
+                    }
                     val adView = activity.layoutInflater.inflate(layout, null) as NativeAdView
                     populateNativeAdView(nativeAd, adView, GoogleENative.UNIFIED_MEDIUM)
                     if (shimmerFrameLayout != null) {
@@ -917,7 +922,7 @@ object AdmodUtils {
         }
         val adLoader: AdLoader = AdLoader.Builder(activity, s!!)
             .forNativeAd { nativeAd ->
-                nativeAd.setOnPaidEventListener { adValue: AdValue -> adCallback.onAdPaid(adValue) }
+                nativeAd.setOnPaidEventListener { adValue: AdValue -> adCallback.onAdPaid(adValue,s) }
                 adCallback.onNativeAdLoaded()
                 val adView = activity.layoutInflater
                     .inflate(layout, null) as NativeAdView
@@ -971,7 +976,7 @@ object AdmodUtils {
         }
         val adLoader: AdLoader = AdLoader.Builder(activity, s)
             .forNativeAd { nativeAd ->
-                nativeAd.setOnPaidEventListener { adValue: AdValue -> adCallback.onAdPaid(adValue) }
+                nativeAd.setOnPaidEventListener { adValue: AdValue -> adCallback.onAdPaid(adValue,s) }
                 adCallback.onNativeAdLoaded()
                 val adView = activity.layoutInflater
                     .inflate(layout, null) as NativeAdView
@@ -1012,7 +1017,7 @@ object AdmodUtils {
         }
         val adLoader: AdLoader = AdLoader.Builder(activity, s!!)
             .forNativeAd { nativeAd ->
-                nativeAd.setOnPaidEventListener { adValue: AdValue -> adCallback.onAdPaid(adValue) }
+                nativeAd.setOnPaidEventListener { adValue: AdValue -> adCallback.onAdPaid(adValue,s) }
                 adCallback.onNativeAdLoaded()
                 val adView = activity.layoutInflater
                     .inflate(layout, null) as NativeAdView
@@ -1349,7 +1354,7 @@ object AdmodUtils {
                                 adCallback.onAdShowed()
                                 try {
                                     aBoolean.onPaidEventListener =
-                                        OnPaidEventListener { adValue -> adCallback.onPaid(adValue) }
+                                        OnPaidEventListener { adValue -> adCallback.onPaid(adValue,aBoolean.adUnitId) }
                                 } catch (e: Exception) {
                                 }
                             }
@@ -1425,7 +1430,7 @@ object AdmodUtils {
             CoroutineScope(Dispatchers.Main).launch {
                 delay(400)
                 callback!!.onStartAction()
-                mInterstitialAd.onPaidEventListener = OnPaidEventListener { adValue: AdValue? -> callback.onPaid(adValue) }
+                mInterstitialAd.onPaidEventListener = OnPaidEventListener { adValue: AdValue? -> callback.onPaid(adValue,mInterstitialAd.adUnitId) }
                 //Showing the ads
                 mInterstitialAd.show(activity)
             }
@@ -2029,7 +2034,7 @@ object AdmodUtils {
                         mInterstitialAd = interstitialAd
                         if (mInterstitialAd != null) {
                             mInterstitialAd!!.onPaidEventListener =
-                                OnPaidEventListener { adValue: AdValue? -> adCallback.onPaid(adValue) }
+                                OnPaidEventListener { adValue: AdValue? -> adCallback.onPaid(adValue,mInterstitialAd?.adUnitId) }
                             mInterstitialAd!!.fullScreenContentCallback =
                                 object : FullScreenContentCallback() {
                                     override fun onAdFailedToShowFullScreenContent(adError: AdError) {
@@ -2142,7 +2147,7 @@ object AdmodUtils {
                         mInterstitialAd = interstitialAd
                         if (mInterstitialAd != null) {
                             mInterstitialAd!!.onPaidEventListener =
-                                OnPaidEventListener { adValue -> adCallback.onPaid(adValue) }
+                                OnPaidEventListener { adValue -> adCallback.onPaid(adValue,mInterstitialAd?.adUnitId) }
                             mInterstitialAd!!.fullScreenContentCallback =
                                 object : FullScreenContentCallback() {
                                     override fun onAdFailedToShowFullScreenContent(adError: AdError) {
@@ -2211,6 +2216,8 @@ object AdmodUtils {
                 }
             })
     }
+
+
 
     //Update New Lib
     private fun checkIdTest(activity: Activity, admobId: String?) {

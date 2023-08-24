@@ -41,7 +41,7 @@ public class SplashActivity extends AppCompatActivity {
         });
         aoaManager = new AOAManager(this, AdsManager.INSTANCE.getAoaHolder().getAds(), 20000, new AOAManager.AppOpenAdsListener() {
             @Override
-            public void onAdPaid(@NonNull AdValue adValue) {
+            public void onAdPaid(@NonNull AdValue adValue , String s) {
                 Log.d("===AdValue", adValue.getCurrencyCode()+"|"+adValue.getValueMicros());
             }
 

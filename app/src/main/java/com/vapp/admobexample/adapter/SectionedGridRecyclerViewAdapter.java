@@ -129,7 +129,7 @@ public class SectionedGridRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
                         }
 
                         @Override
-                        public void onAdPaid(AdValue adValue) {
+                        public void onAdPaid(AdValue adValue, String adUnitAds) {
 
                         }
                     });

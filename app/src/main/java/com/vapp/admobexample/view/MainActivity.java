@@ -240,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onAdPaid(AdValue adValue) {
+                    public void onAdPaid(AdValue adValue, String s) {
                         Utils.getInstance().showMessenger(MainActivity.this, adValue.toString());
                     }
 

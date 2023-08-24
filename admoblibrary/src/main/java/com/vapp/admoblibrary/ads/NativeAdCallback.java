@@ -7,5 +7,5 @@ public interface NativeAdCallback {
     void onLoadedAndGetNativeAd(NativeAd ad );
     void onNativeAdLoaded();
     void onAdFail(String error);
-    void onAdPaid(AdValue adValue);
+    void onAdPaid(AdValue adValue, String adUnitAds);
 }

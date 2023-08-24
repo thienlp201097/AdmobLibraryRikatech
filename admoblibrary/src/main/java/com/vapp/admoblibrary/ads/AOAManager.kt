@@ -147,7 +147,7 @@ class AOAManager(private val activity: Activity,val appOpen: String,val timeOut:
                             txt?.visibility = View.INVISIBLE
                         } catch (ignored: Exception) {
                         }
-                        setOnPaidEventListener { appOpenAdsListener.onAdPaid(it) }
+                        setOnPaidEventListener { appOpenAdsListener.onAdPaid(it,adUnitId) }
                         show(activity)
                     }
                 }, 800)
@@ -169,7 +169,7 @@ class AOAManager(private val activity: Activity,val appOpen: String,val timeOut:
     interface AppOpenAdsListener {
         fun onAdsClose()
         fun onAdsFailed()
-        fun onAdPaid(adValue: AdValue)
+        fun onAdPaid(adValue: AdValue, adUnitAds : String)
     }
 
 }

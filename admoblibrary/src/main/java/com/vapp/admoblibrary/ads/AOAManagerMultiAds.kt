@@ -190,7 +190,7 @@ class AOAManagerMultiAds(private val activity: Activity,val appOpenAppHolder: Ap
                             txt?.visibility = View.INVISIBLE
                         } catch (ignored: Exception) {
                         }
-                        setOnPaidEventListener { appOpenAdsListener.onAdPaid(it) }
+                        setOnPaidEventListener { appOpenAdsListener.onAdPaid(it,adUnitId) }
                         show(activity)
                     }
                 }, 800)
@@ -212,7 +212,7 @@ class AOAManagerMultiAds(private val activity: Activity,val appOpenAppHolder: Ap
     interface AppOpenAdsListener {
         fun onAdsClose()
         fun onAdsFailed()
-        fun onAdPaid(adValue: AdValue)
+        fun onAdPaid(adValue: AdValue , adUnitAds : String)
     }
 
 }
