@@ -163,7 +163,7 @@ public class MyApplication extends Application {
                 nativeAdContainer.visibility = View.GONE
             }
 
-            override fun onAdPaid(adValue: AdValue?) {
+            override fun onAdPaid(adValue: AdValue?, String adUnitAds) {
             }
         })
     }
@@ -306,7 +306,7 @@ public class MyApplication extends Application {
                     callback.onAdClosedOrFailed()
                 }
 
-                override fun onPaid(adValue: AdValue?) {
+                override fun onPaid(adValue: AdValue?, adUnitAds: String?) {
 
                 }
             },
@@ -384,7 +384,7 @@ public class MyApplication extends Application {
                         viewGroup.visibility = View.GONE
                     }
 
-                    override fun onAdPaid(adValue: AdValue?) {
+                    override fun onAdPaid(adValue: AdValue?, mAdView: AdView) {
                     }
                 })
         } else {
@@ -431,6 +431,9 @@ public class MyApplication extends Application {
             override fun NativeFailed() {
                 Log.d("===NativeAds", "Native false")
                 nativeAdContainer.visibility = View.GONE
+            }
+            override fun onPaidNative(adValue: AdValue, adUnitAds: String) {
+
             }
         })
         // ad_template_medium, ad_template_small là file xml nằm trong project example
