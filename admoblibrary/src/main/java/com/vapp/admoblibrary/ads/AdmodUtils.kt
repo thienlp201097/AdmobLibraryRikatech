@@ -226,8 +226,7 @@ object AdmodUtils {
         viewGroup.addView(mAdView, 1)
         shimmerFrameLayout = tagView.findViewById(R.id.shimmer_view_container)
         shimmerFrameLayout?.startShimmer()
-        mAdView.onPaidEventListener =
-            OnPaidEventListener { adValue -> bannerAdCallback.onPaid(adValue, mAdView) }
+        mAdView.setOnPaidEventListener {adValue -> bannerAdCallback.onPaid(adValue, mAdView) }
         mAdView.adListener = object : AdListener() {
             override fun onAdLoaded() {
                 shimmerFrameLayout?.stopShimmer()
@@ -407,7 +406,7 @@ object AdmodUtils {
 
         mAdView.adListener = object : AdListener() {
             override fun onAdLoaded() {
-                mAdView.onPaidEventListener = OnPaidEventListener { adValue -> callback.onAdPaid(adValue, mAdView) }
+                mAdView.setOnPaidEventListener { adValue -> callback.onAdPaid(adValue, mAdView) }
                 shimmerFrameLayout?.stopShimmer()
                 viewGroup.removeView(tagView)
                 callback.onBannerAdLoaded(adSize)
@@ -472,8 +471,7 @@ object AdmodUtils {
 
         mAdView.adListener = object : AdListener() {
             override fun onAdLoaded() {
-                mAdView.onPaidEventListener =
-                    OnPaidEventListener { adValue -> callback.onAdPaid(adValue, mAdView) }
+                mAdView.setOnPaidEventListener { adValue -> callback.onAdPaid(adValue, mAdView) }
                 shimmerFrameLayout?.stopShimmer()
                 viewGroup.removeView(tagView)
                 callback.onBannerAdLoaded(adSize)
@@ -688,7 +686,7 @@ object AdmodUtils {
         val adSize = getAdSize(activity)
         mAdView.setAdSize(adSize)
         viewGroup.addView(mAdView, 0)
-        mAdView.onPaidEventListener = OnPaidEventListener { adValue -> callback.onAdPaid(adValue) }
+        mAdView.setOnPaidEventListener { adValue -> callback.onAdPaid(adValue) }
         mAdView.adListener = object : AdListener() {
             override fun onAdLoaded() {
                 callback.onBannerAdLoaded(adSize)
@@ -1353,8 +1351,9 @@ object AdmodUtils {
                                 isAdShowing = true
                                 adCallback.onAdShowed()
                                 try {
-                                    aBoolean.onPaidEventListener =
-                                        OnPaidEventListener { adValue -> adCallback.onPaid(adValue,aBoolean.adUnitId) }
+                                    aBoolean.setOnPaidEventListener {
+                                            adValue -> adCallback.onPaid(adValue,aBoolean.adUnitId)
+                                    }
                                 } catch (e: Exception) {
                                 }
                             }
@@ -1430,7 +1429,9 @@ object AdmodUtils {
             CoroutineScope(Dispatchers.Main).launch {
                 delay(400)
                 callback!!.onStartAction()
-                mInterstitialAd.onPaidEventListener = OnPaidEventListener { adValue: AdValue? -> callback.onPaid(adValue,mInterstitialAd.adUnitId) }
+                mInterstitialAd.setOnPaidEventListener {
+                        adValue -> callback.onPaid(adValue,mInterstitialAd.adUnitId)
+                }
                 //Showing the ads
                 mInterstitialAd.show(activity)
             }

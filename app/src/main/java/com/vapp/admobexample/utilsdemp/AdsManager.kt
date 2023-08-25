@@ -6,6 +6,7 @@ import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.ads.AdSize
@@ -80,7 +81,7 @@ object AdsManager {
             }
 
             override fun onAdPaid(adValue: AdValue?, adUnitAds: String?) {
-                Log.d("===AdValue", "${adValue?.currencyCode}|${adValue?.valueMicros}")
+                Toast.makeText(activity, "${adValue?.currencyCode}|${adValue?.valueMicros}", Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -148,7 +149,7 @@ object AdsManager {
                 }
 
                 override fun onPaid(adValue: AdValue?, adUnitAds: String?) {
-                    Log.d("===AdValue", "${adValue?.currencyCode}|${adValue?.valueMicros}")
+                    Toast.makeText(context, "${adValue?.currencyCode}|${adValue?.valueMicros}", Toast.LENGTH_SHORT).show()
                 }
             },
             true
@@ -181,6 +182,7 @@ object AdsManager {
                 }
 
                 override fun onPaid(adValue: AdValue?, adUnitAds: String?) {
+                    Toast.makeText(activity, "${adValue?.currencyCode}|${adValue?.valueMicros}", Toast.LENGTH_SHORT).show()
                 }
             },
             true
@@ -204,7 +206,7 @@ object AdsManager {
             }
 
             override fun onAdPaid(adValue: AdValue?, adUnitAds: String?) {
-                Log.d("===AdValue", "${adValue?.currencyCode}|${adValue?.valueMicros}")
+                Toast.makeText(activity, "${adValue?.currencyCode}|${adValue?.valueMicros}", Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -278,7 +280,7 @@ object AdsManager {
                     }
 
                     override fun onAdPaid(adValue: AdValue, mAdView: AdView) {
-                        Log.d("===AdValue", "${adValue.currencyCode}|${adValue.valueMicros}")
+                        Toast.makeText(activity, "${adValue?.currencyCode}|${adValue?.valueMicros}", Toast.LENGTH_SHORT).show()
                     }
                 })
         } else {
@@ -303,7 +305,7 @@ object AdsManager {
                 }
 
                 override fun onPaid(adValue: AdValue?, mAdView: AdView?) {
-                    Log.d("===AdValue", "${adValue?.currencyCode}|${adValue?.valueMicros}")
+                    Toast.makeText(activity, "${adValue?.currencyCode}|${adValue?.valueMicros}", Toast.LENGTH_SHORT).show()
                 }
             })
         } else {

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -42,7 +43,7 @@ public class SplashActivity extends AppCompatActivity {
         aoaManager = new AOAManager(this, AdsManager.INSTANCE.getAoaHolder().getAds(), 20000, new AOAManager.AppOpenAdsListener() {
             @Override
             public void onAdPaid(@NonNull AdValue adValue , String s) {
-                Log.d("===AdValue", adValue.getCurrencyCode()+"|"+adValue.getValueMicros());
+                Toast.makeText(SplashActivity.this, "${adValue?.currencyCode}|${adValue?.valueMicros}", Toast.LENGTH_SHORT).show();
             }
 
             @Override
