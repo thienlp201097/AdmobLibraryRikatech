@@ -81,7 +81,7 @@ object AdsManager {
             }
 
             override fun onAdPaid(adValue: AdValue?, adUnitAds: String?) {
-                Toast.makeText(activity, "${adValue?.currencyCode}|${adValue?.valueMicros}", Toast.LENGTH_SHORT).show()
+                Log.d("===AdValue","Native: ${adValue?.currencyCode}|${adValue?.valueMicros}")
             }
         })
     }
@@ -149,7 +149,7 @@ object AdsManager {
                 }
 
                 override fun onPaid(adValue: AdValue?, adUnitAds: String?) {
-                    Toast.makeText(context, "${adValue?.currencyCode}|${adValue?.valueMicros}", Toast.LENGTH_SHORT).show()
+                    Log.d("===AdValue","Inter: ${adValue?.currencyCode}|${adValue?.valueMicros}")
                 }
             },
             true
@@ -206,7 +206,7 @@ object AdsManager {
             }
 
             override fun onAdPaid(adValue: AdValue?, adUnitAds: String?) {
-                Toast.makeText(activity, "${adValue?.currencyCode}|${adValue?.valueMicros}", Toast.LENGTH_SHORT).show()
+
             }
         })
     }
@@ -280,7 +280,7 @@ object AdsManager {
                     }
 
                     override fun onAdPaid(adValue: AdValue, mAdView: AdView) {
-                        Toast.makeText(activity, "${adValue?.currencyCode}|${adValue?.valueMicros}", Toast.LENGTH_SHORT).show()
+                        Log.d("===AdValue","Banner: ${adValue.currencyCode}|${adValue.valueMicros}")
                     }
                 })
         } else {
@@ -305,7 +305,7 @@ object AdsManager {
                 }
 
                 override fun onPaid(adValue: AdValue?, mAdView: AdView?) {
-                    Toast.makeText(activity, "${adValue?.currencyCode}|${adValue?.valueMicros}", Toast.LENGTH_SHORT).show()
+                    Log.d("===AdValue","Banner: ${adValue?.currencyCode}|${adValue?.valueMicros}")
                 }
             })
         } else {

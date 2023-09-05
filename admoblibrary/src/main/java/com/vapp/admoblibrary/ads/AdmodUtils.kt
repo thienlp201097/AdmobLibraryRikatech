@@ -974,7 +974,9 @@ object AdmodUtils {
         }
         val adLoader: AdLoader = AdLoader.Builder(activity, s)
             .forNativeAd { nativeAd ->
-                nativeAd.setOnPaidEventListener { adValue: AdValue -> adCallback.onAdPaid(adValue,s) }
+                nativeAd.setOnPaidEventListener { adValue: AdValue ->
+                    adCallback.onAdPaid(adValue,s)
+                }
                 adCallback.onNativeAdLoaded()
                 val adView = activity.layoutInflater
                     .inflate(layout, null) as NativeAdView
@@ -2147,8 +2149,9 @@ object AdmodUtils {
                     Handler(Looper.getMainLooper()).postDelayed({
                         mInterstitialAd = interstitialAd
                         if (mInterstitialAd != null) {
-                            mInterstitialAd!!.onPaidEventListener =
-                                OnPaidEventListener { adValue -> adCallback.onPaid(adValue,mInterstitialAd?.adUnitId) }
+                            mInterstitialAd!!.setOnPaidEventListener {
+                                    adValue -> adCallback.onPaid(adValue,mInterstitialAd!!.adUnitId)
+                            }
                             mInterstitialAd!!.fullScreenContentCallback =
                                 object : FullScreenContentCallback() {
                                     override fun onAdFailedToShowFullScreenContent(adError: AdError) {
