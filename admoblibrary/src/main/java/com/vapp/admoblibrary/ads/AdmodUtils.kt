@@ -66,8 +66,10 @@ import com.vapp.admoblibrary.utils.SweetAlert.SweetAlertDialog
 import com.vapp.admoblibrary.utils.Utils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.util.Date
@@ -1419,7 +1421,7 @@ object AdmodUtils {
             }, 400)
         }
     }
-
+    val scope = CoroutineScope(Dispatchers.Main)
     @JvmStatic
     private fun showInterstitialAdNew(
         activity: Activity,
@@ -1428,14 +1430,15 @@ object AdmodUtils {
     ) {
         if (ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) && mInterstitialAd != null) {
             isAdShowing = true
-            CoroutineScope(Dispatchers.Main).launch {
-                delay(400)
-                callback!!.onStartAction()
-                mInterstitialAd.setOnPaidEventListener {
-                        adValue -> callback.onPaid(adValue,mInterstitialAd.adUnitId)
-                }
-                //Showing the ads
+            val startActivity = scope.async { callback!!.onStartAction() }
+            val showAds = scope.async {
+                mInterstitialAd.setOnPaidEventListener { adValue -> callback?.onPaid(adValue,mInterstitialAd.adUnitId) }
                 mInterstitialAd.show(activity)
+            }
+            scope.launch {
+                delay(400)
+                showAds.await()
+                startActivity.await()
             }
         } else {
             isAdShowing = false
