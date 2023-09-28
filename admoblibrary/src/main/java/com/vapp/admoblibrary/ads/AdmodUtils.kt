@@ -765,10 +765,12 @@ object AdmodUtils {
                 adCallback.onLoadedAndGetNativeAd(nativeAd)
             }.withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(adError: LoadAdError) {
-                    adCallback.onAdFail("errorId1_"+adError.message)
                     Log.e("Admodfail", "onAdFailedToLoad" + adError.message)
                     Log.e("Admodfail", "errorCodeAds" + adError.cause)
-                    loadAndGetNativeAds2(context, nativeHolder, adCallback)
+                    nativeHolder.nativeAd = null
+                    nativeHolder.isLoad = false
+                    nativeHolder.native_mutable.value = null
+                    adCallback.onAdFail("errorId2_"+adError.message)
                 }
             })
             .withNativeAdOptions(NativeAdOptions.Builder().build()).build()
@@ -788,14 +790,14 @@ object AdmodUtils {
             return
         }
         if (isTesting) {
-            nativeHolder.ads2 = context.getString(R.string.test_ads_admob_native_id)
+            nativeHolder.ads = context.getString(R.string.test_ads_admob_native_id)
         }
-        val adLoader: AdLoader = AdLoader.Builder(context, nativeHolder.ads2)
+        val adLoader: AdLoader = AdLoader.Builder(context, nativeHolder.ads)
             .forNativeAd { nativeAd ->
                 nativeHolder.nativeAd = nativeAd
                 nativeHolder.isLoad = false
                 nativeHolder.native_mutable.value = nativeAd
-                nativeAd.setOnPaidEventListener { adValue: AdValue? -> adCallback.onAdPaid(adValue,nativeHolder.ads2) }
+                nativeAd.setOnPaidEventListener { adValue: AdValue? -> adCallback.onAdPaid(adValue,nativeHolder.ads) }
                 adCallback.onLoadedAndGetNativeAd(nativeAd)
                 //viewGroup.setVisibility(View.VISIBLE);
             }.withAdListener(object : AdListener() {
@@ -871,7 +873,6 @@ object AdmodUtils {
                 if (nativeAd != null) {
                     nativeAd.setOnPaidEventListener {
                         callback.onPaidNative(it , nativeHolder.ads)
-                        callback.onPaidNative(it , nativeHolder.ads2)
                     }
                     val adView = activity.layoutInflater.inflate(layout, null) as NativeAdView
                     populateNativeAdView(nativeAd, adView, GoogleENative.UNIFIED_MEDIUM)
@@ -991,7 +992,10 @@ object AdmodUtils {
                 override fun onAdFailedToLoad(adError: LoadAdError) {
                     Log.e("Admodfail", "onAdFailedToLoad" + adError.message)
                     Log.e("Admodfail", "errorCodeAds" + adError.cause)
-                    loadAndShowNativeAdsWithLayout2(activity,nativeHolder.ads2,nativeHolder,viewGroup,layout,shimmerFrameLayout,adCallback)
+                    shimmerFrameLayout.stopShimmer()
+                    viewGroup.removeAllViews()
+                    nativeHolder.isLoad = false
+                    adCallback.onAdFail(adError.message)
                 }
             })
             .withNativeAdOptions(NativeAdOptions.Builder().build()).build()
@@ -1094,7 +1098,7 @@ object AdmodUtils {
                     override fun onAdFailedToLoad(adError: LoadAdError) {
                         Log.e("Admodfail", "onAdFailedToLoad" + adError.message)
                         Log.e("Admodfail", "errorCodeAds" + adError.cause)
-                        loadAndShowNativeAdsWithLayout2(activity,nativeHolder.ads2,nativeHolder,viewGroup,layout,shimmerFrameLayout,adCallback)
+//                        loadAndShowNativeAdsWithLayout2(activity,nativeHolder.ads2,nativeHolder,viewGroup,layout,shimmerFrameLayout,adCallback)
                     }
                 })
                 .withNativeAdOptions(NativeAdOptions.Builder().build()).build()
@@ -1191,10 +1195,8 @@ object AdmodUtils {
         }
         if (isTesting) {
             interHolder.ads = activity.getString(R.string.test_ads_admob_inter_id)
-            interHolder.ads2 = activity.getString(R.string.test_ads_admob_inter_id)
         }
         idIntersitialReal = interHolder.ads
-        val idLoadInter2 = interHolder.ads2
         InterstitialAd.load(
             activity,
             idIntersitialReal!!,
@@ -1211,12 +1213,15 @@ object AdmodUtils {
                 }
 
                 override fun onAdFailedToLoad(loadAdError: LoadAdError) {
-                    loadAndGetAdInterstitialId2(
-                        activity,
-                        idLoadInter2,
-                        adLoadCallback,
-                        interHolder
-                    )
+                    isAdShowing = false
+                    if (mInterstitialAd != null) {
+                        mInterstitialAd = null
+                    }
+                    interHolder.check = false
+                    if (isClick) {
+                        interHolder.mutable.value = null
+                    }
+                    adLoadCallback.onAdFail(false)
                 }
             })
     }
@@ -1430,16 +1435,11 @@ object AdmodUtils {
     ) {
         if (ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) && mInterstitialAd != null) {
             isAdShowing = true
-            val startActivity = scope.async { callback!!.onStartAction() }
-            val showAds = scope.async {
+            Handler(Looper.getMainLooper()).postDelayed({
+                callback!!.onStartAction()
                 mInterstitialAd.setOnPaidEventListener { adValue -> callback?.onPaid(adValue,mInterstitialAd.adUnitId) }
                 mInterstitialAd.show(activity)
-            }
-            scope.launch {
-                delay(400)
-                showAds.await()
-                startActivity.await()
-            }
+            },400)
         } else {
             isAdShowing = false
             if (AppOpenManager.getInstance().isInitialized) {

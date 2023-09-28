@@ -35,15 +35,11 @@ object AdsManager {
     var check_inter1 = false
 
     var nativeHolder = NativeHolder(
-        "",
         ""
     )
     var bannerHolder = BannerHolder("", "")
     var aoaHolder = AppOpenAppHolder("", "")
-    var interholder = InterHolder(
-        "",
-        ""
-    )
+    var interholder = InterHolder("")
     fun loadAndShowBannerRemote(activity: Activity, id : String ,bannerConfig: BannerPlugin.BannerConfig?, view: ViewGroup, line: View){
         BannerPlugin(activity, view,id,bannerConfig,object : BannerRemoteConfig{
                 override fun onBannerAdLoaded(adSize: AdSize?) {
@@ -119,11 +115,12 @@ object AdsManager {
             object :
                 AdsInterCallBack {
                 override fun onStartAction() {
-                    callback.onAdClosedOrFailed()
+
                 }
 
                 override fun onEventClickAdClosed() {
-//                    loadInter(context, interHolder)
+                    loadInter(context, interHolder)
+                    callback.onAdClosedOrFailed()
                 }
 
                 override fun onAdShowed() {
@@ -144,7 +141,7 @@ object AdsManager {
                 override fun onAdFail(error: String?) {
                     Log.d("===Failed", error.toString())
                     val log = error?.split(":")?.get(0)?.replace(" ", "_")
-//                    loadInter(context, interHolder)
+                    loadInter(context, interHolder)
                     callback.onAdClosedOrFailed()
                 }
 

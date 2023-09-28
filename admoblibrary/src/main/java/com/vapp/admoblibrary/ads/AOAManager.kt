@@ -47,15 +47,15 @@ class AOAManager(private val activity: Activity,val appOpen: String,val timeOut:
             return
         }
         //Check timeout show inter
-        CoroutineScope(Dispatchers.Main).launch() {
-            delay(timeOut)
-            if (isLoading && isStart) {
-                isStart = false
-                isLoading = false
-                appOpenAdsListener.onAdsFailed()
-                Log.d("====Timeout", "TimeOut")
-            }
-        }
+//        CoroutineScope(Dispatchers.Main).launch() {
+//            delay(timeOut)
+//            if (isLoading && isStart) {
+//                isStart = false
+//                isLoading = false
+//                appOpenAdsListener.onAdsFailed()
+//                Log.d("====Timeout", "TimeOut")
+//            }
+//        }
         if (isAdAvailable) {
             appOpenAdsListener.onAdsFailed()
             return
