@@ -344,13 +344,13 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                     if (isSplash) {
                         splashAd.setFullScreenContentCallback(callback);
                         if (currentActivity != null)
-                            showDialog(currentActivity);
+//                            showDialog(currentActivity);
                             splashAd.show(currentActivity);
                     } else {
                         if (appResumeAd != null){
                             appResumeAd.setFullScreenContentCallback(callback);
                             if (currentActivity != null)
-                                showDialog(currentActivity);
+//                                showDialog(currentActivity);
                                 appResumeAd.show(currentActivity);
                         }
                     }
