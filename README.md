@@ -247,11 +247,8 @@ public class MyApplication extends Application {
 - loadAdInterstitial
  ```bash 
   // Hàm loadAdInterstitial sẽ được gọi trước khi show một màn VD: Muốn show Interstitial ở màn IntroActivity thì sẽ gọi trước hàm load từ màn SplashActivity, đến IntroActivity chỉ cần show.
-    var interholder = InterHolder(
-        "ca-app-pub-3940256099942544/1033173712",
-        "ca-app-pub-3940256099942544/1033173712"
-    )
-    //mỗi vị trí Interstitial sẽ có 2 id qc
+    var interholder = InterHolder(  "ca-app-pub-3940256099942544/1033173712" )
+    //mỗi vị trí Interstitial sẽ có 1 id qc
        
       AdmodUtils.loadAndGetAdInterstitial(context, interHolder, object :
             AdCallBackInterLoad {
@@ -398,10 +395,9 @@ public class MyApplication extends Application {
 ```bash
  // Hàm Load AdNative sẽ được gọi trước khi show một màn VD: Muốn show Interstitial ở màn IntroActivity thì sẽ gọi trước hàm Load từ màn SplashActivity, đến IntroActivity chỉ cần show.
     var nativeHolder = NativeHolder(
-        "ca-app-pub-3940256099942544/2247696110",
         "ca-app-pub-3940256099942544/2247696110"
     )
-    //mỗi vị trí native sẽ có 2 id qc
+    //mỗi vị trí native sẽ có 1 id qc
     
         AdmodUtils.loadAndGetNativeAds(activity, nativeHolder, object : NativeAdCallback {
                 override fun onLoadedAndGetNativeAd(ad: NativeAd?) {
