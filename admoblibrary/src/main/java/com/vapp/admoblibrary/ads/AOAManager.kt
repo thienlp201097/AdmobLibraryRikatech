@@ -40,7 +40,7 @@ class AOAManager(private val activity: Activity,val appOpen: String,val timeOut:
         Log.d("===Load","id1")
         var idAoa = appOpen
         if (AdmodUtils.isTesting){
-             idAoa = activity.getString(R.string.test_ads_admob_app_open)
+            idAoa = activity.getString(R.string.test_ads_admob_app_open)
         }
         if (!AdmodUtils.isShowAds){
             appOpenAdsListener.onAdsFailed()
@@ -141,9 +141,10 @@ class AOAManager(private val activity: Activity,val appOpen: String,val timeOut:
                 Handler(Looper.getMainLooper()).postDelayed({
                     if (!AppOpenManager.getInstance().isShowingAd && !isShowingAd){
                         try {
-                            if (dialogFullScreen != null && dialogFullScreen?.isShowing == true) {
-                                dialogFullScreen?.dismiss()
-                            }
+                            val img = dialogFullScreen?.findViewById<LottieAnimationView>(R.id.imageView3)
+                            val txt = dialogFullScreen?.findViewById<TextView>(R.id.txtLoading)
+                            img?.visibility = View.INVISIBLE
+                            txt?.visibility = View.INVISIBLE
                         } catch (ignored: Exception) {
                         }
                         setOnPaidEventListener { appOpenAdsListener.onAdPaid(it,adUnitId) }

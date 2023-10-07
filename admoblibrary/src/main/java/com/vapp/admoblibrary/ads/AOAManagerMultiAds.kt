@@ -202,8 +202,11 @@ class AOAManagerMultiAds(private val activity: Activity,val appOpenAppHolder: Ap
         isShowingAd = true
         isLoading = false
         try {
-            if (!activity.isFinishing && dialogFullScreen != null && dialogFullScreen?.isShowing == true) {
-                dialogFullScreen?.dismiss()
+            try {
+                if (dialogFullScreen != null && dialogFullScreen?.isShowing == true) {
+                    dialogFullScreen?.dismiss()
+                }
+            } catch (ignored: Exception) {
             }
             appOpenAd?.fullScreenContentCallback?.onAdDismissedFullScreenContent()
         } catch (ignored: Exception) {
