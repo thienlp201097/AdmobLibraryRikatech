@@ -973,7 +973,7 @@ object AdmodUtils {
             return
         }
         if (isTesting) {
-            s = activity.getString(R.string.test_ads_admob_native_id)
+            s = activity.getString(R.string.test_ads_admob_native_video_id)
         }
         val adLoader: AdLoader = AdLoader.Builder(activity, s)
             .forNativeAd { nativeAd ->

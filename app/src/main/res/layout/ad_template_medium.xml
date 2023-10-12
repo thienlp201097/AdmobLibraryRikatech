@@ -12,7 +12,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="50dp"
-        android:padding="6dp">
+        android:padding="4dp">
+
+
+        <com.google.android.gms.ads.nativead.MediaView
+            android:id="@+id/ad_media"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_100sdp"
+            android:layout_gravity="fill"
+            app:layout_constraintBottom_toTopOf="@+id/middle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textView2"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             app:layout_constraintTop_toTopOf="parent"
@@ -30,18 +41,6 @@
             android:textColor="@color/white"
             android:textSize="10sp"
             android:textStyle="bold" />
-
-        <com.google.android.gms.ads.nativead.MediaView
-            android:id="@+id/ad_media"
-            android:layout_width="match_parent"
-            android:layout_height="126dp"
-            android:layout_gravity="fill"
-            android:layout_marginTop="10dp"
-            app:layout_constraintBottom_toTopOf="@+id/middle"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textView2"
-            />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/middle"
@@ -68,9 +67,9 @@
                 android:id="@+id/cardIcon"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="3dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -79,8 +78,8 @@
 
                 <ImageView
                     android:id="@+id/ad_app_icon"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="@dimen/_35sdp"
+                    android:layout_height="@dimen/_35sdp"
                     tools:srcCompat="@tools:sample/avatars" />
 
             </androidx.cardview.widget.CardView>
@@ -89,9 +88,9 @@
                 android:id="@+id/ad_headline"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:layout_marginTop="3dp"
                 android:layout_marginBottom="3dp"
                 android:text="Test Ads"
                 android:maxLines="1"
@@ -110,7 +109,7 @@
                 android:id="@+id/ad_body"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="@dimen/_10sdp"
                 android:layout_marginBottom="2dp"
                 android:text="Test Ads to you"
                 android:textColor="@color/gnt_black"
@@ -126,13 +125,13 @@
         <Button
             android:id="@+id/ad_call_to_action"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="@dimen/_29sdp"
             android:layout_marginTop="10dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
             android:layout_marginBottom="2dp"
             android:text="Install"
-            android:paddingHorizontal="16dp"
+            android:paddingHorizontal="4dp"
             android:textColor="@color/gnt_white"
             android:textSize="14sp"
             android:textStyle="bold"

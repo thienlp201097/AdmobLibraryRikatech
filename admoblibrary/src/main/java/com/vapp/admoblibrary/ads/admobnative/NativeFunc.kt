@@ -12,9 +12,9 @@ import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
 import com.vapp.admoblibrary.R
 
-public class NativeFunc {
+class NativeFunc {
 
-   public companion object {
+   companion object {
         fun populateNativeAdView(
             nativeAd: NativeAd,
             adView: NativeAdView,
@@ -44,7 +44,8 @@ public class NativeFunc {
             }
             if (nativeAd.mediaContent != null) {
                 if (size == GoogleENative.UNIFIED_MEDIUM) {
-                    adView.mediaView!!.setMediaContent(nativeAd.mediaContent!!)
+                    adView.mediaView!!.setImageScaleType(ImageView.ScaleType.CENTER_INSIDE)
+                    adView.mediaView!!.mediaContent = nativeAd.mediaContent!!
                 }
             }
 
@@ -68,12 +69,12 @@ public class NativeFunc {
 
             if (adView.iconView != null) {
                 if (nativeAd.icon == null) {
-                    adView!!.iconView!!.visibility = View.GONE
+                    adView.iconView!!.visibility = View.GONE
                 } else {
                     (adView.iconView as ImageView).setImageDrawable(
-                        nativeAd!!.icon!!.drawable
+                        nativeAd.icon!!.drawable
                     )
-                    adView!!.iconView!!.visibility = View.VISIBLE
+                    adView.iconView!!.visibility = View.VISIBLE
                 }
             }
 
@@ -86,9 +87,6 @@ public class NativeFunc {
             val vc = nativeAd.mediaContent!!.videoController
             if (vc.hasVideoContent()) {
                 vc.videoLifecycleCallbacks = object : VideoController.VideoLifecycleCallbacks() {
-                    override fun onVideoEnd() {
-                        super.onVideoEnd()
-                    }
                 }
             }
         }
