@@ -22,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
+import com.airbnb.lottie.LottieAnimationView
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.ads.mediation.admob.AdMobAdapter
 import com.google.android.gms.ads.AdError
@@ -2290,6 +2291,8 @@ object AdmodUtils {
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.MATCH_PARENT
         )
+        val img = dialogFullScreen?.findViewById<LottieAnimationView>(R.id.imageView3)
+        img?.setAnimation(R.raw.gifloading)
         try {
             if (!context.isFinishing && dialogFullScreen != null && dialogFullScreen?.isShowing == false) {
                 dialogFullScreen?.show()

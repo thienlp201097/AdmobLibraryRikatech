@@ -135,6 +135,8 @@ class AOAManager(private val activity: Activity,val appOpen: String,val delay: L
                 dialogFullScreen?.setCancelable(false)
                 dialogFullScreen?.window?.setBackgroundDrawable(ColorDrawable(Color.WHITE))
                 dialogFullScreen?.window?.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
+                val img = dialogFullScreen?.findViewById<LottieAnimationView>(R.id.imageView3)
+                img?.setAnimation(R.raw.gifloading)
                 try {
                     if (!activity.isFinishing && dialogFullScreen != null && dialogFullScreen?.isShowing == false) {
                         dialogFullScreen?.show()
@@ -144,7 +146,6 @@ class AOAManager(private val activity: Activity,val appOpen: String,val delay: L
                 Handler(Looper.getMainLooper()).postDelayed({
                     if (!AppOpenManager.getInstance().isShowingAd && !isShowingAd){
                         try {
-                            val img = dialogFullScreen?.findViewById<LottieAnimationView>(R.id.imageView3)
                             val txt = dialogFullScreen?.findViewById<TextView>(R.id.txtLoading)
                             img?.visibility = View.INVISIBLE
                             txt?.visibility = View.INVISIBLE
