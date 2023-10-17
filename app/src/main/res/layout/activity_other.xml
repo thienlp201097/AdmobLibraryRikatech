@@ -11,6 +11,8 @@
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBarLayout"
+            android:visibility="gone"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:theme="@style/Theme.AdmobExample.AppBarOverlay"
@@ -29,13 +31,13 @@
         <FrameLayout
             android:id="@+id/nativeAds"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:minHeight="200dp"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toTopOf="@+id/line" />
+            android:orientation="vertical" />
 
         <View
             android:id="@+id/line"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_above="@id/banner"
@@ -44,6 +46,7 @@
 
         <FrameLayout
             android:id="@+id/banner"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

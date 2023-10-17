@@ -7,6 +7,7 @@ import com.vapp.admobexample.R
 import com.vapp.admobexample.databinding.ActivityOtherBinding
 import com.vapp.admobexample.utilsdemp.AdsManager
 import com.vapp.admobexample.utilsdemp.AdsManager.loadAndShowNative
+import com.vapp.admobexample.utilsdemp.AdsManager.loadAndShowNativeFullScreen
 import com.vapp.admobexample.utilsdemp.AdsManager.nativeHolder
 import com.vapp.admobexample.utilsdemp.AdsManager.showAdBanner
 import com.vapp.admobexample.utilsdemp.AdsManager.showAdBannerCollapsible
@@ -23,6 +24,8 @@ class OtherActivity : AppCompatActivity() {
         binding = ActivityOtherBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
         setResult(5)
+
+        loadAndShowNativeFullScreen(this,binding!!.nativeAds,AdsManager.nativeHolder)
         //        if (AdmodUtils.getInstance().dialog != null) {
 //            if (AdmodUtils.getInstance().dialog.isShowing()) {
 //                AdmodUtils.getInstance().dialog.dismiss();
@@ -52,8 +55,8 @@ class OtherActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        loadAndShowNative(this@OtherActivity, binding!!.nativeAds, nativeHolder)
-        showAdBannerCollapsible(this@OtherActivity, AdsManager.bannerHolder, binding!!.banner, binding!!.line)
+//        loadAndShowNative(this@OtherActivity, binding!!.nativeAds, nativeHolder)
+//        showAdBannerCollapsible(this@OtherActivity, AdsManager.bannerHolder, binding!!.banner, binding!!.line)
     }
 
     override fun onBackPressed() {

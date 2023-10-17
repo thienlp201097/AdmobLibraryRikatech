@@ -83,7 +83,6 @@ class AOAManager(private val activity: Activity,val appOpen: String,val delay: L
                         delay(delay)
                         showAdIfAvailable()
                     }
-
                 }
             })
         }

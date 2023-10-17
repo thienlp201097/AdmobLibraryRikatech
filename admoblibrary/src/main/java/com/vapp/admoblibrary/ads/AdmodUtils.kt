@@ -22,6 +22,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
+import com.adjust.sdk.Adjust
+import com.adjust.sdk.AdjustAdRevenue
+import com.adjust.sdk.AdjustConfig
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.ads.mediation.admob.AdMobAdapter
 import com.google.android.gms.ads.AdError
@@ -33,10 +36,12 @@ import com.google.android.gms.ads.AdValue
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.MediaAspectRatio
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.OnPaidEventListener
 import com.google.android.gms.ads.OnUserEarnedRewardListener
 import com.google.android.gms.ads.RequestConfiguration
+import com.google.android.gms.ads.VideoOptions
 import com.google.android.gms.ads.formats.NativeAdOptions
 import com.google.android.gms.ads.initialization.InitializationStatus
 import com.google.android.gms.ads.interstitial.InterstitialAd
@@ -57,6 +62,7 @@ import com.vapp.admoblibrary.ads.model.BannerAdCallback
 import com.vapp.admoblibrary.ads.model.BannerHolder
 import com.vapp.admoblibrary.ads.model.InterHolder
 import com.vapp.admoblibrary.ads.model.NativeHolder
+import com.vapp.admoblibrary.ads.nativefullscreen.NativeFullScreenCallBack
 import com.vapp.admoblibrary.ads.remote.BannerAdView
 import com.vapp.admoblibrary.ads.remote.BannerPlugin
 import com.vapp.admoblibrary.ads.remote.BannerRemoteConfig
@@ -66,14 +72,11 @@ import com.vapp.admoblibrary.utils.SweetAlert.SweetAlertDialog
 import com.vapp.admoblibrary.utils.Utils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.util.Date
 import java.util.Locale
+import java.util.concurrent.LinkedBlockingQueue
 
 object AdmodUtils {
     //Dialog loading
@@ -228,7 +231,7 @@ object AdmodUtils {
         viewGroup.addView(mAdView, 1)
         shimmerFrameLayout = tagView.findViewById(R.id.shimmer_view_container)
         shimmerFrameLayout?.startShimmer()
-        mAdView.setOnPaidEventListener {adValue -> bannerAdCallback.onPaid(adValue, mAdView) }
+        mAdView.setOnPaidEventListener {adValue -> postRevenueAdjust(adValue,mAdView.adUnitId) }
         mAdView.adListener = object : AdListener() {
             override fun onAdLoaded() {
                 shimmerFrameLayout?.stopShimmer()
@@ -408,7 +411,7 @@ object AdmodUtils {
 
         mAdView.adListener = object : AdListener() {
             override fun onAdLoaded() {
-                mAdView.setOnPaidEventListener { adValue -> callback.onAdPaid(adValue, mAdView) }
+                mAdView.setOnPaidEventListener { adValue -> postRevenueAdjust(adValue,mAdView.adUnitId) }
                 shimmerFrameLayout?.stopShimmer()
                 viewGroup.removeView(tagView)
                 callback.onBannerAdLoaded(adSize)
@@ -473,7 +476,7 @@ object AdmodUtils {
 
         mAdView.adListener = object : AdListener() {
             override fun onAdLoaded() {
-                mAdView.setOnPaidEventListener { adValue -> callback.onAdPaid(adValue, mAdView) }
+                mAdView.setOnPaidEventListener { adValue -> postRevenueAdjust(adValue,mAdView.adUnitId) }
                 shimmerFrameLayout?.stopShimmer()
                 viewGroup.removeView(tagView)
                 callback.onBannerAdLoaded(adSize)
@@ -688,7 +691,7 @@ object AdmodUtils {
         val adSize = getAdSize(activity)
         mAdView.setAdSize(adSize)
         viewGroup.addView(mAdView, 0)
-        mAdView.setOnPaidEventListener { adValue -> callback.onAdPaid(adValue) }
+        mAdView.setOnPaidEventListener { adValue -> postRevenueAdjust(adValue,mAdView.adUnitId) }
         mAdView.adListener = object : AdListener() {
             override fun onAdLoaded() {
                 callback.onBannerAdLoaded(adSize)
@@ -761,7 +764,10 @@ object AdmodUtils {
                 nativeHolder.nativeAd = nativeAd
                 nativeHolder.isLoad = false
                 nativeHolder.native_mutable.value = nativeAd
-                nativeAd.setOnPaidEventListener { adValue: AdValue? -> adCallback.onAdPaid(adValue,nativeHolder.ads) }
+                nativeAd.setOnPaidEventListener { adValue: AdValue? -> adValue?.let {
+                    postRevenueAdjust(
+                        it,nativeHolder.ads)
+                } }
                 adCallback.onLoadedAndGetNativeAd(nativeAd)
             }.withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(adError: LoadAdError) {
@@ -797,7 +803,10 @@ object AdmodUtils {
                 nativeHolder.nativeAd = nativeAd
                 nativeHolder.isLoad = false
                 nativeHolder.native_mutable.value = nativeAd
-                nativeAd.setOnPaidEventListener { adValue: AdValue? -> adCallback.onAdPaid(adValue,nativeHolder.ads) }
+                nativeAd.setOnPaidEventListener { adValue: AdValue? -> adValue?.let {
+                    postRevenueAdjust(
+                        it,nativeHolder.ads)
+                } }
                 adCallback.onLoadedAndGetNativeAd(nativeAd)
                 //viewGroup.setVisibility(View.VISIBLE);
             }.withAdListener(object : AdListener() {
@@ -842,8 +851,7 @@ object AdmodUtils {
         viewGroup.removeAllViews()
         if (!nativeHolder.isLoad) {
             if (nativeHolder.nativeAd != null) {
-                val adView = activity.layoutInflater
-                    .inflate(layout, null) as NativeAdView
+                val adView = activity.layoutInflater.inflate(layout, null) as NativeAdView
                 populateNativeAdView(nativeHolder.nativeAd!!, adView, GoogleENative.UNIFIED_MEDIUM)
                 if (shimmerFrameLayout != null) {
                     shimmerFrameLayout?.stopShimmer()
@@ -872,7 +880,7 @@ object AdmodUtils {
             nativeHolder.native_mutable.observe((activity as LifecycleOwner)) { nativeAd: NativeAd? ->
                 if (nativeAd != null) {
                     nativeAd.setOnPaidEventListener {
-                        callback.onPaidNative(it , nativeHolder.ads)
+                        postRevenueAdjust(it,nativeHolder.ads)
                     }
                     val adView = activity.layoutInflater.inflate(layout, null) as NativeAdView
                     populateNativeAdView(nativeAd, adView, GoogleENative.UNIFIED_MEDIUM)
@@ -923,7 +931,7 @@ object AdmodUtils {
         }
         val adLoader: AdLoader = AdLoader.Builder(activity, s!!)
             .forNativeAd { nativeAd ->
-                nativeAd.setOnPaidEventListener { adValue: AdValue -> adCallback.onAdPaid(adValue,s) }
+                nativeAd.setOnPaidEventListener { adValue: AdValue -> postRevenueAdjust(adValue,s) }
                 adCallback.onNativeAdLoaded()
                 val adView = activity.layoutInflater
                     .inflate(layout, null) as NativeAdView
@@ -978,7 +986,7 @@ object AdmodUtils {
         val adLoader: AdLoader = AdLoader.Builder(activity, s)
             .forNativeAd { nativeAd ->
                 nativeAd.setOnPaidEventListener { adValue: AdValue ->
-                    adCallback.onAdPaid(adValue,s)
+                    postRevenueAdjust(adValue,s)
                 }
                 adCallback.onNativeAdLoaded()
                 val adView = activity.layoutInflater
@@ -1023,7 +1031,7 @@ object AdmodUtils {
         }
         val adLoader: AdLoader = AdLoader.Builder(activity, s!!)
             .forNativeAd { nativeAd ->
-                nativeAd.setOnPaidEventListener { adValue: AdValue -> adCallback.onAdPaid(adValue,s) }
+                nativeAd.setOnPaidEventListener { adValue: AdValue -> postRevenueAdjust(adValue,s) }
                 adCallback.onNativeAdLoaded()
                 val adView = activity.layoutInflater
                     .inflate(layout, null) as NativeAdView
@@ -1361,7 +1369,7 @@ object AdmodUtils {
                                 adCallback.onAdShowed()
                                 try {
                                     aBoolean.setOnPaidEventListener {
-                                            adValue -> adCallback.onPaid(adValue,aBoolean.adUnitId)
+                                            adValue -> postRevenueAdjust(adValue,interHolder.inter?.adUnitId)
                                     }
                                 } catch (e: Exception) {
                                 }
@@ -1437,7 +1445,7 @@ object AdmodUtils {
             isAdShowing = true
             Handler(Looper.getMainLooper()).postDelayed({
                 callback!!.onStartAction()
-                mInterstitialAd.setOnPaidEventListener { adValue -> callback?.onPaid(adValue,mInterstitialAd.adUnitId) }
+                mInterstitialAd.setOnPaidEventListener { adValue -> postRevenueAdjust(adValue,mInterstitialAd.adUnitId) }
                 mInterstitialAd.show(activity)
             },400)
         } else {
@@ -2153,7 +2161,7 @@ object AdmodUtils {
                         mInterstitialAd = interstitialAd
                         if (mInterstitialAd != null) {
                             mInterstitialAd!!.setOnPaidEventListener {
-                                    adValue -> adCallback.onPaid(adValue,mInterstitialAd!!.adUnitId)
+                                    adValue -> postRevenueAdjust(adValue,admobId)
                             }
                             mInterstitialAd!!.fullScreenContentCallback =
                                 object : FullScreenContentCallback() {
@@ -2274,6 +2282,14 @@ object AdmodUtils {
         return ""
     }
 
+    fun postRevenueAdjust(ad: AdValue, adUnit: String?) {
+        val adjustAdRevenue = AdjustAdRevenue(AdjustConfig.AD_REVENUE_ADMOB)
+        val rev = ad.valueMicros.toDouble() / 1000000
+        adjustAdRevenue.setRevenue(rev, ad.currencyCode)
+        adjustAdRevenue.setAdRevenueUnit(adUnit)
+        Adjust.trackAdRevenue(adjustAdRevenue)
+    }
+
     fun dialogLoading(context: Activity) {
 
         dialogFullScreen = Dialog(context)
@@ -2293,4 +2309,45 @@ object AdmodUtils {
         }
 
     }
+    fun loadAndShowNativeFullScreen(activity: Activity,id : String, viewGroup: ViewGroup,layout: Int, listener: NativeFullScreenCallBack){
+        if (!isShowAds || !isNetworkConnected(activity)) {
+            viewGroup.visibility = View.GONE
+            return
+        }
+        var adMobId : String = id
+        if (isTesting) {
+            adMobId = activity.getString(R.string.test_ads_admob_native_full_screen_id)
+        }
+        viewGroup.removeAllViews()
+        val tagView = activity.layoutInflater.inflate(R.layout.layoutnative_loading_fullscreen, null, false)
+        viewGroup.addView(tagView,0)
+        shimmerFrameLayout = tagView.findViewById(R.id.shimmer_view_container)
+        shimmerFrameLayout?.startShimmer()
+        val adView = activity.layoutInflater.inflate(layout, null) as NativeAdView
+        val builder = AdLoader.Builder(activity,adMobId)
+        val videoOptions = VideoOptions.Builder().setStartMuted(false).setCustomControlsRequested(true).build()
+        val adOptions = com.google.android.gms.ads.nativead.NativeAdOptions.Builder()
+            .setMediaAspectRatio(MediaAspectRatio.ANY)
+            .setVideoOptions(videoOptions)
+            .build()
+        builder.withNativeAdOptions(adOptions)
+        builder.forNativeAd { nativeAd ->
+            nativeAd.setOnPaidEventListener { adValue: AdValue? -> adValue?.let { postRevenueAdjust(it,id) } }
+            populateNativeAdView(nativeAd,adView.findViewById(R.id.native_ad_view))
+            viewGroup.removeAllViews()
+            shimmerFrameLayout?.stopShimmer()
+            viewGroup.addView(adView)
+        }
+        builder.withAdListener(object : AdListener() {
+            override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                Log.d("===AdmobFailed", loadAdError.toString())
+                shimmerFrameLayout?.stopShimmer()
+                listener.onLoadFailed()
+            }
+        })
+        if (adRequest != null) {
+            builder.build().loadAd(adRequest!!)
+        }
+    }
+
 }

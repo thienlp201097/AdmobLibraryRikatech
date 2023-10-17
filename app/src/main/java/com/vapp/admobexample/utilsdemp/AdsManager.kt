@@ -26,6 +26,7 @@ import com.vapp.admoblibrary.ads.model.AppOpenAppHolder
 import com.vapp.admoblibrary.ads.model.BannerHolder
 import com.vapp.admoblibrary.ads.model.InterHolder
 import com.vapp.admoblibrary.ads.model.NativeHolder
+import com.vapp.admoblibrary.ads.nativefullscreen.NativeFullScreenCallBack
 import com.vapp.admoblibrary.ads.remote.BannerPlugin
 import com.vapp.admoblibrary.ads.remote.BannerRemoteConfig
 
@@ -309,6 +310,24 @@ object AdsManager {
             view.visibility = View.GONE
             line.visibility = View.GONE
         }
+    }
+
+    fun loadAndShowNativeFullScreen(activity: Activity, nativeAdContainer: ViewGroup, nativeHolder: NativeHolder){
+
+        AdmodUtils.loadAndShowNativeFullScreen(activity,nativeHolder.ads,nativeAdContainer,R.layout.ad_unified,object : NativeFullScreenCallBack{
+            override fun onLoaded(nativeAd: NativeAd) {
+                Log.d("===native","loadAndShowNativeFullScreen")
+            }
+
+            override fun onLoadFailed() {
+
+            }
+
+            override fun onPaidNative(adValue: AdValue, adUnitAds: String) {
+
+            }
+
+        })
     }
 
     interface AdListener {

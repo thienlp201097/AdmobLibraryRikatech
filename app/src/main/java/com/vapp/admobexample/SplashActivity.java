@@ -37,9 +37,7 @@ public class SplashActivity extends AppCompatActivity {
             finish();
             return;
         }
-        RemoteConfigManager.INSTANCE.initRemoteConfig(task -> {
 
-        });
         aoaManager = new AOAManager(this, AdsManager.INSTANCE.getAoaHolder().getAds(), 3000, new AOAManager.AppOpenAdsListener() {
             @Override
             public void onAdPaid(@NonNull AdValue adValue , String s) {
