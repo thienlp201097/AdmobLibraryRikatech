@@ -44,7 +44,28 @@ public class MyApplication extends Application {
 
 ```
 ```bash
-    New Update 7.0.0-beta2: Add AdValue Banner, Native and AOA 
+    New Update 7.0.9: Add Native fullscreen
+```
+
+-## Native Full Screen
+```bash
+fun loadAndShowNativeFullScreen(activity: Activity, nativeAdContainer: ViewGroup, nativeHolder: NativeHolder){
+
+        AdmodUtils.loadAndShowNativeFullScreen(activity,nativeHolder.ads,nativeAdContainer,R.layout.ad_unified,object : NativeFullScreenCallBack{
+            override fun onLoaded(nativeAd: NativeAd) {
+                Log.d("===native","loadAndShowNativeFullScreen")
+            }
+
+            override fun onLoadFailed() {
+
+            }
+
+            override fun onPaidNative(adValue: AdValue, adUnitAds: String) {
+
+            }
+
+        })
+    }
 ```
 -## Load 2 sàn AOA, Banner
 ```bash
