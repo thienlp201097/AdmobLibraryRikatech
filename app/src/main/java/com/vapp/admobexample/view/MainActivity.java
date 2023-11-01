@@ -23,6 +23,7 @@ import com.google.android.gms.ads.nativead.NativeAd;
 import com.vapp.admobexample.utilsdemp.AdsManager;
 import com.vapp.admobexample.utilsdemp.RemoteConfigManager;
 import com.vapp.admobexample.utilsdemp.UtilsDemoActivity;
+import com.vapp.admoblibrary.AdsInterCallBack;
 import com.vapp.admoblibrary.ads.AOAManager;
 import com.vapp.admoblibrary.ads.AdCallbackNew;
 import com.vapp.admoblibrary.ads.AdLoadCallback;
@@ -83,12 +84,44 @@ public class MainActivity extends AppCompatActivity {
         btn_ShowInter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AdsManager.INSTANCE.showAdInter(MainActivity.this, AdsManager.INSTANCE.getInterholder(), new AdsManager.AdListener() {
+//                AdsManager.INSTANCE.showAdInter(MainActivity.this, AdsManager.INSTANCE.getInterholder(), new AdsManager.AdListener() {
+//                    @Override
+//                    public void onAdClosedOrFailed() {
+//                        Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
+//                    }
+//                });
+
+                AdmodUtils.loadAndShowAdInterstitial(MainActivity.this, AdsManager.INSTANCE.getInterholder().getAds(), new AdsInterCallBack() {
                     @Override
-                    public void onAdClosedOrFailed() {
+                    public void onStartAction() {
+
+                    }
+
+                    @Override
+                    public void onEventClickAdClosed() {
                         Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
                     }
-                });
+
+                    @Override
+                    public void onAdShowed() {
+
+                    }
+
+                    @Override
+                    public void onAdLoaded() {
+
+                    }
+
+                    @Override
+                    public void onAdFail(String error) {
+                        Utils.getInstance().addActivity(MainActivity.this, OtherActivity.class);
+                    }
+
+                    @Override
+                    public void onPaid(AdValue adValue, String adUnitAds) {
+
+                    }
+                },true);
             }
         });
         btn_LoadAndShowInter.setOnClickListener(new View.OnClickListener() {
