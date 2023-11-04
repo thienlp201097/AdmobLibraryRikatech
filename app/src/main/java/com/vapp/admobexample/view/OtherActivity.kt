@@ -24,7 +24,7 @@ class OtherActivity : AppCompatActivity() {
         binding = ActivityOtherBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
         setResult(5)
-        loadAndShowNativeFullScreen(this,binding!!.nativeAds,AdsManager.nativeHolder)
+        AdsManager.showAdNativeFullScreen(this,binding!!.nativeAds,nativeHolder)
         //        if (AdmodUtils.getInstance().dialog != null) {
 //            if (AdmodUtils.getInstance().dialog.isShowing()) {
 //                AdmodUtils.getInstance().dialog.dismiss();
@@ -52,13 +52,4 @@ class OtherActivity : AppCompatActivity() {
 //        ratingDialog.show();
     }
 
-    override fun onResume() {
-        super.onResume()
-//        loadAndShowNative(this@OtherActivity, binding!!.nativeAds, nativeHolder)
-//        showAdBannerCollapsible(this@OtherActivity, AdsManager.bannerHolder, binding!!.banner, binding!!.line)
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-    }
 }

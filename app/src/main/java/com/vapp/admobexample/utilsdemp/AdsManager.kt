@@ -209,12 +209,34 @@ object AdsManager {
         })
     }
 
-    fun showAdNativeSmall(activity: Activity, nativeAdContainer: ViewGroup, nativeHolder: NativeHolder) {
+    fun loadNativeFullScreen(activity: Context, nativeHolder: NativeHolder) {
+        AdmodUtils.loadAndGetNativeFullScreenAds(activity, nativeHolder, object : NativeAdCallback {
+            override fun onLoadedAndGetNativeAd(ad: NativeAd?) {
+            }
+
+            override fun onNativeAdLoaded() {
+
+            }
+
+            override fun onAdFail(error: String) {
+                Log.d("===AdsLoadsNative",
+                    error.replace(":", "").replace(" ", "_").replace(".", "").replace("?", "")
+                        .replace("!", "")
+                )
+            }
+
+            override fun onAdPaid(adValue: AdValue?, adUnitAds: String?) {
+
+            }
+        })
+    }
+
+    fun showAdNativeFullScreen(activity: Activity, nativeAdContainer: ViewGroup, nativeHolder: NativeHolder) {
         if (!AdmodUtils.isNetworkConnected(activity)) {
             nativeAdContainer.visibility = View.GONE
             return
         }
-        AdmodUtils.showNativeAdsWithLayout(activity, nativeHolder, nativeAdContainer, R.layout.ad_template_small, GoogleENative.UNIFIED_SMALL, object : AdmodUtils.AdsNativeCallBackAdmod {
+        AdmodUtils.showNativeFullScreenAdsWithLayout(activity, nativeHolder, nativeAdContainer, R.layout.ad_unified, GoogleENative.UNIFIED_SMALL, object : AdmodUtils.AdsNativeCallBackAdmod {
                 override fun NativeLoaded() {
                     Log.d("===NativeAds", "Native showed")
                     nativeAdContainer.visibility = View.VISIBLE

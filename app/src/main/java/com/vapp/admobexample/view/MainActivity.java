@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
         findbyid();
-
+        AdsManager.INSTANCE.loadNativeFullScreen(this,AdsManager.INSTANCE.getNativeHolder());
         //API data sample
         AdUnitListModel adUnitList = Utils.getInstance().getAdUnitByName("Name AdUnit", "Defaul Id Admob");
         //check Countries (BOOL)
