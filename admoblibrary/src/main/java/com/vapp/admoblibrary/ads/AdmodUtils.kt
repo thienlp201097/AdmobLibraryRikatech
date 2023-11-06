@@ -2538,7 +2538,6 @@ object AdmodUtils {
         nativeHolder: NativeHolder,
         viewGroup: ViewGroup,
         layout: Int,
-        size: GoogleENative,
         callback: AdsNativeCallBackAdmod
     ) {
         if (!isShowAds || !isNetworkConnected(activity)) {
@@ -2570,11 +2569,7 @@ object AdmodUtils {
                 callback.NativeFailed()
             }
         } else {
-            val tagView: View = if (size === GoogleENative.UNIFIED_MEDIUM) {
-                activity.layoutInflater.inflate(R.layout.layoutnative_loading_medium, null, false)
-            } else {
-                activity.layoutInflater.inflate(R.layout.layoutnative_loading_small, null, false)
-            }
+            val tagView = activity.layoutInflater.inflate(R.layout.layoutnative_loading_fullscreen, null, false)
             viewGroup.addView(tagView, 0)
             if (shimmerFrameLayout == null) shimmerFrameLayout = tagView.findViewById(R.id.shimmer_view_container)
             shimmerFrameLayout?.startShimmer()
