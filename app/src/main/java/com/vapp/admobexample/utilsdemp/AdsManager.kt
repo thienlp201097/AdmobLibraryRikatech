@@ -12,6 +12,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdValue
 import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MediaAspectRatio
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.nativead.NativeAd
 import com.vapp.admobexample.R
@@ -210,7 +211,7 @@ object AdsManager {
     }
 
     fun loadNativeFullScreen(activity: Context, nativeHolder: NativeHolder) {
-        AdmodUtils.loadAndGetNativeFullScreenAds(activity, nativeHolder, object : NativeAdCallback {
+        AdmodUtils.loadAndGetNativeFullScreenAds(activity, nativeHolder,MediaAspectRatio.SQUARE, object : NativeAdCallback {
             override fun onLoadedAndGetNativeAd(ad: NativeAd?) {
             }
 
@@ -336,7 +337,7 @@ object AdsManager {
 
     fun loadAndShowNativeFullScreen(activity: Activity, nativeAdContainer: ViewGroup, nativeHolder: NativeHolder){
 
-        AdmodUtils.loadAndShowNativeFullScreen(activity,nativeHolder.ads,nativeAdContainer,R.layout.ad_unified,object : NativeFullScreenCallBack{
+        AdmodUtils.loadAndShowNativeFullScreen(activity,nativeHolder.ads,nativeAdContainer,R.layout.ad_unified,MediaAspectRatio.SQUARE,object : NativeFullScreenCallBack{
             override fun onLoaded(nativeAd: NativeAd) {
                 Log.d("===native","loadAndShowNativeFullScreen")
             }

@@ -2440,7 +2440,7 @@ object AdmodUtils {
         }
 
     }
-    fun loadAndShowNativeFullScreen(activity: Activity,id : String, viewGroup: ViewGroup,layout: Int, listener: NativeFullScreenCallBack){
+    fun loadAndShowNativeFullScreen(activity: Activity,id : String, viewGroup: ViewGroup,layout: Int,mediaAspectRatio : Int, listener: NativeFullScreenCallBack){
         if (!isShowAds || !isNetworkConnected(activity)) {
             viewGroup.visibility = View.GONE
             return
@@ -2458,7 +2458,7 @@ object AdmodUtils {
         val builder = AdLoader.Builder(activity,adMobId)
         val videoOptions = VideoOptions.Builder().setStartMuted(false).setCustomControlsRequested(true).build()
         val adOptions = com.google.android.gms.ads.nativead.NativeAdOptions.Builder()
-            .setMediaAspectRatio(MediaAspectRatio.ANY)
+            .setMediaAspectRatio(mediaAspectRatio)
             .setVideoOptions(videoOptions)
             .build()
         builder.withNativeAdOptions(adOptions)
@@ -2484,7 +2484,7 @@ object AdmodUtils {
     @JvmStatic
     fun loadAndGetNativeFullScreenAds(
         context: Context,
-        nativeHolder: NativeHolder,
+        nativeHolder: NativeHolder,mediaAspectRatio : Int,
         adCallback: NativeAdCallback
     ) {
         if (!isShowAds || !isNetworkConnected(context)) {
@@ -2502,7 +2502,7 @@ object AdmodUtils {
         nativeHolder.isLoad = true
         val videoOptions = VideoOptions.Builder().setStartMuted(false).setCustomControlsRequested(true).build()
         val adOptions = com.google.android.gms.ads.nativead.NativeAdOptions.Builder()
-            .setMediaAspectRatio(MediaAspectRatio.ANY)
+            .setMediaAspectRatio(mediaAspectRatio)
             .setVideoOptions(videoOptions)
             .build()
         val adLoader = AdLoader.Builder(context, nativeHolder.ads)

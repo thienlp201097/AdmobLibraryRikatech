@@ -24,7 +24,7 @@ class OtherActivity : AppCompatActivity() {
         binding = ActivityOtherBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
         setResult(5)
-        AdsManager.showAdNativeFullScreen(this,binding!!.nativeAds,nativeHolder)
+        AdsManager.loadAndShowNativeFullScreen(this,binding!!.nativeAds,nativeHolder)
         //        if (AdmodUtils.getInstance().dialog != null) {
 //            if (AdmodUtils.getInstance().dialog.isShowing()) {
 //                AdmodUtils.getInstance().dialog.dismiss();
