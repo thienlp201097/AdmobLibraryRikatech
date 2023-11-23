@@ -38,7 +38,7 @@ public class SplashActivity extends AppCompatActivity {
             return;
         }
 
-        aoaManager = new AOAManager(this, AdsManager.INSTANCE.getAoaHolder().getAds(), 3000, new AOAManager.AppOpenAdsListener() {
+        aoaManager = new AOAManager(this, "ca-app-pub-3940256099942544/3419835294", 3000, new AOAManager.AppOpenAdsListener() {
             @Override
             public void onAdPaid(@NonNull AdValue adValue , String s) {
                 Toast.makeText(SplashActivity.this, "${adValue?.currencyCode}|${adValue?.valueMicros}", Toast.LENGTH_SHORT).show();

@@ -138,7 +138,7 @@ object AdmodUtils {
     }
 
     fun initListIdTest() {
-        testDevices.add("727D4F658B63BDFA0EFB164261AAE54")
+        testDevices.add("b9c69f38-a608-4dd4-b285-e51390521056")
         testDevices.add("3FA34D6F6B2DCF88DED51A6AF263E3F0")
         testDevices.add("482996BF6946FBE1B9FFD3975144D084")
         testDevices.add("8619926A823916A224795141B93B7E0B")
@@ -184,6 +184,7 @@ object AdmodUtils {
         testDevices.add("805702C1D9D4FD957AFE14F3D69E79F7")
         //Xiaomi Redmi Note 7
         testDevices.add("9C62AAC36B9F23413AF4D66FE48F9E9B")
+        testDevices.add("876DD1EC6F9EC9570A03581F00388D43")
     }
 
     //check open network
@@ -982,9 +983,6 @@ object AdmodUtils {
         }
         val adLoader: AdLoader = AdLoader.Builder(activity, s)
             .forNativeAd { nativeAd ->
-                nativeAd.setOnPaidEventListener { adValue: AdValue ->
-                    adCallback.onAdPaid(adValue,s)
-                }
                 adCallback.onNativeAdLoaded()
                 val adView = activity.layoutInflater
                     .inflate(layout, null) as NativeAdView
@@ -992,6 +990,9 @@ object AdmodUtils {
                 shimmerFrameLayout.stopShimmer()
                 viewGroup.removeAllViews()
                 viewGroup.addView(adView)
+                nativeAd.setOnPaidEventListener { adValue: AdValue ->
+                    adCallback.onAdPaid(adValue,s)
+                }
                 //viewGroup.setVisibility(View.VISIBLE);
             }.withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(adError: LoadAdError) {
@@ -2456,7 +2457,7 @@ object AdmodUtils {
         shimmerFrameLayout?.startShimmer()
         val adView = activity.layoutInflater.inflate(layout, null) as NativeAdView
         val builder = AdLoader.Builder(activity,adMobId)
-        val videoOptions = VideoOptions.Builder().setStartMuted(false).setCustomControlsRequested(true).build()
+        val videoOptions = VideoOptions.Builder().setStartMuted(false).setCustomControlsRequested(false).build()
         val adOptions = com.google.android.gms.ads.nativead.NativeAdOptions.Builder()
             .setMediaAspectRatio(mediaAspectRatio)
             .setVideoOptions(videoOptions)

@@ -72,7 +72,7 @@ class AOAManager(private val activity: Activity,val appOpen: String,val delay: L
                         appOpenAdsListener.onAdsFailed()
                     }
 
-                    Log.d("====Timeout", "onAppOpenAdFailedToLoad: ")
+                    Log.d("====Timeout", "onAppOpenAdFailedToLoad: $p0")
                 }
 
                 override fun onAdLoaded(ad: AppOpenAd) {
@@ -116,7 +116,7 @@ class AOAManager(private val activity: Activity,val appOpen: String,val delay: L
                         } catch (ignored: Exception) {
                         }
                         isShowingAd = true
-                        Log.d("====Timeout", "Failed... ")
+                        Log.d("====Timeout", "Failed... " + p0)
                         if (isStart){
                             isStart = false
                             appOpenAdsListener.onAdsFailed()

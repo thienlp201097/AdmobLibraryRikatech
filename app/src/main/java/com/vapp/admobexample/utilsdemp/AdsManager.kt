@@ -37,7 +37,7 @@ object AdsManager {
     var check_inter1 = false
 
     var nativeHolder = NativeHolder(
-        ""
+        "ca-app-pub-3492149301591401/9251865600"
     )
     var bannerHolder = BannerHolder("", "")
     var aoaHolder = AppOpenAppHolder("", "")
