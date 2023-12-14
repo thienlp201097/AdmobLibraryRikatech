@@ -954,7 +954,7 @@ object AdmodUtils {
         Log.e("Admod", "loadAdNativeAds")
     }
     @JvmStatic
-    fun loadAndShowNativeAdsWithLayoutMultiAds(
+    fun loadAndShowNativeAdsWithLayoutAds(
         activity: Activity,
         nativeHolder: NativeHolder,
         viewGroup: ViewGroup,
@@ -1057,7 +1057,7 @@ object AdmodUtils {
     }
 
     @JvmStatic
-    fun loadAndShowNativeAdsWithLayoutMultiAdsWithOnResume(
+    fun loadAndShowNativeAdsWithLayoutAdsWithOnResume(
         activity: Activity,
         nativeHolder: NativeHolder,
         viewGroup: ViewGroup,

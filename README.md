@@ -171,7 +171,7 @@ fun loadAndShowNativeFullScreen(activity: Activity, nativeAdContainer: ViewGroup
             nativeAdContainer.visibility = View.GONE
             return
         }
-        AdmodUtils.loadAndShowNativeAdsWithLayoutMultiAds(activity,nativeHolder, nativeAdContainer,R.layout.ad_template_medium,GoogleENative.UNIFIED_MEDIUM,object : NativeAdCallback{
+        AdmodUtils.loadAndShowNativeAdsWithLayoutAds(activity,nativeHolder, nativeAdContainer,R.layout.ad_template_medium,GoogleENative.UNIFIED_MEDIUM,object : NativeAdCallback{
             override fun onLoadedAndGetNativeAd(ad: NativeAd?) {
             }
 

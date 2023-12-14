@@ -43,7 +43,7 @@ class AOAManager(private val activity: Activity,val appOpen: String,val delay: L
             idAoa = activity.getString(R.string.test_ads_admob_app_open)
         }
         if (!AdmodUtils.isShowAds){
-            appOpenAdsListener.onAdsFailed()
+            appOpenAdsListener.onAdsFailed("isShowAds false")
             return
         }
         //Check timeout show inter
@@ -57,7 +57,7 @@ class AOAManager(private val activity: Activity,val appOpen: String,val delay: L
 //            }
 //        }
         if (isAdAvailable) {
-            appOpenAdsListener.onAdsFailed()
+            appOpenAdsListener.onAdsFailed("isAdAvailable true")
             return
         } else {
             Log.d("====Timeout", "fetching... ")
@@ -69,7 +69,7 @@ class AOAManager(private val activity: Activity,val appOpen: String,val delay: L
                     super.onAdFailedToLoad(p0)
                     if (isStart){
                         isStart = false
-                        appOpenAdsListener.onAdsFailed()
+                        appOpenAdsListener.onAdsFailed(p0.message)
                     }
 
                     Log.d("====Timeout", "onAppOpenAdFailedToLoad: $p0")
@@ -116,10 +116,10 @@ class AOAManager(private val activity: Activity,val appOpen: String,val delay: L
                         } catch (ignored: Exception) {
                         }
                         isShowingAd = true
-                        Log.d("====Timeout", "Failed... " + p0)
+                        Log.d("====Timeout", "Failed... $p0")
                         if (isStart){
                             isStart = false
-                            appOpenAdsListener.onAdsFailed()
+                            appOpenAdsListener.onAdsFailed(p0.message)
                         }
                     }
 
@@ -172,7 +172,7 @@ class AOAManager(private val activity: Activity,val appOpen: String,val delay: L
     }
     interface AppOpenAdsListener {
         fun onAdsClose()
-        fun onAdsFailed()
+        fun onAdsFailed(message : String)
         fun onAdPaid(adValue: AdValue, adUnitAds : String)
     }
 

@@ -50,7 +50,7 @@ public class SplashActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onAdsFailed() {
+            public void onAdsFailed(String massage) {
                 Utils.getInstance().replaceActivity(SplashActivity.this, MainActivity.class);
             }
         });

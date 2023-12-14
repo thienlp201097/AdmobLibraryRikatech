@@ -262,7 +262,7 @@ public class MainActivity extends AppCompatActivity {
         btn_LoadAndShowNative.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AdmodUtils.loadAndShowNativeAdsWithLayoutMultiAds(MainActivity.this, AdsManager.INSTANCE.getNativeHolder(), viewNativeAds, R.layout.ad_template_medium, GoogleENative.UNIFIED_MEDIUM, new NativeAdCallback() {
+                AdmodUtils.loadAndShowNativeAdsWithLayoutAds(MainActivity.this, AdsManager.INSTANCE.getNativeHolder(), viewNativeAds, R.layout.ad_template_medium, GoogleENative.UNIFIED_MEDIUM, new NativeAdCallback() {
                     @Override
                     public void onNativeAdLoaded() {
                     }
