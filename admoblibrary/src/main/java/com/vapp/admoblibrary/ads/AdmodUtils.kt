@@ -196,7 +196,7 @@ object AdmodUtils {
 
     interface BannerCallBack {
         fun onLoad()
-        fun onFailed()
+        fun onFailed(message : String)
         fun onPaid(adValue: AdValue?, mAdView: AdView?)
     }
 
@@ -212,7 +212,7 @@ object AdmodUtils {
         var bannerId2 = bannerHolder.ads2
         if (!isShowAds || !isNetworkConnected(activity)) {
             viewGroup.visibility = View.GONE
-            bannerAdCallback.onFailed()
+            bannerAdCallback.onFailed("None Show")
             return
         }
         val mAdView = AdView(activity)
@@ -267,7 +267,7 @@ object AdmodUtils {
         var bannerId = bannerId
         if (!isShowAds || !isNetworkConnected(activity)) {
             viewGroup.visibility = View.GONE
-            bannerAdCallback.onFailed()
+            bannerAdCallback.onFailed("None Show")
             return
         }
         val mAdView = AdView(activity)
@@ -296,7 +296,7 @@ object AdmodUtils {
                 Log.e(" Admod", "failloadbanner" + adError.message)
                 shimmerFrameLayout?.stopShimmer()
                 viewGroup.removeView(tagView)
-                    bannerAdCallback.onFailed()
+                    bannerAdCallback.onFailed(adError.message)
                 }
 
                 override fun onAdOpened() {}
@@ -325,7 +325,7 @@ object AdmodUtils {
         var bannerId = bannerId
         if (!isShowAds || !isNetworkConnected(activity)) {
             viewGroup.visibility = View.GONE
-            bannerAdCallback.onFailed()
+            bannerAdCallback.onFailed("None Show")
             return
         }
         val mAdView = AdView(activity)
@@ -354,7 +354,7 @@ object AdmodUtils {
                 Log.e(" Admod", "failloadbanner" + adError.message)
                 shimmerFrameLayout?.stopShimmer()
                 viewGroup.removeView(tagView)
-                bannerAdCallback.onFailed()
+                bannerAdCallback.onFailed(adError.message)
             }
 
             override fun onAdOpened() {}
@@ -374,7 +374,7 @@ object AdmodUtils {
     }
     interface BannerCollapsibleAdCallback {
         fun onBannerAdLoaded(adSize: AdSize)
-        fun onAdFail()
+        fun onAdFail(message : String)
         fun onAdPaid(adValue: AdValue, mAdView: AdView)
     }
     @JvmStatic
@@ -484,7 +484,7 @@ object AdmodUtils {
                 Log.e(" Admod", "failloadbanner" + adError.message)
                 shimmerFrameLayout?.stopShimmer()
                 viewGroup.removeView(tagView)
-                callback.onAdFail()
+                callback.onAdFail(adError.message)
             }
 
             override fun onAdOpened() {}
@@ -551,7 +551,7 @@ object AdmodUtils {
                 Log.e(" Admod", "failloadbanner" + adError.message)
                 shimmerFrameLayout?.stopShimmer()
                 viewGroup.removeView(tagView)
-                callback.onAdFail()
+                callback.onAdFail(adError.message)
             }
 
             override fun onAdOpened() {}
@@ -774,7 +774,7 @@ object AdmodUtils {
                     nativeHolder.nativeAd = null
                     nativeHolder.isLoad = false
                     nativeHolder.native_mutable.value = null
-                    adCallback.onAdFail("errorId2_"+adError.message)
+                    adCallback.onAdFail(adError.message)
                 }
             })
             .withNativeAdOptions(NativeAdOptions.Builder().build()).build()
@@ -826,7 +826,7 @@ object AdmodUtils {
 
     interface AdsNativeCallBackAdmod {
         fun NativeLoaded()
-        fun NativeFailed()
+        fun NativeFailed(massage : String)
         fun onPaidNative(adValue : AdValue, adUnitAds : String)
     }
 
@@ -863,7 +863,7 @@ object AdmodUtils {
                     shimmerFrameLayout?.stopShimmer()
                 }
                 nativeHolder.native_mutable.removeObservers((activity as LifecycleOwner))
-                callback.NativeFailed()
+                callback.NativeFailed("None Show")
             }
         } else {
             val tagView: View = if (size === GoogleENative.UNIFIED_MEDIUM) {
@@ -893,7 +893,7 @@ object AdmodUtils {
                     if (shimmerFrameLayout != null) {
                         shimmerFrameLayout?.stopShimmer()
                     }
-                    callback.NativeFailed()
+                    callback.NativeFailed("None Show")
                     nativeHolder.native_mutable.removeObservers((activity as LifecycleOwner))
                 }
             }
@@ -1188,7 +1188,7 @@ object AdmodUtils {
     ) {
         isAdShowing = false
         if (!isShowAds || !isNetworkConnected(activity)) {
-            adLoadCallback.onAdFail(false)
+            adLoadCallback.onAdFail("None Show")
             return
         }
         if (interHolder.inter != null) {
@@ -1227,7 +1227,7 @@ object AdmodUtils {
                     if (isClick) {
                         interHolder.mutable.value = null
                     }
-                    adLoadCallback.onAdFail(false)
+                    adLoadCallback.onAdFail(loadAdError.message)
                 }
             })
     }
@@ -1243,7 +1243,7 @@ object AdmodUtils {
         var admobId2 = admobId2
         isAdShowing = false
         if (!isShowAds || !isNetworkConnected(activity)) {
-            adLoadCallback.onAdFail(false)
+            adLoadCallback.onAdFail("None Show")
             return
         }
         if (isTesting) {
@@ -1277,7 +1277,7 @@ object AdmodUtils {
                     if (isClick) {
                         interHolder.mutable.value = null
                     }
-                    adLoadCallback.onAdFail(false)
+                    adLoadCallback.onAdFail(loadAdError.message)
                 }
             })
     }
@@ -1497,7 +1497,7 @@ object AdmodUtils {
                 override fun onAdFailedToLoad(loadAdError: LoadAdError) {
                     // Handle the error.
                     mRewardedAd = null
-                    adCallback2.onAdFail()
+                    adCallback2.onAdFail(loadAdError.message)
                     dismissAdDialog()
                     if (AppOpenManager.getInstance().isInitialized) {
                         AppOpenManager.getInstance().isAppResumeEnabled = true
@@ -1523,7 +1523,7 @@ object AdmodUtils {
                                     // Called when ad fails to show.
                                     if (adError.code != 1) {
                                         isAdShowing = false
-                                        adCallback2.onAdFail()
+                                        adCallback2.onAdFail(adError.message)
                                         mRewardedAd = null
                                         dismissAdDialog()
                                     }
@@ -1561,7 +1561,7 @@ object AdmodUtils {
                         }
                     } else {
                         isAdShowing = false
-                        adCallback2.onAdFail()
+                        adCallback2.onAdFail("None Show")
                         dismissAdDialog()
                         if (AppOpenManager.getInstance().isInitialized) {
                             AppOpenManager.getInstance().isAppResumeEnabled = true
@@ -1625,7 +1625,7 @@ object AdmodUtils {
                     //                Toast.makeText(
 //                        activity, "onAdFailedToLoad() with error: " + error, Toast.LENGTH_SHORT)
 //                        .show();
-                    adLoadCallback.onAdFail()
+                    adLoadCallback.onAdFail(loadAdError.message)
                 }
             })
     }
@@ -1651,7 +1651,7 @@ object AdmodUtils {
                 }
 
                 override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                    adCallback.onAdFail()
+                    adCallback.onAdFail(adError.message)
                     isAdShowing = false
                     mInterstitialAd = null
                     Log.d("TAG", "The ad failed to show.")
@@ -2567,7 +2567,7 @@ object AdmodUtils {
                     shimmerFrameLayout?.stopShimmer()
                 }
                 nativeHolder.native_mutable.removeObservers((activity as LifecycleOwner))
-                callback.NativeFailed()
+                callback.NativeFailed("None Show")
             }
         } else {
             val tagView = activity.layoutInflater.inflate(R.layout.layoutnative_loading_fullscreen, null, false)
@@ -2592,7 +2592,7 @@ object AdmodUtils {
                     if (shimmerFrameLayout != null) {
                         shimmerFrameLayout?.stopShimmer()
                     }
-                    callback.NativeFailed()
+                    callback.NativeFailed("None Show")
                     nativeHolder.native_mutable.removeObservers((activity as LifecycleOwner))
                 }
             }

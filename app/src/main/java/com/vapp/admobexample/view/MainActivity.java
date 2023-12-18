@@ -150,6 +150,12 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
+                    public void onAdFail(String message) {
+                        Utils.getInstance().showMessenger(MainActivity.this, "Reward fail");
+
+                    }
+
+                    @Override
                     public void onEarned() {
                         if (AdmodUtils.mRewardedAd != null) {
                             AdmodUtils.mRewardedAd = null;
@@ -157,12 +163,6 @@ public class MainActivity extends AppCompatActivity {
                         AdmodUtils.dismissAdDialog();
                         Utils.getInstance().showMessenger(MainActivity.this, "Reward");
 
-                    }
-
-                    @Override
-                    public void onAdFail() {
-                        //code here
-                        Utils.getInstance().showMessenger(MainActivity.this, "Reward fail");
                     }
                 }, true);
 
@@ -185,10 +185,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 AdmodUtils.loadAdInterstitialReward(MainActivity.this, getString(R.string.test_ads_admob_inter_reward_id), new AdLoadCallback() {
                     @Override
-                    public void onAdFail() {
+                    public void onAdFail(String message) {
                         startActivity(new Intent(MainActivity.this, OtherActivity.class));
                         Utils.getInstance().showMessenger(MainActivity.this, "onAdFail");
-
                     }
 
                     @Override
@@ -212,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onAdFail() {
+                        public void onAdFail(String message) {
                             Utils.getInstance().showMessenger(MainActivity.this, "onAdFail");
                             startActivity(new Intent(MainActivity.this, OtherActivity.class));
                         }

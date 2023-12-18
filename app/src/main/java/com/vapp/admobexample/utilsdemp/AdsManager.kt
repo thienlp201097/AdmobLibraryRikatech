@@ -103,7 +103,7 @@ object AdsManager {
 
             }
 
-            override fun onAdFail(isLoading: Boolean) {
+            override fun onAdFail(message: String?) {
             }
         })
     }
@@ -243,7 +243,7 @@ object AdsManager {
                     nativeAdContainer.visibility = View.VISIBLE
                 }
 
-                override fun NativeFailed() {
+                override fun NativeFailed(massage: String) {
                     Log.d("===NativeAds", "Native false")
                     nativeAdContainer.visibility = View.GONE
                 }
@@ -266,7 +266,7 @@ object AdsManager {
                 nativeAdContainer.visibility = View.VISIBLE
             }
 
-            override fun NativeFailed() {
+            override fun NativeFailed(massage: String) {
                 Log.d("===NativeAds", "Native false")
                 nativeAdContainer.visibility = View.GONE
             }
@@ -295,7 +295,7 @@ object AdsManager {
                         view.layoutParams = params
                     }
 
-                    override fun onAdFail() {
+                    override fun onAdFail(message: String) {
                         view.visibility = View.GONE
                         line.visibility = View.GONE
                     }
@@ -320,7 +320,7 @@ object AdsManager {
                     line.visibility = View.VISIBLE
                 }
 
-                override fun onFailed() {
+                override fun onFailed(message: String) {
                     view.visibility = View.GONE
                     line.visibility = View.GONE
                 }
