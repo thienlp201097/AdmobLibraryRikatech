@@ -81,10 +81,8 @@ class AOAManager(private val activity: Activity,val appOpen: String,val delay: L
                     Log.d("====Timeout", "isAdAvailable = true")
                     CoroutineScope(Dispatchers.Main).launch {
                         delay(delay)
-                        if (!AppOpenManager.getInstance().isShowingAd && !isShowingAd && !activity.isFinishing && !activity.isDestroyed){
+                        if (!AppOpenManager.getInstance().isShowingAd && !isShowingAd){
                             showAdIfAvailable()
-                        }else{
-                            Log.d("===AOA","None Show")
                         }
                     }
                 }

@@ -58,9 +58,9 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-//        aoaManager.onAoaDestroyed();
+    public void onBackPressed() {
+        super.onBackPressed();
+        System.exit(0);
     }
 }
 
