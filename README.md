@@ -44,7 +44,32 @@ public class MyApplication extends Application {
 
 ```
 ```bash
-    New Update 7.0.9: Add Native fullscreen
+    New Update 7.1.5: Load AOA splash
+AOAManager aoaManager;
+...
+aoaManager = new AOAManager(this, "ca-app-pub-3940256099942544/3419835294", 3000, new AOAManager.AppOpenAdsListener() {
+            @Override
+            public void onAdPaid(@NonNull AdValue adValue , String s) {
+                Toast.makeText(SplashActivity.this, "${adValue?.currencyCode}|${adValue?.valueMicros}", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAdsClose() {
+                Utils.getInstance().replaceActivity(SplashActivity.this, MainActivity.class);
+            }
+
+            @Override
+            public void onAdsFailed(String massage) {
+                Utils.getInstance().replaceActivity(SplashActivity.this, MainActivity.class);
+            }
+        });
+        aoaManager.loadAndShowAoA();
+...
+@Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        System.exit(0);
+    }
 ```
 
 -## Native Full Screen
