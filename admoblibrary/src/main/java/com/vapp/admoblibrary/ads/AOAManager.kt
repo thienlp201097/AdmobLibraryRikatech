@@ -81,7 +81,11 @@ class AOAManager(private val activity: Activity,val appOpen: String,val delay: L
                     Log.d("====Timeout", "isAdAvailable = true")
                     CoroutineScope(Dispatchers.Main).launch {
                         delay(delay)
-                        showAdIfAvailable()
+                        if (!AppOpenManager.getInstance().isShowingAd && !isShowingAd && !activity.isFinishing && !activity.isDestroyed){
+                            showAdIfAvailable()
+                        }else{
+                            Log.d("===AOA","None Show")
+                        }
                     }
                 }
             })
@@ -144,7 +148,8 @@ class AOAManager(private val activity: Activity,val appOpen: String,val delay: L
                 } catch (ignored: Exception) {
                 }
                 Handler(Looper.getMainLooper()).postDelayed({
-                    if (!AppOpenManager.getInstance().isShowingAd && !isShowingAd){
+                    if (!AppOpenManager.getInstance().isShowingAd && !isShowingAd && !activity.isFinishing && !activity.isDestroyed){
+                        Log.d("===AOA","Show")
                         try {
                             val txt = dialogFullScreen?.findViewById<TextView>(R.id.txtLoading)
                             img?.visibility = View.INVISIBLE
