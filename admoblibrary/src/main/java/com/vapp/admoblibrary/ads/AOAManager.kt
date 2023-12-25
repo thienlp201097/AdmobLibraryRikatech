@@ -148,7 +148,7 @@ class AOAManager(private val activity: Activity,val appOpen: String,val delay: L
                 } catch (ignored: Exception) {
                 }
                 Handler(Looper.getMainLooper()).postDelayed({
-                    if (!AppOpenManager.getInstance().isShowingAd && !isShowingAd && !activity.isFinishing && !activity.isDestroyed){
+                    if (!AppOpenManager.getInstance().isShowingAd && !isShowingAd){
                         Log.d("===AOA","Show")
                         try {
                             val txt = dialogFullScreen?.findViewById<TextView>(R.id.txtLoading)
