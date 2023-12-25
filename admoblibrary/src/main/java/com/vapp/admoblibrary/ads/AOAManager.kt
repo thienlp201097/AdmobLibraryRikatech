@@ -24,7 +24,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class AOAManager(private val activity: Activity,val appOpen: String,val delay: Long,val timeOut: Long, val appOpenAdsListener: AppOpenAdsListener) {
+class AOAManager(private val activity: Activity,val appOpen: String,val timeOut: Long, val appOpenAdsListener: AppOpenAdsListener) {
     private var appOpenAd: AppOpenAd? = null
     var isShowingAd = true
     var isLoading = true
@@ -81,11 +81,8 @@ class AOAManager(private val activity: Activity,val appOpen: String,val delay: L
                     appOpenAd = ad
                     job.cancel()
                     Log.d("====Timeout", "isAdAvailable = true")
-                    CoroutineScope(Dispatchers.Main).launch {
-                        delay(delay)
-                        if (!AppOpenManager.getInstance().isShowingAd && !isShowingAd){
-                            showAdIfAvailable()
-                        }
+                    if (!AppOpenManager.getInstance().isShowingAd && !isShowingAd){
+                        showAdIfAvailable()
                     }
                 }
             })
@@ -158,6 +155,8 @@ class AOAManager(private val activity: Activity,val appOpen: String,val delay: L
                         }
                         setOnPaidEventListener { appOpenAdsListener.onAdPaid(it,adUnitId) }
                         show(activity)
+                    }else{
+                        appOpenAdsListener.onAdsFailed("AOA can't show")
                     }
                 }, 800)
             }
