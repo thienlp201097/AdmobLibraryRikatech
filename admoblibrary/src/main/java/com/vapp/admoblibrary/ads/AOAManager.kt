@@ -24,7 +24,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class AOAManager(private val activity: Activity,val appOpen: String,val delay: Long, val appOpenAdsListener: AppOpenAdsListener) {
+class AOAManager(private val activity: Activity,val appOpen: String,val delay: Long,val timeOut: Long, val appOpenAdsListener: AppOpenAdsListener) {
     private var appOpenAd: AppOpenAd? = null
     var isShowingAd = true
     var isLoading = true
@@ -47,16 +47,17 @@ class AOAManager(private val activity: Activity,val appOpen: String,val delay: L
             return
         }
         //Check timeout show inter
-//        CoroutineScope(Dispatchers.Main).launch() {
-//            delay(timeOut)
-//            if (isLoading && isStart) {
-//                isStart = false
-//                isLoading = false
-//                appOpenAdsListener.onAdsFailed()
-//                Log.d("====Timeout", "TimeOut")
-//            }
-//        }
+        val job = CoroutineScope(Dispatchers.Main).launch{
+            delay(timeOut)
+            if (isLoading && isStart) {
+                isStart = false
+                isLoading = false
+                appOpenAdsListener.onAdsFailed("Time out")
+                Log.d("====Timeout", "TimeOut")
+            }
+        }
         if (isAdAvailable) {
+            job.cancel()
             appOpenAdsListener.onAdsFailed("isAdAvailable true")
             return
         } else {
@@ -71,13 +72,14 @@ class AOAManager(private val activity: Activity,val appOpen: String,val delay: L
                         isStart = false
                         appOpenAdsListener.onAdsFailed(p0.message)
                     }
-
+                    job.cancel()
                     Log.d("====Timeout", "onAppOpenAdFailedToLoad: $p0")
                 }
 
                 override fun onAdLoaded(ad: AppOpenAd) {
                     super.onAdLoaded(ad)
                     appOpenAd = ad
+                    job.cancel()
                     Log.d("====Timeout", "isAdAvailable = true")
                     CoroutineScope(Dispatchers.Main).launch {
                         delay(delay)
