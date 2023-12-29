@@ -160,6 +160,8 @@ class AOAManager(private val activity: Activity,val appOpen: String,val timeOut:
                     }
                 }, 800)
             }
+        }else{
+            appOpenAdsListener.onAdsFailed("AOA can't show in background!")
         }
     }
 
