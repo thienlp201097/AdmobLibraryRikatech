@@ -93,6 +93,9 @@ class AOAManager(private val activity: Activity,val appOpen: String,val timeOut:
         Log.d("====Timeout", "$isShowingAd - $isAdAvailable")
         if (!isShowingAd && isAdAvailable && isLoading) {
             isLoading = false
+            if (AppOpenManager.getInstance().isInitialized) {
+                AppOpenManager.getInstance().isAppResumeEnabled = false
+            }
             Log.d("====Timeout", "will show ad ")
             val fullScreenContentCallback: FullScreenContentCallback =
                 object : FullScreenContentCallback() {
@@ -109,6 +112,9 @@ class AOAManager(private val activity: Activity,val appOpen: String,val timeOut:
                             isStart = false
                             appOpenAdsListener.onAdsClose()
                         }
+                        if (AppOpenManager.getInstance().isInitialized) {
+                            AppOpenManager.getInstance().isAppResumeEnabled = true
+                        }
                     }
 
                     override fun onAdFailedToShowFullScreenContent(p0: AdError) {
@@ -121,6 +127,9 @@ class AOAManager(private val activity: Activity,val appOpen: String,val timeOut:
                         if (isStart){
                             isStart = false
                             appOpenAdsListener.onAdsFailed(p0.message)
+                        }
+                        if (AppOpenManager.getInstance().isInitialized) {
+                            AppOpenManager.getInstance().isAppResumeEnabled = true
                         }
                     }
 

@@ -6,12 +6,12 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
-import com.vapp.admoblibrary.ads.admobnative.enumclass.GoogleENative
 import com.google.android.gms.ads.VideoController
 import com.google.android.gms.ads.nativead.MediaView
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
 import com.vapp.admoblibrary.R
+import com.vapp.admoblibrary.ads.admobnative.enumclass.GoogleENative
 
 class NativeFunc {
 
@@ -45,8 +45,16 @@ class NativeFunc {
             }
             if (nativeAd.mediaContent != null) {
                 if (size == GoogleENative.UNIFIED_MEDIUM) {
-                    adView.mediaView!!.setImageScaleType(ImageView.ScaleType.CENTER_INSIDE)
-                    adView.mediaView!!.mediaContent = nativeAd.mediaContent!!
+                    adView.mediaView?.let {
+                        it.setImageScaleType(ImageView.ScaleType.CENTER_INSIDE)
+                        val mediaContent = nativeAd.mediaContent
+                        if (mediaContent != null && mediaContent.hasVideoContent()) {
+                            // Create a MediaView and set its media content.
+                            val mediaView = MediaView(it.context)
+                            mediaView.mediaContent = mediaContent
+                            it.addView(mediaView)
+                        }
+                    }
                 }
             }
 
