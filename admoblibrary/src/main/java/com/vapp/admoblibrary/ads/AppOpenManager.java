@@ -161,48 +161,49 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
         this.fullScreenContentCallback = null;
     }
 
-
+    boolean isLoading = false;
     public void fetchAd(final boolean isSplash) {
         Log.d(TAG, "fetchAd: isSplash = " + isSplash);
-        if (isAdAvailable(isSplash)||appResumeAdId == null) {
+        if (isAdAvailable(isSplash) || appResumeAdId == null || AppOpenManager.this.appResumeAd!= null) {
+            Log.d(TAG, "AppOpenManager: Ad is ready or id = null");
             return;
         }
-        loadCallback =
-                new AppOpenAd.AppOpenAdLoadCallback() {
-                    /**
-                     * Called when an app open ad has loaded.
-                     *
-                     * @param ad the loaded app open ad.
-                     */
-                    @Override
-                    public void onAdLoaded(AppOpenAd ad) {
-                        Log.d(TAG, "onAppOpenAdLoaded: isSplash = " + isSplash);
-                        if (!isSplash) {
+        if (!isLoading){
+            Log.d(TAG, "===fetchAd: Loading");
+            isLoading = true;
+            loadCallback =
+                    new AppOpenAd.AppOpenAdLoadCallback() {
+                        /**
+                         * Called when an app open ad has loaded.
+                         *
+                         * @param ad the loaded app open ad.
+                         */
+                        @Override
+                        public void onAdLoaded(AppOpenAd ad) {
+                            Log.d(TAG, "AppOpenManager: Loaded");
                             AppOpenManager.this.appResumeAd = ad;
                             AppOpenManager.this.appResumeLoadTime = (new Date()).getTime();
-                        } else {
-                            AppOpenManager.this.splashAd = ad;
-                            AppOpenManager.this.splashLoadTime = (new Date()).getTime();
                         }
-                    }
 
-                    /**
-                     * Called when an app open ad has failed to load.
-                     *
-                     * @param loadAdError the error.
-                     */
-                    @Override
-                    public void onAdFailedToLoad(LoadAdError loadAdError) {
-                        // Handle the error.
-                        String a = "fail";
-                    }
+                        /**
+                         * Called when an app open ad has failed to load.
+                         *
+                         * @param loadAdError the error.
+                         */
+                        @Override
+                        public void onAdFailedToLoad(LoadAdError loadAdError) {
+                            // Handle the error.
+                            isLoading = false;
+                            Log.d(TAG, "AppOpenManager: onAdFailedToLoad");
+                            String a = "fail";
+                        }
 
-                };
+                    };
+            AppOpenAd.load(
+                    myApplication, appResumeAdId, adRequest,
+                    AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT, loadCallback);
+        }
 
-
-        AppOpenAd.load(
-                myApplication, appResumeAdId, adRequest,
-                AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT, loadCallback);
     }
 
 
@@ -285,6 +286,8 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                     new FullScreenContentCallback() {
                         @Override
                         public void onAdDismissedFullScreenContent() {
+                            isLoading = false;
+                            Log.d(TAG, "onAdShowedFullScreenContent: Dismiss");
                             try {
                                 dialogFullScreen.dismiss();
                                 dialogFullScreen = null;
@@ -298,11 +301,12 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                             }
                             isShowingAd = false;
                             fetchAd(isSplash);
-
                         }
 
                         @Override
                         public void onAdFailedToShowFullScreenContent(AdError adError) {
+                            isLoading = false;
+                            Log.d(TAG, "onAdShowedFullScreenContent: Show false");
                             try {
                                 dialogFullScreen.dismiss();
                                 dialogFullScreen = null;
@@ -313,17 +317,14 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                             if (fullScreenContentCallback != null) {
                                 fullScreenContentCallback.onAdFailedToShowFullScreenContent(adError);
                             }
+                            fetchAd(isSplash);
                         }
 
                         @Override
                         public void onAdShowedFullScreenContent() {
-                            Log.d(TAG, "onAdShowedFullScreenContent: isSplash = " + isSplash);
+                            Log.d(TAG, "onAdShowedFullScreenContent: Show");
                             isShowingAd = true;
-                            if (isSplash) {
-                                splashAd = null;
-                            } else {
-                                appResumeAd = null;
-                            }
+                            appResumeAd = null;
                         }
                     };
             showAdsResume(isSplash, callback);
@@ -338,21 +339,12 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
 
     private void showAdsResume(final boolean isSplash, final FullScreenContentCallback callback) {
         if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (isSplash) {
-                        splashAd.setFullScreenContentCallback(callback);
-                        if (currentActivity != null)
-                            showDialog(currentActivity);
-                            splashAd.show(currentActivity);
-                    } else {
-                        if (appResumeAd != null){
-                            appResumeAd.setFullScreenContentCallback(callback);
-                            if (currentActivity != null)
-                                showDialog(currentActivity);
-                                appResumeAd.show(currentActivity);
-                        }
+            new Handler().postDelayed(() -> {
+                if (appResumeAd != null){
+                    appResumeAd.setFullScreenContentCallback(callback);
+                    if (currentActivity != null){
+                        showDialog(currentActivity);
+                        appResumeAd.show(currentActivity);
                     }
                 }
             }, 100);

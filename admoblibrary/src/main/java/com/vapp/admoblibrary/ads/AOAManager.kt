@@ -123,10 +123,10 @@ class AOAManager(private val activity: Activity,val appOpen: String,val timeOut:
                         } catch (ignored: Exception) {
                         }
                         isShowingAd = true
-                        Log.d("====Timeout", "Failed... $p0")
                         if (isStart){
                             isStart = false
                             appOpenAdsListener.onAdsFailed(p0.message)
+                            Log.d("====Timeout", "Failed... $p0")
                         }
                         if (AppOpenManager.getInstance().isInitialized) {
                             AppOpenManager.getInstance().isAppResumeEnabled = true

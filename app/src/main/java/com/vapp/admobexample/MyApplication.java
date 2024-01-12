@@ -15,11 +15,7 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        AdmodUtils.initAdmob(this, 10000, true, isShowAds);
-        if (isShowAdsResume) {
-            AppOpenManager.getInstance().init(this, getString(R.string.test_ads_admob_app_open));
-            AppOpenManager.getInstance().disableAppResumeWithActivity(SplashActivity.class);
-        }
+
     }
 
     @Override

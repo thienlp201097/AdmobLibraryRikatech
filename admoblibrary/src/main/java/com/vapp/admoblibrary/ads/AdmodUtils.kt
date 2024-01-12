@@ -1929,59 +1929,51 @@ object AdmodUtils {
                     adCallback.onAdLoaded()
                     Handler(Looper.getMainLooper()).postDelayed({
                         mInterstitialAd = interstitialAd
-                        if (mInterstitialAd != null) {
-                            mInterstitialAd?.fullScreenContentCallback =
-                                object : FullScreenContentCallback() {
-                                    override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                                        adCallback.onAdFail()
-                                        isAdShowing = false
-                                        if (AppOpenManager.getInstance().isInitialized) {
-                                            AppOpenManager.getInstance().isAppResumeEnabled = true
-                                        }
-                                        isAdShowing = false
-                                        if (mInterstitialAd != null) {
-                                            mInterstitialAd = null
-                                        }
-                                        Log.e("Admodfail", "onAdFailedToLoad" + adError.message)
-                                        Log.e("Admodfail", "errorCodeAds" + adError.cause)
+                        mInterstitialAd?.fullScreenContentCallback =
+                            object : FullScreenContentCallback() {
+                                override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                                    adCallback.onAdFail()
+                                    isAdShowing = false
+                                    if (AppOpenManager.getInstance().isInitialized) {
+                                        AppOpenManager.getInstance().isAppResumeEnabled = true
                                     }
-
-                                    override fun onAdDismissedFullScreenContent() {
-                                        lastTimeShowInterstitial = Date().time
-                                        adCallback.onAdClosed()
-                                        adCallback.onEventClickAdClosed()
-                                        if (mInterstitialAd != null) {
-                                            mInterstitialAd = null
-                                        }
-                                        isAdShowing = false
-                                        if (AppOpenManager.getInstance().isInitialized) {
-                                            AppOpenManager.getInstance().isAppResumeEnabled = true
-                                        }
+                                    isAdShowing = false
+                                    if (mInterstitialAd != null) {
+                                        mInterstitialAd = null
                                     }
+                                    Log.e("Admodfail", "onAdFailedToLoad" + adError.message)
+                                    Log.e("Admodfail", "errorCodeAds" + adError.cause)
+                                }
 
-                                    override fun onAdShowedFullScreenContent() {
-                                        adCallback.onAdShowed()
-                                        super.onAdShowedFullScreenContent()
+                                override fun onAdDismissedFullScreenContent() {
+                                    lastTimeShowInterstitial = Date().time
+                                    adCallback.onAdClosed()
+                                    adCallback.onEventClickAdClosed()
+                                    if (mInterstitialAd != null) {
+                                        mInterstitialAd = null
+                                    }
+                                    isAdShowing = false
+                                    if (AppOpenManager.getInstance().isInitialized) {
+                                        AppOpenManager.getInstance().isAppResumeEnabled = true
                                     }
                                 }
-                            if (activity.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) && mInterstitialAd != null) {
-                                mInterstitialAd!!.show(activity)
-                                isAdShowing = true
-                            } else {
-                                mInterstitialAd = null
-                                dismissAdDialog()
-                                isAdShowing = false
-                                if (AppOpenManager.getInstance().isInitialized) {
-                                    AppOpenManager.getInstance().isAppResumeEnabled = true
+
+                                override fun onAdShowedFullScreenContent() {
+                                    adCallback.onAdShowed()
+                                    super.onAdShowedFullScreenContent()
                                 }
                             }
+                        if (activity.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) && mInterstitialAd != null) {
+                            mInterstitialAd!!.show(activity)
+                            isAdShowing = true
                         } else {
+                            mInterstitialAd = null
                             dismissAdDialog()
-                            adCallback.onAdFail()
                             isAdShowing = false
                             if (AppOpenManager.getInstance().isInitialized) {
                                 AppOpenManager.getInstance().isAppResumeEnabled = true
                             }
+                            adCallback.onAdFail()
                         }
                     }, 800)
                 }
@@ -2327,6 +2319,7 @@ object AdmodUtils {
 
                                     override fun onAdShowedFullScreenContent() {
                                         super.onAdShowedFullScreenContent()
+                                        Log.e("===onAdShowed", "onAdShowedFullScreenContent")
                                         adCallback.onAdShowed()
                                         Handler(Looper.getMainLooper()).postDelayed({
                                             dismissAdDialog()
@@ -2346,6 +2339,7 @@ object AdmodUtils {
                                 if (AppOpenManager.getInstance().isInitialized) {
                                     AppOpenManager.getInstance().isAppResumeEnabled = true
                                 }
+                                adCallback.onAdFail("Interstitial can't show in background")
                             }
                         } else {
                             dismissAdDialog()
