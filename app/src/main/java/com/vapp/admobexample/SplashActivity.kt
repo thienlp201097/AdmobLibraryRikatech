@@ -2,6 +2,7 @@ package com.vapp.admobexample
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.ads.AdValue
@@ -90,8 +91,9 @@ class SplashActivity : AppCompatActivity() {
                 )
             }
 
-            override fun onPaid(adValue: AdValue, adUnitAds: String) {}
-        }, true)
+            override fun onPaid(adValue: AdValue, adUnitAds: String) {
+                }
+        }, false)
     }
 
     fun showAOA(){

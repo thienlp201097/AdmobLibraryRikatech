@@ -3,6 +3,7 @@ package com.vapp.admobexample.view;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -164,6 +165,11 @@ public class MainActivity extends AppCompatActivity {
                         Utils.getInstance().showMessenger(MainActivity.this, "Reward");
 
                     }
+
+                    @Override
+                    public void onPaid(AdValue adValue, String adUnitAds) {
+                        Toast.makeText(MainActivity.this,adValue.getValueMicros() + adValue.getCurrencyCode(),Toast.LENGTH_SHORT).show();
+                    }
                 }, true);
 
             }
@@ -183,16 +189,14 @@ public class MainActivity extends AppCompatActivity {
         btn_LoadInterReward.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AdmodUtils.loadAdInterstitialReward(MainActivity.this, getString(R.string.test_ads_admob_inter_reward_id), new AdLoadCallback() {
+                AdmodUtils.loadAdInterstitialReward(MainActivity.this, AdsManager.INSTANCE.getInterRewardHolder(), new AdLoadCallback() {
                     @Override
                     public void onAdFail(String message) {
-                        startActivity(new Intent(MainActivity.this, OtherActivity.class));
-                        Utils.getInstance().showMessenger(MainActivity.this, "onAdFail");
+
                     }
 
                     @Override
                     public void onAdLoaded() {
-                        Utils.getInstance().showMessenger(MainActivity.this, "Reward Loaded");
                         //show dialog
                     }
                 });
@@ -203,28 +207,29 @@ public class MainActivity extends AppCompatActivity {
         btn_ShowInterReward.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (AdmodUtils.mInterstitialRewardAd != null) {
-                    AdmodUtils.showAdInterstitialRewardWithCallback(AdmodUtils.mInterstitialRewardAd, MainActivity.this, new RewardAdCallback() {
-                        @Override
-                        public void onAdClosed() {
-                            startActivity(new Intent(MainActivity.this, OtherActivity.class));
-                        }
+                AdmodUtils.showAdInterstitialRewardWithCallback( MainActivity.this,AdsManager.INSTANCE.getInterRewardHolder(), new RewardAdCallback() {
+                    @Override
+                    public void onAdClosed() {
+                        startActivity(new Intent(MainActivity.this, OtherActivity.class));
+                    }
 
-                        @Override
-                        public void onAdFail(String message) {
-                            Utils.getInstance().showMessenger(MainActivity.this, "onAdFail");
-                            startActivity(new Intent(MainActivity.this, OtherActivity.class));
-                        }
+                    @Override
+                    public void onAdFail(String message) {
+                        Utils.getInstance().showMessenger(MainActivity.this, "onAdFail");
+                        startActivity(new Intent(MainActivity.this, OtherActivity.class));
+                    }
 
-                        @Override
-                        public void onEarned() {
-                            Utils.getInstance().showMessenger(MainActivity.this, "onEarned");
-                            //bool true
-                        }
-                    });
-                } else {
-                    startActivity(new Intent(MainActivity.this, OtherActivity.class));
-                }
+                    @Override
+                    public void onEarned() {
+                        Utils.getInstance().showMessenger(MainActivity.this, "onEarned");
+                        //bool true
+                    }
+
+                    @Override
+                    public void onPaid(AdValue adValue, String adUnitAds) {
+                        Toast.makeText(MainActivity.this, adValue.getValueMicros() + adValue.getCurrencyCode(),Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
 

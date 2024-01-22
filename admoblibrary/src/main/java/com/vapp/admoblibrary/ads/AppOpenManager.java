@@ -34,37 +34,27 @@ import java.util.List;
 
 public class AppOpenManager implements Application.ActivityLifecycleCallbacks, LifecycleObserver {
     private static final String TAG = "AppOpenManager";
-
     private static volatile AppOpenManager INSTANCE;
     private AppOpenAd appResumeAd = null;
     private AppOpenAd splashAd = null;
     private AppOpenAd.AppOpenAdLoadCallback loadCallback;
     private FullScreenContentCallback fullScreenContentCallback;
-
     private String appResumeAdId;
-
     private Activity currentActivity;
-
     private Application myApplication;
-
     private static boolean isShowingAd = false;
     public boolean isShowingAdsOnResume = false;
     public boolean isShowingAdsOnResumeBanner = false;
     private long appResumeLoadTime = 0;
     private long splashLoadTime = 0;
     private int splashTimeout = 0;
-
     private boolean isInitialized = false;
     public boolean isAppResumeEnabled = true;
-
     private final List<Class> disabledAppOpenList;
     private Class splashActivity;
-
     private boolean isTimeout = false;
     private static final int TIMEOUT_MSG = 11;
-
     private Dialog dialogFullScreen;
-
     private Handler timeoutHandler = new Handler(msg -> {
         if (msg.what == TIMEOUT_MSG) {
             isTimeout = true;

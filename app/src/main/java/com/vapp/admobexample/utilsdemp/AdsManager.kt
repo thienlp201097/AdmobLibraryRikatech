@@ -27,6 +27,7 @@ import com.vapp.admoblibrary.ads.model.AppOpenAppHolder
 import com.vapp.admoblibrary.ads.model.BannerHolder
 import com.vapp.admoblibrary.ads.model.InterHolder
 import com.vapp.admoblibrary.ads.model.NativeHolder
+import com.vapp.admoblibrary.ads.model.RewardedInterstitialHolder
 import com.vapp.admoblibrary.ads.nativefullscreen.NativeFullScreenCallBack
 import com.vapp.admoblibrary.ads.remote.BannerPlugin
 import com.vapp.admoblibrary.ads.remote.BannerRemoteConfig
@@ -42,6 +43,7 @@ object AdsManager {
     var bannerHolder = BannerHolder("", "")
     var aoaHolder = AppOpenAppHolder("", "")
     var interholder = InterHolder("")
+    var interRewardHolder = RewardedInterstitialHolder("")
     fun loadAndShowBannerRemote(activity: Activity, id : String ,bannerConfig: BannerPlugin.BannerConfig?, view: ViewGroup, line: View){
         BannerPlugin(activity, view,id,bannerConfig,object : BannerRemoteConfig{
                 override fun onBannerAdLoaded(adSize: AdSize?) {

@@ -34,10 +34,8 @@ import com.google.android.gms.ads.AdValue
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
-import com.google.android.gms.ads.MediaAspectRatio
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.OnPaidEventListener
-import com.google.android.gms.ads.OnUserEarnedRewardListener
 import com.google.android.gms.ads.RequestConfiguration
 import com.google.android.gms.ads.VideoOptions
 import com.google.android.gms.ads.formats.NativeAdOptions
@@ -51,7 +49,6 @@ import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoadCallback
 import com.vapp.admoblibrary.AdsInterCallBack
-import com.vapp.admoblibrary.BuildConfig
 import com.vapp.admoblibrary.R
 import com.vapp.admoblibrary.ads.admobnative.NativeFunc.Companion.populateNativeAdView
 import com.vapp.admoblibrary.ads.admobnative.enumclass.CollapsibleBanner
@@ -60,16 +57,17 @@ import com.vapp.admoblibrary.ads.model.BannerAdCallback
 import com.vapp.admoblibrary.ads.model.BannerHolder
 import com.vapp.admoblibrary.ads.model.InterHolder
 import com.vapp.admoblibrary.ads.model.NativeHolder
+import com.vapp.admoblibrary.ads.model.RewardedInterstitialHolder
 import com.vapp.admoblibrary.ads.nativefullscreen.NativeFullScreenCallBack
 import com.vapp.admoblibrary.ads.remote.BannerAdView
 import com.vapp.admoblibrary.ads.remote.BannerPlugin
 import com.vapp.admoblibrary.ads.remote.BannerRemoteConfig
-import com.vapp.admoblibrary.utils.DialogCallback
-import com.vapp.admoblibrary.utils.DialogType
 import com.vapp.admoblibrary.utils.SweetAlert.SweetAlertDialog
-import com.vapp.admoblibrary.utils.Utils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.util.Date
@@ -1458,11 +1456,15 @@ object AdmodUtils {
 
     @JvmStatic
     fun dismissAdDialog() {
-        if (dialog != null && dialog!!.isShowing) {
-            dialog!!.dismiss()
-        }
-        if (dialogFullScreen != null && dialogFullScreen?.isShowing == true) {
-            dialogFullScreen?.dismiss()
+        try {
+            if (dialog != null && dialog!!.isShowing) {
+                dialog!!.dismiss()
+            }
+            if (dialogFullScreen != null && dialogFullScreen?.isShowing == true) {
+                dialogFullScreen?.dismiss()
+            }
+        }catch (_: Exception){
+
         }
     }
     @JvmStatic
@@ -1510,7 +1512,8 @@ object AdmodUtils {
                 override fun onAdLoaded(rewardedAd: RewardedAd) {
                     mRewardedAd = rewardedAd
                     if (mRewardedAd != null) {
-                        mRewardedAd!!.fullScreenContentCallback =
+                        mRewardedAd?.setOnPaidEventListener { adCallback2.onPaid(it, mRewardedAd?.adUnitId) }
+                        mRewardedAd?.fullScreenContentCallback =
                             object : FullScreenContentCallback() {
                                 override fun onAdShowedFullScreenContent() {
                                     isAdShowing = true
@@ -1577,31 +1580,23 @@ object AdmodUtils {
     @JvmStatic
     fun loadAdInterstitialReward(
         activity: Context,
-        admobId: String,
+        mInterstitialRewardAd: RewardedInterstitialHolder,
         adLoadCallback: AdLoadCallback
     ) {
-        var admobId = admobId
+        var admobId = mInterstitialRewardAd.ads
         if (!isShowAds || !isNetworkConnected(activity)) {
             return
         }
+        if (mInterstitialRewardAd.inter != null) {
+            Log.d("===AdsInter", "mInterstitialRewardAd not null")
+            return
+        }
+        if (adRequest == null) {
+            initAdRequest(timeOut)
+        }
+        mInterstitialRewardAd.isLoading = true
         if (isTesting) {
             admobId = activity.getString(R.string.test_ads_admob_inter_reward_id)
-        } else {
-            if (admobId == activity.getString(R.string.test_ads_admob_inter_reward_id) && !BuildConfig.DEBUG) {
-                Utils.getInstance().showDialogTitle(
-                    activity,
-                    "Warning",
-                    "Build bản release nhưng đang để id test ads",
-                    "Đã biết",
-                    DialogType.WARNING_TYPE,
-                    false,
-                    "",
-                    object : DialogCallback {
-                        override fun onClosed() {}
-                        override fun cancel() {}
-                    })
-                return
-            }
         }
         RewardedInterstitialAd.load(
             activity,
@@ -1609,62 +1604,151 @@ object AdmodUtils {
             adRequest!!,
             object : RewardedInterstitialAdLoadCallback() {
                 override fun onAdLoaded(interstitialRewardAd: RewardedInterstitialAd) {
-                    mInterstitialRewardAd = interstitialRewardAd
+                    mInterstitialRewardAd.inter = interstitialRewardAd
+                    mInterstitialRewardAd.mutable.value = interstitialRewardAd
+                    mInterstitialRewardAd.isLoading = false
                     adLoadCallback.onAdLoaded()
                     Log.i("adLog", "onAdLoaded")
-                    // Toast.makeText(activity, "success load ads", Toast.LENGTH_SHORT).show();
                 }
 
                 override fun onAdFailedToLoad(loadAdError: LoadAdError) {
-                    // Handle the error
-                    Log.i("adLog", loadAdError.message)
-                    val error = String.format(
-                        "domain: %s, code: %d, message: %s",
-                        loadAdError.domain, loadAdError.message, loadAdError.message
-                    )
-                    //                Toast.makeText(
-//                        activity, "onAdFailedToLoad() with error: " + error, Toast.LENGTH_SHORT)
-//                        .show();
+                    mInterstitialRewardAd.inter = null
+                    mInterstitialRewardAd.isLoading = false
+                    mInterstitialRewardAd.mutable.value = null
                     adLoadCallback.onAdFail(loadAdError.message)
                 }
             })
     }
     @JvmStatic
     fun showAdInterstitialRewardWithCallback(
-        kInterstitialRewardAd: RewardedInterstitialAd?,
-        activity: Activity,
+        activity: Activity,mInterstitialRewardAd : RewardedInterstitialHolder,
         adCallback: RewardAdCallback
     ) {
+        if (adRequest == null) {
+            initAdRequest(timeOut)
+        }
         if (!isShowAds || !isNetworkConnected(activity)) {
-            adCallback.onAdClosed()
+            if (AppOpenManager.getInstance().isInitialized) {
+                AppOpenManager.getInstance().isAppResumeEnabled = true
+            }
+            adCallback.onAdFail("No internet or isShowAds = false")
             return
         }
-        if (kInterstitialRewardAd != null) {
-            kInterstitialRewardAd.show(
-                activity,
-                OnUserEarnedRewardListener { adCallback.onEarned() })
-            kInterstitialRewardAd.fullScreenContentCallback = object : FullScreenContentCallback() {
-                override fun onAdDismissedFullScreenContent() {
-                    adCallback.onAdClosed()
-                    isAdShowing = false
-                    Log.d("TAG", "The ad was dismissed.")
-                }
 
-                override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                    adCallback.onAdFail(adError.message)
-                    isAdShowing = false
-                    mInterstitialAd = null
-                    Log.d("TAG", "The ad failed to show.")
-                }
-
-                override fun onAdShowedFullScreenContent() {
-                    mInterstitialAd = null
-                    isAdShowing = true
-                    Log.d("TAG", "The ad was shown.")
+        if (AppOpenManager.getInstance().isInitialized) {
+            if (!AppOpenManager.getInstance().isAppResumeEnabled) {
+                return
+            } else {
+                isAdShowing = false
+                if (AppOpenManager.getInstance().isInitialized) {
+                    AppOpenManager.getInstance().isAppResumeEnabled = false
                 }
             }
-        } else {
-            // Toast.makeText(activity, "Ad did not load", Toast.LENGTH_SHORT).show();
+        }
+
+        CoroutineScope(Dispatchers.IO).launch{
+            withContext(Dispatchers.Main){
+                if (mInterstitialRewardAd.isLoading){
+                    dialogLoading(activity)
+                    delay(800)
+
+                    mInterstitialRewardAd.mutable.observe(activity as LifecycleOwner){reward: RewardedInterstitialAd? ->
+                        reward?.let {
+                            mInterstitialRewardAd.mutable.removeObservers((activity as LifecycleOwner))
+                            it.setOnPaidEventListener { value ->
+                                adCallback.onPaid(value,mInterstitialRewardAd.inter?.adUnitId)
+                            }
+                            mInterstitialRewardAd.inter?.fullScreenContentCallback = object : FullScreenContentCallback() {
+                                override fun onAdDismissedFullScreenContent() {
+                                    mInterstitialRewardAd.inter = null
+                                    mInterstitialRewardAd.mutable.removeObservers((activity as LifecycleOwner))
+                                    mInterstitialRewardAd.mutable.value = null
+                                    if (AppOpenManager.getInstance().isInitialized) {
+                                        AppOpenManager.getInstance().isAppResumeEnabled = true
+                                    }
+                                    isAdShowing = false
+                                    dismissAdDialog()
+                                    adCallback.onAdClosed()
+                                    Log.d("TAG", "The ad was dismissed.")
+                                }
+
+                                override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                                    mInterstitialRewardAd.inter = null
+                                    mInterstitialRewardAd.mutable.removeObservers((activity as LifecycleOwner))
+                                    mInterstitialRewardAd.mutable.value = null
+                                    if (AppOpenManager.getInstance().isInitialized) {
+                                        AppOpenManager.getInstance().isAppResumeEnabled = true
+                                    }
+                                    isAdShowing = false
+                                    dismissAdDialog()
+                                    adCallback.onAdFail(adError.message)
+                                    Log.d("TAG", "The ad failed to show.")
+                                }
+
+                                override fun onAdShowedFullScreenContent() {
+                                    isAdShowing = true
+                                    Handler(Looper.getMainLooper()).postDelayed({
+                                        dismissAdDialog()
+                                    },800)
+                                    Log.d("TAG", "The ad was shown.")
+                                }
+                            }
+                            it.show(activity) { adCallback.onEarned() }
+                        }
+                    }
+                }else {
+                    if (mInterstitialRewardAd.inter != null) {
+                        dialogLoading(activity)
+                        delay(800)
+
+                        mInterstitialRewardAd.inter?.setOnPaidEventListener {
+                            adCallback.onPaid(it,mInterstitialRewardAd.inter?.adUnitId)
+                        }
+                        mInterstitialRewardAd.inter?.fullScreenContentCallback = object : FullScreenContentCallback() {
+                            override fun onAdDismissedFullScreenContent() {
+                                mInterstitialRewardAd.inter = null
+                                mInterstitialRewardAd.mutable.removeObservers((activity as LifecycleOwner))
+                                mInterstitialRewardAd.mutable.value = null
+                                if (AppOpenManager.getInstance().isInitialized) {
+                                    AppOpenManager.getInstance().isAppResumeEnabled = true
+                                }
+                                isAdShowing = false
+                                dismissAdDialog()
+                                adCallback.onAdClosed()
+                                Log.d("TAG", "The ad was dismissed.")
+                            }
+
+                            override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                                mInterstitialRewardAd.inter = null
+                                mInterstitialRewardAd.mutable.removeObservers((activity as LifecycleOwner))
+                                mInterstitialRewardAd.mutable.value = null
+                                if (AppOpenManager.getInstance().isInitialized) {
+                                    AppOpenManager.getInstance().isAppResumeEnabled = true
+                                }
+                                isAdShowing = false
+                                dismissAdDialog()
+                                adCallback.onAdFail(adError.message)
+                                Log.d("TAG", "The ad failed to show.")
+                            }
+
+                            override fun onAdShowedFullScreenContent() {
+                                isAdShowing = true
+                                Log.d("TAG", "The ad was shown.")
+                            }
+                        }
+                        mInterstitialRewardAd.inter?.show(activity) { adCallback.onEarned() }
+
+                    } else {
+                        isAdShowing = false
+                        adCallback.onAdFail("None Show")
+                        dismissAdDialog()
+                        if (AppOpenManager.getInstance().isInitialized) {
+                            AppOpenManager.getInstance().isAppResumeEnabled = true
+                        }
+                        Log.d("TAG", "Ad did not load.")
+                    }
+                }
+            }
         }
     }
     @JvmStatic
