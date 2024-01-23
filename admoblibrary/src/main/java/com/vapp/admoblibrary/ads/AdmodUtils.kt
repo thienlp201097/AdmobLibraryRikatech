@@ -1296,10 +1296,10 @@ object AdmodUtils {
             if (AppOpenManager.getInstance().isInitialized) {
                 AppOpenManager.getInstance().isAppResumeEnabled = true
             }
-            adCallback!!.onAdFail("No internet")
+            adCallback?.onAdFail("No internet")
             return
         }
-        adCallback!!.onAdLoaded()
+        adCallback?.onAdLoaded()
         val handler = Handler(Looper.getMainLooper())
         //Check timeout show inter
         val runnable = Runnable {
@@ -1311,7 +1311,7 @@ object AdmodUtils {
                 interHolder.mutable.removeObservers((activity as LifecycleOwner))
                 isAdShowing = false
                 dismissAdDialog()
-                adCallback.onAdFail("timeout")
+                adCallback?.onAdFail("timeout")
             }
         }
         handler.postDelayed(runnable, timeout)
@@ -1337,7 +1337,7 @@ object AdmodUtils {
                                 interHolder.inter = null
                                 interHolder.mutable.removeObservers((activity as LifecycleOwner))
                                 interHolder.mutable.value = null
-                                adCallback.onEventClickAdClosed()
+                                adCallback?.onEventClickAdClosed()
                                 dismissAdDialog()
                                 Log.d("TAG", "The ad was dismissed.")
                             }
@@ -1356,16 +1356,16 @@ object AdmodUtils {
                                 Log.e("Admodfail", "errorCodeAds" + adError.cause)
                                 interHolder.mutable.removeObservers((activity as LifecycleOwner))
                                 interHolder.mutable.value = null
-                                adCallback.onAdFail(adError.message)
+                                adCallback?.onAdFail(adError.message)
                             }
 
                             override fun onAdShowedFullScreenContent() {
                                 handler.removeCallbacksAndMessages(null)
                                 isAdShowing = true
-                                adCallback.onAdShowed()
+                                adCallback?.onAdShowed()
                                 try {
                                     aBoolean.setOnPaidEventListener {
-                                            adValue -> adCallback.onPaid(adValue,interHolder.inter?.adUnitId)
+                                            adValue -> adCallback?.onPaid(adValue,interHolder.inter?.adUnitId)
                                     }
                                 } catch (e: Exception) {
                                 }
@@ -1391,7 +1391,7 @@ object AdmodUtils {
                 dialogLoading(activity)
             }
             Handler(Looper.getMainLooper()).postDelayed({
-                interHolder.inter!!.fullScreenContentCallback =
+                interHolder.inter?.fullScreenContentCallback =
                     object : FullScreenContentCallback() {
                         override fun onAdDismissedFullScreenContent() {
                             isAdShowing = false
@@ -1401,7 +1401,7 @@ object AdmodUtils {
                             isClick = false
                             interHolder.mutable.removeObservers((activity as LifecycleOwner))
                             interHolder.inter = null
-                            adCallback.onEventClickAdClosed()
+                            adCallback?.onEventClickAdClosed()
                             dismissAdDialog()
                         }
 
@@ -1415,7 +1415,7 @@ object AdmodUtils {
                             interHolder.mutable.removeObservers((activity as LifecycleOwner))
                             isAdShowing = false
                             dismissAdDialog()
-                            adCallback.onAdFail(adError.message)
+                            adCallback?.onAdFail(adError.message)
                             Log.e("Admodfail", "onAdFailedToLoad" + adError.message)
                             Log.e("Admodfail", "errorCodeAds" + adError.cause)
                         }
@@ -1423,14 +1423,13 @@ object AdmodUtils {
                         override fun onAdShowedFullScreenContent() {
                             handler.removeCallbacksAndMessages(null)
                             isAdShowing = true
-                            adCallback.onAdShowed()
+                            adCallback?.onAdShowed()
                         }
                     }
                 showInterstitialAdNew(activity, interHolder.inter, adCallback)
             }, 400)
         }
     }
-    val scope = CoroutineScope(Dispatchers.Main)
     @JvmStatic
     private fun showInterstitialAdNew(
         activity: Activity,
@@ -1440,8 +1439,8 @@ object AdmodUtils {
         if (ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) && mInterstitialAd != null) {
             isAdShowing = true
             Handler(Looper.getMainLooper()).postDelayed({
-                callback!!.onStartAction()
-                mInterstitialAd.setOnPaidEventListener { adValue -> callback.onPaid(adValue,mInterstitialAd.adUnitId) }
+                callback?.onStartAction()
+                mInterstitialAd.setOnPaidEventListener { adValue -> callback?.onPaid(adValue,mInterstitialAd.adUnitId) }
                 mInterstitialAd.show(activity)
             },400)
         } else {
@@ -1450,7 +1449,7 @@ object AdmodUtils {
                 AppOpenManager.getInstance().isAppResumeEnabled = true
             }
             dismissAdDialog()
-            callback!!.onAdFail("onResume")
+            callback?.onAdFail("onResume")
         }
     }
 
@@ -1552,7 +1551,7 @@ object AdmodUtils {
                             if (AppOpenManager.getInstance().isInitialized) {
                                 AppOpenManager.getInstance().isAppResumeEnabled = false
                             }
-                            mRewardedAd!!.show(activity) { adCallback2.onEarned() }
+                            mRewardedAd?.show(activity) { adCallback2.onEarned() }
                             isAdShowing = true
                         } else {
                             mRewardedAd = null
@@ -1959,7 +1958,7 @@ object AdmodUtils {
                 AppOpenManager.getInstance().isAppResumeEnabled = true
             }
             dismissAdDialog()
-            callback!!.onAdFail()
+            callback?.onAdFail()
         }
     }
     @JvmStatic
