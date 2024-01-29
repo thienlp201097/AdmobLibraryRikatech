@@ -59,9 +59,6 @@
         <activity android:name=".utilsdemp.UtilsDemoActivity" />
         <activity android:name=".view.NativeGridActivity" />
 
-        <meta-data
-            android:name="com.google.android.gms.ads.flag.NATIVE_AD_DEBUGGER_ENABLED"
-            android:value="false" />
     </application>
 
 </manifest>
