@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
             result -> {
                 if (result.getResultCode() == 5) {
                     AdsManager.INSTANCE.loadAndShowNative(this,viewNativeAds,AdsManager.INSTANCE.getNativeHolder());
-                    AdsManager.showAdBanner(this,AdsManager.INSTANCE.getBannerHolder(), findViewById(R.id.banner),findViewById(R.id.line));
+
                 }
             });
     @Override
@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
         btn_LoadInterReward.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AdmodUtils.loadAdInterstitialReward(MainActivity.this, AdsManager.INSTANCE.getInterRewardHolder(), new AdLoadCallback() {
+                AdmodUtils.loadAdInterstitialRewardDeviceId(MainActivity.this, AdsManager.INSTANCE.getInterRewardHolder(),true, new AdLoadCallback() {
                     @Override
                     public void onAdFail(String message) {
 
@@ -266,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
         btn_LoadAndShowNative.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AdmodUtils.loadAndShowNativeAdsWithLayoutAds(MainActivity.this, AdsManager.INSTANCE.getNativeHolder(), viewNativeAds, R.layout.ad_template_medium, GoogleENative.UNIFIED_MEDIUM, new NativeAdCallback() {
+                AdmodUtils.loadAndShowNativeAdsWithLayoutAdsDeviceId(MainActivity.this, AdsManager.INSTANCE.getNativeHolder(), viewNativeAds, R.layout.ad_template_medium, GoogleENative.UNIFIED_MEDIUM,true, new NativeAdCallback() {
                     @Override
                     public void onNativeAdLoaded() {
                     }
@@ -303,6 +303,8 @@ public class MainActivity extends AppCompatActivity {
                 AdsManager.INSTANCE.showAdNativeMedium(MainActivity.this,viewNativeAds,AdsManager.INSTANCE.getNativeHolder());
             }
         });
+//        AdsManager.showAdBanner(this,"", findViewById(R.id.banner),findViewById(R.id.line));
+        AdsManager.showAdBannerCollapsible(this,"", findViewById(R.id.banner),findViewById(R.id.line));
 //        AdmodUtils.loadAndShowBannerRemote(this,"","", RemoteConfigManager.INSTANCE.getBannerConfig("test_banner_2"), findViewById(R.id.banner),findViewById(R.id.line));
     }
     private void showDialogRate() {

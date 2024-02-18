@@ -37,9 +37,7 @@ object AdsManager {
     val mutable_inter1: MutableLiveData<InterstitialAd> = MutableLiveData()
     var check_inter1 = false
 
-    var nativeHolder = NativeHolder(
-        "ca-app-pub-3492149301591401/9251865600"
-    )
+    var nativeHolder = NativeHolder("")
     var bannerHolder = BannerHolder("", "")
     var aoaHolder = AppOpenAppHolder("", "")
     var interholder = InterHolder("")
@@ -87,7 +85,7 @@ object AdsManager {
     }
 
     fun loadInter(context: Context, interHolder: InterHolder) {
-        AdmodUtils.loadAndGetAdInterstitial(context, interHolder, object :
+        AdmodUtils.loadAndGetAdInterstitialDeviceId(context, interHolder,true, object :
             AdCallBackInterLoad {
             override fun onAdClosed() {
 
@@ -191,7 +189,7 @@ object AdsManager {
     }
 
     fun loadNative(activity: Context, nativeHolder: NativeHolder) {
-        AdmodUtils.loadAndGetNativeAds(activity, nativeHolder, object : NativeAdCallback {
+        AdmodUtils.loadAndGetNativeAdsDeviceId(activity, nativeHolder,true, object : NativeAdCallback {
                 override fun onLoadedAndGetNativeAd(ad: NativeAd?) {
                 }
 
@@ -281,13 +279,13 @@ object AdsManager {
     }
 
     @JvmStatic
-    fun showAdBannerCollapsible(activity: Activity, bannerHolder: BannerHolder, view: ViewGroup, line: View) {
+    fun showAdBannerCollapsible(activity: Activity, bannerHolder: String, view: ViewGroup, line: View) {
         if (AdmodUtils.isNetworkConnected(activity)) {
-            AdmodUtils.loadAdBannerCollapsibleMultiAds(
+            AdmodUtils.loadAdBannerCollapsibleDeviceId(
                 activity,
                 bannerHolder,
                 CollapsibleBanner.BOTTOM,
-                view,
+                view,true,
                 object : AdmodUtils.BannerCollapsibleAdCallback {
                     override fun onBannerAdLoaded(adSize: AdSize) {
                         view.visibility = View.VISIBLE
@@ -313,9 +311,9 @@ object AdsManager {
     }
 
     @JvmStatic
-    fun showAdBanner(activity: Activity, bannerHolder: BannerHolder, view: ViewGroup, line: View) {
+    fun showAdBanner(activity: Activity, bannerHolder: String, view: ViewGroup, line: View) {
         if (AdmodUtils.isNetworkConnected(activity)) {
-            AdmodUtils.loadAdBannerMultiAds(activity, bannerHolder, view, object :
+            AdmodUtils.loadAdBannerDeviceId(activity, bannerHolder, view,true, object :
                 AdmodUtils.BannerCallBack {
                 override fun onLoad() {
                     view.visibility = View.VISIBLE

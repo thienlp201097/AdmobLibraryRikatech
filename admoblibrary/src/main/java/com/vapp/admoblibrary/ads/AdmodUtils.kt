@@ -94,6 +94,7 @@ object AdmodUtils {
     var isTesting = false
     //List device test
     var testDevices: MutableList<String> = ArrayList()
+    var deviceId = ""
     //Reward Ads
     @JvmField
     var mRewardedAd: RewardedAd? = null
@@ -118,6 +119,7 @@ object AdmodUtils {
         isTesting = isDebug
         isShowAds = isEnableAds
         MobileAds.initialize(context!!) { initializationStatus: InitializationStatus? -> }
+        deviceId = getDeviceID(context)
         initListIdTest()
         val requestConfiguration = RequestConfiguration.Builder()
             .setTestDeviceIds(testDevices)
@@ -134,55 +136,8 @@ object AdmodUtils {
             .setHttpTimeoutMillis(timeOut)
             .build()
     }
-
     fun initListIdTest() {
-        testDevices.add("b9c69f38-a608-4dd4-b285-e51390521056")
-        testDevices.add("3FA34D6F6B2DCF88DED51A6AF263E3F0")
-        testDevices.add("482996BF6946FBE1B9FFD3975144D084")
-        testDevices.add("8619926A823916A224795141B93B7E0B")
-        testDevices.add("6399D5AEE5C75205B6C0F6755365CF21")
-        testDevices.add("2E379568A9F147A64B0E0C9571DE812D")
-        testDevices.add("A0518C6FA4396B91F82B9656DE83AFC7")
-        testDevices.add("C8EEFFC32272E3F1018FC72ECBD46F0C")
-        testDevices.add("284A7F7624F1131E7341ECDCBBCDF9A8")
-        testDevices.add("FEECD9793CCCE1E0FF8D392B0DB65559")
-        testDevices.add("D34AE6EC4CBA619D6243B03D4E31EED6")
-        testDevices.add("25F9EEACB11D46869D2854923615D839")
-        testDevices.add("A5CB09DBBE486E3421502DFF53070339")
-        testDevices.add("5798E06F645D797640A9C4B90B6CBEA7")
-        testDevices.add("E91FD94E971864C3880FB434D1C39A03")
-        testDevices.add("50ACF2DAA0884FF8B08F7C823E046DEA")
-        testDevices.add("97F07D4A6D0145F9DB7114B63D3D8E9B")
-        testDevices.add("4C96668EC6F204034D0CDCE1B94A4E65")
-        testDevices.add("00A52C89E14694316247D3CA3DF19F6B")
-        testDevices.add("C38A7BF0A80E31BD6B76AF6D0C1EE4A1")
-        testDevices.add("CE604BDCEFEE2B9125CCFFC53E96022E")
-        testDevices.add("39D7026016640CEA1502836C6EF3776D")
-        testDevices.add("A99C99C378EE9BDE5D3DE404D3A4A812")
-        testDevices.add("EB28F4CCC32F14DC98068A063B97E6CE")
-        //Oneplus GM1910
-        testDevices.add("D94D5042C9CC42DA75DCC0C4C233A500")
-        //Redmi note 4
-        testDevices.add("3FA34D6F6B2DCF88DED51A6AF263E3F0")
-        //Galaxy M11
-        testDevices.add("AF6ABEDE9EE7719295BF5E6F19A40452")
-        //Samsung SM-G610F
-        testDevices.add("2B018C52668CBA0B033F411955A5B561")
-        //Realme RMX1851
-        testDevices.add("39D7026016640CEA1502836C6EF3776D")
-        //Redmi 5 Plus
-        testDevices.add("CE604BDCEFEE2B9125CCFFC53E96022E")
-        //Redmi 9A
-        testDevices.add("13D67F452A299DB825A348917D52D640")
-        //POCO X3
-        testDevices.add("7D94825002E2407B75A9D5378194CFA9")
-        //Galaxy A21S
-        testDevices.add("98EFC23E56FA228C791F8C3AFBEE44D4")
-        //Oppo CPH1825
-        testDevices.add("805702C1D9D4FD957AFE14F3D69E79F7")
-        //Xiaomi Redmi Note 7
-        testDevices.add("9C62AAC36B9F23413AF4D66FE48F9E9B")
-        testDevices.add("876DD1EC6F9EC9570A03581F00388D43")
+        testDevices.add("D4A597237D12FDEC52BE6B2F15508BB")
     }
 
     //check open network
@@ -2674,5 +2629,378 @@ object AdmodUtils {
                 }
             }
         }
+    }
+
+    // check device id
+
+    @JvmStatic
+    fun loadAdBannerDeviceId(
+        activity: Activity,
+        bannerId: String?,
+        viewGroup: ViewGroup,
+        isCheckDeviceId : Boolean,
+        bannerAdCallback: BannerCallBack
+    ) {
+        var bannerId = bannerId
+        if (!isShowAds || !isNetworkConnected(activity)) {
+            viewGroup.visibility = View.GONE
+            bannerAdCallback.onFailed("None Show")
+            return
+        }
+        val mAdView = AdView(activity)
+        if (isTesting) {
+            bannerId = activity.getString(R.string.test_ads_admob_banner_id)
+        }else{
+            if (isCheckDeviceId){
+                testDevices.forEach {
+                    if (it == deviceId){
+                        bannerId = activity.getString(R.string.test_ads_admob_banner_id)
+                    }
+                }
+            }
+        }
+        mAdView.adUnitId = bannerId!!
+        val adSize = getAdSize(activity)
+        mAdView.setAdSize(adSize)
+        viewGroup.removeAllViews()
+        val tagView = activity.layoutInflater.inflate(R.layout.layoutbanner_loading, null, false)
+        viewGroup.addView(tagView, 0)
+        viewGroup.addView(mAdView, 1)
+        shimmerFrameLayout = tagView.findViewById(R.id.shimmer_view_container)
+        shimmerFrameLayout?.startShimmer()
+        mAdView.onPaidEventListener =
+            OnPaidEventListener { adValue -> bannerAdCallback.onPaid(adValue, mAdView) }
+        mAdView.adListener = object : AdListener() {
+            override fun onAdLoaded() {
+                shimmerFrameLayout?.stopShimmer()
+                viewGroup.removeView(tagView)
+                bannerAdCallback.onLoad()
+            }
+
+            override fun onAdFailedToLoad(adError: LoadAdError) {
+                Log.e(" Admod", "failloadbanner" + adError.message)
+                shimmerFrameLayout?.stopShimmer()
+                viewGroup.removeView(tagView)
+                bannerAdCallback.onFailed(adError.message)
+            }
+
+            override fun onAdOpened() {}
+            override fun onAdClicked() {
+                // Code to be executed when the user clicks on an ad.
+            }
+
+            override fun onAdClosed() {
+                // Code to be executed when the user is about to return
+                // to the app after tapping on an ad.
+            }
+        }
+        if (adRequest != null) {
+            mAdView.loadAd(adRequest!!)
+        }
+        Log.e(" Admod", "loadAdBanner")
+    }
+
+    @JvmStatic
+    fun loadAndGetNativeAdsDeviceId(
+        context: Context,
+        nativeHolder: NativeHolder,isCheckDeviceId : Boolean,
+        adCallback: NativeAdCallback
+    ) {
+        if (!isShowAds || !isNetworkConnected(context)) {
+            adCallback.onAdFail("No internet")
+            return
+        }
+        //If native is loaded return
+        if (nativeHolder.nativeAd != null) {
+            Log.d("===AdsLoadsNative", "Native not null")
+            return
+        }
+        if (isTesting) {
+            nativeHolder.ads = context.getString(R.string.test_ads_admob_native_id)
+        }else{
+            if (isCheckDeviceId){
+                testDevices.forEach {
+                    if (it == deviceId){
+                        nativeHolder.ads = context.getString(R.string.test_ads_admob_native_id)
+                    }
+                }
+            }
+        }
+        nativeHolder.isLoad = true
+        val adLoader: AdLoader = AdLoader.Builder(context, nativeHolder.ads)
+            .forNativeAd { nativeAd ->
+                nativeHolder.nativeAd = nativeAd
+                nativeHolder.isLoad = false
+                nativeHolder.native_mutable.value = nativeAd
+                nativeAd.setOnPaidEventListener { adValue: AdValue? -> adValue?.let {
+                    adCallback.onAdPaid(
+                        it,nativeHolder.ads)
+                } }
+                adCallback.onLoadedAndGetNativeAd(nativeAd)
+            }.withAdListener(object : AdListener() {
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    Log.e("Admodfail", "onAdFailedToLoad" + adError.message)
+                    Log.e("Admodfail", "errorCodeAds" + adError.cause)
+                    nativeHolder.nativeAd = null
+                    nativeHolder.isLoad = false
+                    nativeHolder.native_mutable.value = null
+                    adCallback.onAdFail(adError.message)
+                }
+            })
+            .withNativeAdOptions(NativeAdOptions.Builder().build()).build()
+        if (adRequest != null) {
+            adLoader.loadAd(adRequest!!)
+        }
+    }
+
+    @JvmStatic
+    fun loadAndGetAdInterstitialDeviceId(
+        activity: Context,
+        interHolder: InterHolder,isCheckDeviceId : Boolean,
+        adLoadCallback: AdCallBackInterLoad
+    ) {
+        isAdShowing = false
+        if (!isShowAds || !isNetworkConnected(activity)) {
+            adLoadCallback.onAdFail("None Show")
+            return
+        }
+        if (interHolder.inter != null) {
+            Log.d("===AdsInter", "inter not null")
+            return
+        }
+        interHolder.check = true
+        if (adRequest == null) {
+            initAdRequest(timeOut)
+        }
+        if (isTesting) {
+            interHolder.ads = activity.getString(R.string.test_ads_admob_inter_id)
+        }else{
+            if (isCheckDeviceId){
+                testDevices.forEach {
+                    if (it == deviceId){
+                        interHolder.ads = activity.getString(R.string.test_ads_admob_inter_id)
+                    }
+                }
+            }
+        }
+        idIntersitialReal = interHolder.ads
+        InterstitialAd.load(
+            activity,
+            idIntersitialReal!!,
+            adRequest!!,
+            object : InterstitialAdLoadCallback() {
+                override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                    if (isClick) {
+                        interHolder.mutable.value = interstitialAd
+                    }
+                    interHolder.inter = interstitialAd
+                    interHolder.check = false
+                    adLoadCallback.onAdLoaded(interstitialAd, false)
+                    Log.i("adLog", "onAdLoaded")
+                }
+
+                override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                    isAdShowing = false
+                    if (mInterstitialAd != null) {
+                        mInterstitialAd = null
+                    }
+                    interHolder.check = false
+                    if (isClick) {
+                        interHolder.mutable.value = null
+                    }
+                    adLoadCallback.onAdFail(loadAdError.message)
+                }
+            })
+    }
+
+    @JvmStatic
+    fun loadAndShowNativeAdsWithLayoutAdsDeviceId(
+        activity: Activity,
+        nativeHolder: NativeHolder,
+        viewGroup: ViewGroup,
+        layout: Int,
+        size: GoogleENative,isCheckDeviceId : Boolean,
+        adCallback: NativeAdCallback
+    ) {
+        Log.d("===Native", "Native1")
+        viewGroup.removeAllViews()
+        val tagView: View = if (size === GoogleENative.UNIFIED_MEDIUM) {
+            activity.layoutInflater.inflate(R.layout.layoutnative_loading_medium, null, false)
+        } else {
+            activity.layoutInflater.inflate(R.layout.layoutnative_loading_small, null, false)
+        }
+        viewGroup.addView(tagView, 0)
+        val shimmerFrameLayout =
+            tagView.findViewById<ShimmerFrameLayout>(R.id.shimmer_view_container)
+        shimmerFrameLayout.startShimmer()
+        if (!isShowAds || !isNetworkConnected(activity)) {
+            viewGroup.visibility = View.GONE
+            return
+        }
+        if (isTesting) {
+            nativeHolder.ads = activity.getString(R.string.test_ads_admob_native_id)
+        }else{
+            if (isCheckDeviceId){
+                testDevices.forEach {
+                    if (it == deviceId){
+                        nativeHolder.ads = activity.getString(R.string.test_ads_admob_native_id)
+                    }
+                }
+            }
+        }
+        val adLoader: AdLoader = AdLoader.Builder(activity, nativeHolder.ads)
+            .forNativeAd { nativeAd ->
+                adCallback.onNativeAdLoaded()
+                val adView = activity.layoutInflater
+                    .inflate(layout, null) as NativeAdView
+                populateNativeAdView(nativeAd, adView, GoogleENative.UNIFIED_MEDIUM)
+                shimmerFrameLayout.stopShimmer()
+                viewGroup.removeAllViews()
+                viewGroup.addView(adView)
+                nativeAd.setOnPaidEventListener { adValue: AdValue ->
+                    adCallback.onAdPaid(adValue,nativeHolder.ads)
+                }
+                //viewGroup.setVisibility(View.VISIBLE);
+            }.withAdListener(object : AdListener() {
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    Log.e("Admodfail", "onAdFailedToLoad" + adError.message)
+                    Log.e("Admodfail", "errorCodeAds" + adError.cause)
+                    shimmerFrameLayout.stopShimmer()
+                    viewGroup.removeAllViews()
+                    nativeHolder.isLoad = false
+                    adCallback.onAdFail(adError.message)
+                }
+            })
+            .withNativeAdOptions(NativeAdOptions.Builder().build()).build()
+        if (adRequest != null) {
+            adLoader.loadAd(adRequest!!)
+        }
+        Log.e("Admod", "loadAdNativeAds")
+    }
+
+    @JvmStatic
+    fun loadAdBannerCollapsibleDeviceId(
+        activity: Activity,
+        bannerId: String?,
+        collapsibleBannerSize: CollapsibleBanner,
+        viewGroup: ViewGroup,isCheckDeviceId : Boolean,
+        callback: BannerCollapsibleAdCallback
+    ) {
+        var bannerId = bannerId
+        if (!isShowAds || !isNetworkConnected(activity)) {
+            viewGroup.visibility = View.GONE
+            return
+        }
+        val mAdView = AdView(activity)
+        if (isTesting) {
+            bannerId = activity.getString(R.string.test_ads_admob_banner_id)
+        }else{
+            if (isCheckDeviceId){
+                testDevices.forEach {
+                    if (it == deviceId){
+                        bannerId = activity.getString(R.string.test_ads_admob_banner_id)
+                    }
+                }
+            }
+        }
+        mAdView.adUnitId = bannerId!!
+        viewGroup.removeAllViews()
+        val adSize = getAdSize(activity)
+        mAdView.setAdSize(adSize)
+
+        val tagView = activity.layoutInflater.inflate(R.layout.layoutbanner_loading, null, false)
+        viewGroup.addView(tagView, 0)
+        viewGroup.addView(mAdView, 1)
+        shimmerFrameLayout = tagView.findViewById(R.id.shimmer_view_container)
+        shimmerFrameLayout?.startShimmer()
+
+        mAdView.adListener = object : AdListener() {
+            override fun onAdLoaded() {
+                mAdView.onPaidEventListener =
+                    OnPaidEventListener { adValue -> callback.onAdPaid(adValue, mAdView) }
+                shimmerFrameLayout?.stopShimmer()
+                viewGroup.removeView(tagView)
+                callback.onBannerAdLoaded(adSize)
+            }
+
+            override fun onAdFailedToLoad(adError: LoadAdError) {
+                Log.e(" Admod", "failloadbanner" + adError.message)
+                shimmerFrameLayout?.stopShimmer()
+                viewGroup.removeView(tagView)
+                callback.onAdFail(adError.message)
+            }
+
+            override fun onAdOpened() {}
+            override fun onAdClicked() {
+                // Code to be executed when the user clicks on an ad.
+            }
+
+            override fun onAdClosed() {
+                // Code to be executed when the user is about to return
+                // to the app after tapping on an ad.
+            }
+        }
+        val extras = Bundle()
+        var anchored = "top"
+        anchored = if (collapsibleBannerSize === CollapsibleBanner.TOP) {
+            "top"
+        } else {
+            "bottom"
+        }
+        extras.putString("collapsible", anchored)
+        val adRequest2 = AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter::class.java, extras).build()
+        mAdView.loadAd(adRequest2)
+        Log.e(" Admod", "loadAdBanner")
+    }
+
+    @JvmStatic
+    fun loadAdInterstitialRewardDeviceId(
+        activity: Context,
+        mInterstitialRewardAd: RewardedInterstitialHolder,isCheckDeviceId : Boolean,
+        adLoadCallback: AdLoadCallback
+    ) {
+        var admobId = mInterstitialRewardAd.ads
+        if (!isShowAds || !isNetworkConnected(activity)) {
+            return
+        }
+        if (mInterstitialRewardAd.inter != null) {
+            Log.d("===AdsInter", "mInterstitialRewardAd not null")
+            return
+        }
+        if (adRequest == null) {
+            initAdRequest(timeOut)
+        }
+        mInterstitialRewardAd.isLoading = true
+        if (isTesting) {
+            admobId = activity.getString(R.string.test_ads_admob_inter_reward_id)
+        }else{
+            if (isCheckDeviceId){
+                testDevices.forEach {
+                    if (it == deviceId){
+                        admobId = activity.getString(R.string.test_ads_admob_inter_reward_id)
+                    }
+                }
+            }
+        }
+        RewardedInterstitialAd.load(
+            activity,
+            admobId,
+            adRequest!!,
+            object : RewardedInterstitialAdLoadCallback() {
+                override fun onAdLoaded(interstitialRewardAd: RewardedInterstitialAd) {
+                    mInterstitialRewardAd.inter = interstitialRewardAd
+                    mInterstitialRewardAd.mutable.value = interstitialRewardAd
+                    mInterstitialRewardAd.isLoading = false
+                    adLoadCallback.onAdLoaded()
+                    Log.i("adLog", "onAdLoaded")
+                }
+
+                override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                    mInterstitialRewardAd.inter = null
+                    mInterstitialRewardAd.isLoading = false
+                    mInterstitialRewardAd.mutable.value = null
+                    adLoadCallback.onAdFail(loadAdError.message)
+                }
+            })
     }
 }

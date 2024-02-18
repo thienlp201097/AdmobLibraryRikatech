@@ -2,24 +2,28 @@ package com.vapp.admobexample
 
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.ads.AdValue
 import com.vapp.admobexample.utilsdemp.AdsManager.interholder
 import com.vapp.admobexample.view.MainActivity
-import com.vapp.admobexample.view.OtherActivity
 import com.vapp.admoblibrary.AdsInterCallBack
 import com.vapp.admoblibrary.ads.AOAManager
+import com.vapp.admoblibrary.ads.AOAManagerDeviceId
 import com.vapp.admoblibrary.ads.AdmodUtils.initAdmob
 import com.vapp.admoblibrary.ads.AdmodUtils.loadAndShowAdInterstitial
 import com.vapp.admoblibrary.ads.AppOpenManager
 import com.vapp.admoblibrary.cmp.GoogleMobileAdsConsentManager
 import com.vapp.admoblibrary.utils.Utils
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 import java.util.concurrent.atomic.AtomicBoolean
 
+
 class SplashActivity : AppCompatActivity() {
-    var aoaManager: AOAManager? = null
+    var aoaManager: AOAManagerDeviceId? = null
     var isAOAFalse = false
     private var isMobileAdsInitializeCalled = AtomicBoolean(false)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,8 +34,26 @@ class SplashActivity : AppCompatActivity() {
             return
         }
         setupCMP()
+        val android_id: String = Settings.Secure.getString(this.contentResolver, Settings.Secure.ANDROID_ID)
+        val deviceId: String = md5(android_id).toUpperCase()
+        Log.i("device id=", deviceId)
     }
+    fun md5(s: String): String {
+        try {
+            // Create MD5 Hash
+            val digest = MessageDigest.getInstance("MD5")
+            digest.update(s.toByteArray())
+            val messageDigest = digest.digest()
 
+            // Create Hex String
+            val hexString = StringBuffer()
+            for (i in messageDigest.indices) hexString.append(Integer.toHexString(0xFF and messageDigest[i].toInt()))
+            return hexString.toString()
+        } catch (e: NoSuchAlgorithmException) {
+            e.printStackTrace()
+        }
+        return ""
+    }
     override fun onBackPressed() {
         super.onBackPressed()
         System.exit(0)
@@ -65,11 +87,11 @@ class SplashActivity : AppCompatActivity() {
             return
         }
         isMobileAdsInitializeCalled.set(true)
-        initAdmob(this, 10000, isDebug = true, isEnableAds = true)
+        initAdmob(this, 10000, isDebug = false, isEnableAds = true)
         AppOpenManager.getInstance().init(application, getString(R.string.test_ads_admob_app_open))
         AppOpenManager.getInstance().disableAppResumeWithActivity(SplashActivity::class.java)
-        showInter()
-
+//        showInter()
+        showAOA()
     }
 
     fun showInter(){
@@ -97,11 +119,11 @@ class SplashActivity : AppCompatActivity() {
     }
 
     fun showAOA(){
-        aoaManager = AOAManager(
+        aoaManager = AOAManagerDeviceId(
             this,
             "ca-app-pub-3940256099942544/3419835294",
-            20000,
-            object : AOAManager.AppOpenAdsListener {
+            20000,true,
+            object : AOAManagerDeviceId.AppOpenAdsListener {
                 override fun onAdPaid(adValue: AdValue, s: String) {
                     Toast.makeText(
                         this@SplashActivity,

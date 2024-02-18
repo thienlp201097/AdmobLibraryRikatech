@@ -19,15 +19,13 @@ import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.appopen.AppOpenAd
 import com.vapp.admoblibrary.R
-import com.vapp.admoblibrary.ads.model.AppOpenAppHolder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class AOAManagerMultiAds(private val activity: Activity,val appOpenAppHolder: AppOpenAppHolder,val timeOut: Long, val appOpenAdsListener: AppOpenAdsListener) {
+class AOAManagerDeviceId(private val activity: Activity, val appOpen: String, val timeOut: Long,val isCheckDeviceId : Boolean, val appOpenAdsListener: AppOpenAdsListener) {
     private var appOpenAd: AppOpenAd? = null
-    private var loadCallback: AppOpenAd.AppOpenAdLoadCallback? = null
     var isShowingAd = true
     var isLoading = true
     var dialogFullScreen: Dialog? = null
@@ -40,98 +38,72 @@ class AOAManagerMultiAds(private val activity: Activity,val appOpenAppHolder: Ap
 
     fun loadAndShowAoA() {
         Log.d("===Load","id1")
-        var idAoa = appOpenAppHolder.ads
+        var idAoa = appOpen
         if (AdmodUtils.isTesting){
-             idAoa = activity.getString(R.string.test_ads_admob_app_open)
+            idAoa = activity.getString(R.string.test_ads_admob_app_open)
+        }else{
+            if (isCheckDeviceId){
+                AdmodUtils.testDevices.forEach {
+                    if (it == AdmodUtils.deviceId){
+                        idAoa = activity.getString(R.string.test_ads_admob_app_open)
+                    }
+                }
+            }
         }
         if (!AdmodUtils.isShowAds){
-            appOpenAdsListener.onAdsFailed()
+            appOpenAdsListener.onAdsFailed("isShowAds false")
             return
         }
         //Check timeout show inter
-        CoroutineScope(Dispatchers.Main).launch() {
+        val job = CoroutineScope(Dispatchers.Main).launch{
             delay(timeOut)
             if (isLoading && isStart) {
                 isStart = false
                 isLoading = false
-                appOpenAdsListener.onAdsFailed()
+                appOpenAdsListener.onAdsFailed("Time out")
                 Log.d("====Timeout", "TimeOut")
             }
         }
         if (isAdAvailable) {
-            appOpenAdsListener.onAdsFailed()
+            job.cancel()
+            appOpenAdsListener.onAdsFailed("isAdAvailable true")
             return
         } else {
             Log.d("====Timeout", "fetching... ")
             isShowingAd = false
-            loadCallback = object : AppOpenAd.AppOpenAdLoadCallback() {
-
-                override fun onAdFailedToLoad(p0: LoadAdError) {
-                    super.onAdFailedToLoad(p0)
-                    loadAndShowAoA2(appOpenAppHolder.ads2)
-                    Log.d("====Timeout", "onAppOpenAdFailedToLoad: ")
-                }
-
-                override fun onAdLoaded(ad: AppOpenAd) {
-                    super.onAdLoaded(ad)
-                    appOpenAd = ad
-                    Log.d("====Timeout", "isAdAvailable = true")
-                    showAdIfAvailable()
-                }
-            }
             val request = adRequest
-            AppOpenAd.load(activity, idAoa, request, AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT, loadCallback!!)
-        }
-    }
-
-    fun loadAndShowAoA2(id2 : String) {
-        Log.d("===Load","id2")
-        var id2 = id2
-        if (AdmodUtils.isTesting){
-            id2 = activity.getString(R.string.test_ads_admob_app_open)
-        }
-        if (!AdmodUtils.isShowAds){
-            appOpenAdsListener.onAdsFailed()
-            return
-        }
-        //Check timeout show inter
-
-        if (isAdAvailable) {
-            appOpenAdsListener.onAdsFailed()
-            return
-        } else {
-            Log.d("====Timeout", "fetching... ")
-            isShowingAd = false
-            loadCallback = object : AppOpenAd.AppOpenAdLoadCallback() {
-
+            AppOpenAd.load(activity, idAoa, request, AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT, object : AppOpenAd.AppOpenAdLoadCallback() {
                 override fun onAdFailedToLoad(p0: LoadAdError) {
                     isLoading = false
                     super.onAdFailedToLoad(p0)
                     if (isStart){
                         isStart = false
-                        appOpenAdsListener.onAdsFailed()
+                        appOpenAdsListener.onAdsFailed(p0.message)
                     }
-
-                    Log.d("====Timeout", "onAppOpenAdFailedToLoad: ")
+                    job.cancel()
+                    Log.d("====Timeout", "onAppOpenAdFailedToLoad: $p0")
                 }
 
                 override fun onAdLoaded(ad: AppOpenAd) {
                     super.onAdLoaded(ad)
                     appOpenAd = ad
+                    job.cancel()
                     Log.d("====Timeout", "isAdAvailable = true")
-                    showAdIfAvailable()
+                    if (!AppOpenManager.getInstance().isShowingAd && !isShowingAd){
+                        showAdIfAvailable()
+                    }
                 }
-            }
-            val request = adRequest
-            AppOpenAd.load(activity, id2, request, AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT, loadCallback!!)
+            })
         }
     }
-
 
     fun showAdIfAvailable() {
         Log.d("====Timeout", "$isShowingAd - $isAdAvailable")
         if (!isShowingAd && isAdAvailable && isLoading) {
             isLoading = false
+            if (AppOpenManager.getInstance().isInitialized) {
+                AppOpenManager.getInstance().isAppResumeEnabled = false
+            }
             Log.d("====Timeout", "will show ad ")
             val fullScreenContentCallback: FullScreenContentCallback =
                 object : FullScreenContentCallback() {
@@ -148,6 +120,9 @@ class AOAManagerMultiAds(private val activity: Activity,val appOpenAppHolder: Ap
                             isStart = false
                             appOpenAdsListener.onAdsClose()
                         }
+                        if (AppOpenManager.getInstance().isInitialized) {
+                            AppOpenManager.getInstance().isAppResumeEnabled = true
+                        }
                     }
 
                     override fun onAdFailedToShowFullScreenContent(p0: AdError) {
@@ -156,10 +131,13 @@ class AOAManagerMultiAds(private val activity: Activity,val appOpenAppHolder: Ap
                         } catch (ignored: Exception) {
                         }
                         isShowingAd = true
-                        Log.d("====Timeout", "Failed... ")
                         if (isStart){
                             isStart = false
-                            appOpenAdsListener.onAdsFailed()
+                            appOpenAdsListener.onAdsFailed(p0.message)
+                            Log.d("====Timeout", "Failed... $p0")
+                        }
+                        if (AppOpenManager.getInstance().isInitialized) {
+                            AppOpenManager.getInstance().isAppResumeEnabled = true
                         }
                     }
 
@@ -175,6 +153,8 @@ class AOAManagerMultiAds(private val activity: Activity,val appOpenAppHolder: Ap
                 dialogFullScreen?.setCancelable(false)
                 dialogFullScreen?.window?.setBackgroundDrawable(ColorDrawable(Color.WHITE))
                 dialogFullScreen?.window?.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
+                val img = dialogFullScreen?.findViewById<LottieAnimationView>(R.id.imageView3)
+                img?.setAnimation(R.raw.gifloading)
                 try {
                     if (!activity.isFinishing && dialogFullScreen != null && dialogFullScreen?.isShowing == false) {
                         dialogFullScreen?.show()
@@ -183,8 +163,8 @@ class AOAManagerMultiAds(private val activity: Activity,val appOpenAppHolder: Ap
                 }
                 Handler(Looper.getMainLooper()).postDelayed({
                     if (!AppOpenManager.getInstance().isShowingAd && !isShowingAd){
+                        Log.d("===AOA","Show")
                         try {
-                            val img = dialogFullScreen?.findViewById<LottieAnimationView>(R.id.imageView3)
                             val txt = dialogFullScreen?.findViewById<TextView>(R.id.txtLoading)
                             img?.visibility = View.INVISIBLE
                             txt?.visibility = View.INVISIBLE
@@ -192,9 +172,13 @@ class AOAManagerMultiAds(private val activity: Activity,val appOpenAppHolder: Ap
                         }
                         setOnPaidEventListener { appOpenAdsListener.onAdPaid(it,adUnitId) }
                         show(activity)
+                    }else{
+                        appOpenAdsListener.onAdsFailed("AOA can't show")
                     }
                 }, 800)
             }
+        }else{
+            appOpenAdsListener.onAdsFailed("AOA can't show in background!")
         }
     }
 
@@ -202,11 +186,8 @@ class AOAManagerMultiAds(private val activity: Activity,val appOpenAppHolder: Ap
         isShowingAd = true
         isLoading = false
         try {
-            try {
-                if (dialogFullScreen != null && dialogFullScreen?.isShowing == true) {
-                    dialogFullScreen?.dismiss()
-                }
-            } catch (ignored: Exception) {
+            if (!activity.isFinishing && dialogFullScreen != null && dialogFullScreen?.isShowing == true) {
+                dialogFullScreen?.dismiss()
             }
             appOpenAd?.fullScreenContentCallback?.onAdDismissedFullScreenContent()
         } catch (ignored: Exception) {
@@ -214,8 +195,8 @@ class AOAManagerMultiAds(private val activity: Activity,val appOpenAppHolder: Ap
     }
     interface AppOpenAdsListener {
         fun onAdsClose()
-        fun onAdsFailed()
-        fun onAdPaid(adValue: AdValue , adUnitAds : String)
+        fun onAdsFailed(message : String)
+        fun onAdPaid(adValue: AdValue, adUnitAds : String)
     }
 
 }
