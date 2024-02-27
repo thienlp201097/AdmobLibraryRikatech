@@ -85,7 +85,7 @@ object AdsManager {
     }
 
     fun loadInter(context: Context, interHolder: InterHolder) {
-        AdmodUtils.loadAndGetAdInterstitialDeviceId(context, interHolder,true, object :
+        AdmodUtils.loadAndGetAdInterstitial(context, interHolder, object :
             AdCallBackInterLoad {
             override fun onAdClosed() {
 
@@ -100,7 +100,7 @@ object AdsManager {
             }
 
             override fun onAdLoaded(interstitialAd: InterstitialAd?, isLoading: Boolean) {
-
+                Log.d("===ResponseInfo",interstitialAd?.responseInfo.toString())
             }
 
             override fun onAdFail(message: String?) {
@@ -189,7 +189,7 @@ object AdsManager {
     }
 
     fun loadNative(activity: Context, nativeHolder: NativeHolder) {
-        AdmodUtils.loadAndGetNativeAdsDeviceId(activity, nativeHolder,true, object : NativeAdCallback {
+        AdmodUtils.loadAndGetNativeAds(activity, nativeHolder, object : NativeAdCallback {
                 override fun onLoadedAndGetNativeAd(ad: NativeAd?) {
                 }
 
@@ -281,11 +281,11 @@ object AdsManager {
     @JvmStatic
     fun showAdBannerCollapsible(activity: Activity, bannerHolder: String, view: ViewGroup, line: View) {
         if (AdmodUtils.isNetworkConnected(activity)) {
-            AdmodUtils.loadAdBannerCollapsibleDeviceId(
+            AdmodUtils.loadAdBannerCollapsible(
                 activity,
                 bannerHolder,
                 CollapsibleBanner.BOTTOM,
-                view,true,
+                view,
                 object : AdmodUtils.BannerCollapsibleAdCallback {
                     override fun onBannerAdLoaded(adSize: AdSize) {
                         view.visibility = View.VISIBLE
@@ -313,7 +313,7 @@ object AdsManager {
     @JvmStatic
     fun showAdBanner(activity: Activity, bannerHolder: String, view: ViewGroup, line: View) {
         if (AdmodUtils.isNetworkConnected(activity)) {
-            AdmodUtils.loadAdBannerDeviceId(activity, bannerHolder, view,true, object :
+            AdmodUtils.loadAdBanner(activity, bannerHolder, view, object :
                 AdmodUtils.BannerCallBack {
                 override fun onLoad() {
                     view.visibility = View.VISIBLE

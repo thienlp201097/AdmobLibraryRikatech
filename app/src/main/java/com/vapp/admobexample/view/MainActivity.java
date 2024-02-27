@@ -28,6 +28,7 @@ import com.vapp.admoblibrary.AdsInterCallBack;
 import com.vapp.admoblibrary.ads.AOAManager;
 import com.vapp.admoblibrary.ads.AdCallbackNew;
 import com.vapp.admoblibrary.ads.AdLoadCallback;
+import com.vapp.admoblibrary.ads.AppOpenManager;
 import com.vapp.admoblibrary.ads.NativeAdCallback;
 import com.vapp.admoblibrary.ads.admobnative.enumclass.CollapsibleBanner;
 import com.vapp.admoblibrary.ads.admobnative.enumclass.GoogleENative;
@@ -189,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
         btn_LoadInterReward.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AdmodUtils.loadAdInterstitialRewardDeviceId(MainActivity.this, AdsManager.INSTANCE.getInterRewardHolder(),true, new AdLoadCallback() {
+                AdmodUtils.loadAdInterstitialReward(MainActivity.this, AdsManager.INSTANCE.getInterRewardHolder(), new AdLoadCallback() {
                     @Override
                     public void onAdFail(String message) {
 
@@ -266,7 +267,7 @@ public class MainActivity extends AppCompatActivity {
         btn_LoadAndShowNative.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AdmodUtils.loadAndShowNativeAdsWithLayoutAdsDeviceId(MainActivity.this, AdsManager.INSTANCE.getNativeHolder(), viewNativeAds, R.layout.ad_template_medium, GoogleENative.UNIFIED_MEDIUM,true, new NativeAdCallback() {
+                AdmodUtils.loadAndShowNativeAdsWithLayoutAds(MainActivity.this, AdsManager.INSTANCE.getNativeHolder(), viewNativeAds, R.layout.ad_template_medium, GoogleENative.UNIFIED_MEDIUM, new NativeAdCallback() {
                     @Override
                     public void onNativeAdLoaded() {
                     }
@@ -371,5 +372,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        AppOpenManager.getInstance().enableAppResumeWithActivity(MainActivity.class);
     }
 }

@@ -87,7 +87,7 @@ class SplashActivity : AppCompatActivity() {
             return
         }
         isMobileAdsInitializeCalled.set(true)
-        initAdmob(this, 10000, isDebug = false, isEnableAds = true)
+        initAdmob(this, 10000, isDebug = true, isEnableAds = true)
         AppOpenManager.getInstance().init(application, getString(R.string.test_ads_admob_app_open))
         AppOpenManager.getInstance().disableAppResumeWithActivity(SplashActivity::class.java)
 //        showInter()
