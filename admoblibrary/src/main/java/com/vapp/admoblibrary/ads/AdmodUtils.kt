@@ -1496,6 +1496,7 @@ object AdmodUtils {
                             object : FullScreenContentCallback() {
                                 override fun onAdShowedFullScreenContent() {
                                     isAdShowing = true
+                                    adCallback2.onAdShowed()
                                     if (AppOpenManager.getInstance().isInitialized) {
                                         AppOpenManager.getInstance().isAppResumeEnabled = false
                                     }
@@ -1666,6 +1667,7 @@ object AdmodUtils {
 
                                 override fun onAdShowedFullScreenContent() {
                                     isAdShowing = true
+                                    adCallback.onAdShowed()
                                     Handler(Looper.getMainLooper()).postDelayed({
                                         dismissAdDialog()
                                     },800)
@@ -1712,6 +1714,7 @@ object AdmodUtils {
 
                             override fun onAdShowedFullScreenContent() {
                                 isAdShowing = true
+                                adCallback.onAdShowed()
                                 Log.d("TAG", "The ad was shown.")
                             }
                         }

@@ -3,6 +3,7 @@ package com.vapp.admobexample.view;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -152,6 +153,12 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
+                    public void onAdShowed() {
+                        Utils.getInstance().showMessenger(MainActivity.this, "onAdShowed");
+                        new Handler().postDelayed(() -> AdmodUtils.dismissAdDialog(),800);
+                    }
+
+                    @Override
                     public void onAdFail(String message) {
                         Utils.getInstance().showMessenger(MainActivity.this, "Reward fail");
 
@@ -212,6 +219,11 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onAdClosed() {
                         startActivity(new Intent(MainActivity.this, OtherActivity.class));
+                    }
+
+                    @Override
+                    public void onAdShowed() {
+                        Utils.getInstance().showMessenger(MainActivity.this, "onAdShowed");
                     }
 
                     @Override
