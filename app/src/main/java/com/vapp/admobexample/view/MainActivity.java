@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
 //                    }
 //                });
 
-                AdmobUtils.loadAndShowAdInterstitial(MainActivity.this, AdsManager.INSTANCE.getInterholder().getAds(), new AdsInterCallBack() {
+                AdmobUtils.loadAndShowAdInterstitial(MainActivity.this, AdsManager.INSTANCE.getInterholder(), new AdsInterCallBack() {
                     @Override
                     public void onStartAction() {
 
@@ -247,30 +247,19 @@ public class MainActivity extends AppCompatActivity {
         btn_Rate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AdmobUtils.loadAdBannerCollapsibleNoShimmer(MainActivity.this, getString(R.string.test_ads_admob_banner_id), CollapsibleBanner.BOTTOM, banner, new BannerAdCallback() {
-                    @Override
-                    public void onBannerAdLoaded(AdSize adSize) {
-                        Toast.makeText(MainActivity.this, String.valueOf(adSize.getHeight()), Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onAdFail() {
-
-                    }
-
-                    @Override
-                    public void onAdPaid(AdValue adValue) {
-
-                    }
-                });
-//                showDialogRate();
+                showDialogRate();
             }
         });
 
         btn_LoadAndShowNative.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AdmobUtils.loadAndShowNativeAdsWithLayoutAds(MainActivity.this, AdsManager.INSTANCE.getNativeHolder(), viewNativeAds, R.layout.ad_template_medium, GoogleENative.UNIFIED_MEDIUM, new NativeAdCallback() {
+                AdmobUtils.loadAndShowNativeAdsWithLayoutAds(MainActivity.this, AdsManager.INSTANCE.getNativeHolder(), viewNativeAds, R.layout.ad_template_medium, GoogleENative.UNIFIED_MEDIUM, new AdmobUtils.NativeAdCallbackNew() {
+                    @Override
+                    public void onClickAds() {
+
+                    }
+
                     @Override
                     public void onNativeAdLoaded() {
                     }

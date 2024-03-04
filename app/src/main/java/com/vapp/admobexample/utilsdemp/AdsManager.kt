@@ -16,6 +16,7 @@ import com.google.android.gms.ads.MediaAspectRatio
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.nativead.NativeAd
 import com.vapp.admobexample.R
+import com.vapp.admobexample.view.MainActivity
 import com.vapp.admoblibrary.AdsInterCallBack
 import com.vapp.admoblibrary.ads.AdCallBackInterLoad
 import com.vapp.admoblibrary.ads.AdmobUtils
@@ -31,6 +32,7 @@ import com.vapp.admoblibrary.ads.model.RewardedInterstitialHolder
 import com.vapp.admoblibrary.ads.nativefullscreen.NativeFullScreenCallBack
 import com.vapp.admoblibrary.ads.remote.BannerPlugin
 import com.vapp.admoblibrary.ads.remote.BannerRemoteConfig
+import com.vapp.admoblibrary.utils.Utils
 
 object AdsManager {
     var interAds1: InterstitialAd? = null
@@ -65,7 +67,7 @@ object AdsManager {
             nativeAdContainer.visibility = View.GONE
             return
         }
-        AdmobUtils.loadAndShowNativeAdsWithLayoutAds(activity,nativeHolder, nativeAdContainer,R.layout.ad_template_medium,GoogleENative.UNIFIED_MEDIUM,object : NativeAdCallback{
+        AdmobUtils.loadAndShowNativeAdsWithLayoutAds(activity,nativeHolder, nativeAdContainer,R.layout.ad_template_medium,GoogleENative.UNIFIED_MEDIUM,object : AdmobUtils.NativeAdCallbackNew{
             override fun onLoadedAndGetNativeAd(ad: NativeAd?) {
             }
 
@@ -74,12 +76,16 @@ object AdsManager {
                 nativeAdContainer.visibility = View.VISIBLE
             }
 
-            override fun onAdFail(error: String?) {
+            override fun onAdFail(error: String) {
                 nativeAdContainer.visibility = View.GONE
             }
 
             override fun onAdPaid(adValue: AdValue?, adUnitAds: String?) {
                 Log.d("===AdValue","Native: ${adValue?.currencyCode}|${adValue?.valueMicros}")
+            }
+
+            override fun onClickAds() {
+
             }
         })
     }
@@ -155,33 +161,23 @@ object AdsManager {
         )
     }
 
-    fun loadAndShowIntersial(activity: Activity, adListener: AdListener) {
-        AdmobUtils.loadAndShowAdInterstitialWithCallbackMultiAds(activity as AppCompatActivity, "", "",
+    fun loadAndShowIntersial(activity: AppCompatActivity, adListener: AdListener) {
+
+        AdmobUtils.loadAndShowAdInterstitial(activity,
+            interholder,
             object : AdsInterCallBack {
-                override fun onStartAction() {
-                    adListener.onAdClosedOrFailed()
-                }
-
+                override fun onStartAction() {}
                 override fun onEventClickAdClosed() {
-
-                }
-
-                override fun onAdShowed() {
-
-                }
-
-                override fun onAdLoaded() {
-
-                }
-
-                override fun onAdFail(error: String) {
-                    val log = error.split(":")[0].replace(" ", "_")
-                    Log.d("===ADS", log)
                     adListener.onAdClosedOrFailed()
                 }
 
-                override fun onPaid(adValue: AdValue?, adUnitAds: String?) {
-                    Toast.makeText(activity, "${adValue?.currencyCode}|${adValue?.valueMicros}", Toast.LENGTH_SHORT).show()
+                override fun onAdShowed() {}
+                override fun onAdLoaded() {}
+                override fun onAdFail(error: String) {
+                    adListener.onAdClosedOrFailed()
+                }
+
+                override fun onPaid(adValue: AdValue, adUnitAds: String) {
                 }
             },
             true
@@ -211,7 +207,7 @@ object AdsManager {
     }
 
     fun loadNativeFullScreen(activity: Context, nativeHolder: NativeHolder) {
-        AdmobUtils.loadAndGetNativeFullScreenAds(activity, nativeHolder,MediaAspectRatio.SQUARE, object : NativeAdCallback {
+        AdmobUtils.loadAndGetNativeFullScreenAds(activity, nativeHolder,MediaAspectRatio.SQUARE, object : AdmobUtils.NativeAdCallbackNew {
             override fun onLoadedAndGetNativeAd(ad: NativeAd?) {
             }
 
@@ -228,6 +224,10 @@ object AdsManager {
 
             override fun onAdPaid(adValue: AdValue?, adUnitAds: String?) {
 
+            }
+
+            override fun onClickAds() {
+                TODO("Not yet implemented")
             }
         })
     }
@@ -287,6 +287,10 @@ object AdsManager {
                 CollapsibleBanner.BOTTOM,
                 view,
                 object : AdmobUtils.BannerCollapsibleAdCallback {
+                    override fun onClickAds() {
+
+                    }
+
                     override fun onBannerAdLoaded(adSize: AdSize) {
                         view.visibility = View.VISIBLE
                         line.visibility = View.VISIBLE
@@ -315,6 +319,10 @@ object AdsManager {
         if (AdmobUtils.isNetworkConnected(activity)) {
             AdmobUtils.loadAdBanner(activity, bannerHolder, view, object :
                 AdmobUtils.BannerCallBack {
+                override fun onClickAds() {
+
+                }
+
                 override fun onLoad() {
                     view.visibility = View.VISIBLE
                     line.visibility = View.VISIBLE

@@ -94,7 +94,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     fun showInter(){
-        loadAndShowAdInterstitial(this@SplashActivity, interholder.ads, object : AdsInterCallBack {
+        loadAndShowAdInterstitial(this@SplashActivity, interholder, object : AdsInterCallBack {
             override fun onStartAction() {}
             override fun onEventClickAdClosed() {
                 Utils.getInstance().addActivity(
