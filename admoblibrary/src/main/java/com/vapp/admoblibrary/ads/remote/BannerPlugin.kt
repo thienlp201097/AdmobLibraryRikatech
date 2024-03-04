@@ -8,7 +8,7 @@ import android.view.ViewGroup.LayoutParams
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.gson.annotations.SerializedName
 import com.vapp.admoblibrary.R
-import com.vapp.admoblibrary.ads.AdmodUtils
+import com.vapp.admoblibrary.ads.AdmobUtils
 import com.vapp.admoblibrary.ads.remote.BannerPlugin.BannerConfig.Companion.TYPE_ADAPTIVE
 import com.vapp.admoblibrary.ads.remote.BannerPlugin.BannerConfig.Companion.TYPE_COLLAPSIBLE_BOTTOM
 import com.vapp.admoblibrary.ads.remote.BannerPlugin.BannerConfig.Companion.TYPE_COLLAPSIBLE_TOP
@@ -75,7 +75,7 @@ class BannerPlugin(
         this.defaultBannerType = BannerType.Adaptive
         this.defaultRefreshRateSec = 10
         this.defaultCBFetchIntervalSec = 20
-        this.loadAdAfterInit = AdmodUtils.isShowAds
+        this.loadAdAfterInit = AdmobUtils.isShowAds
     }
 
     init {
@@ -95,7 +95,7 @@ class BannerPlugin(
         var cbFetchIntervalSec = config.defaultCBFetchIntervalSec
         var refreshRateSec: Int? = config.defaultRefreshRateSec
 
-        if (AdmodUtils.isTesting) {
+        if (AdmobUtils.isTesting) {
             adUnitId = activity.getString(R.string.test_ads_admob_banner_id)
         }
         bannerType = when (bannerConfig?.type) {

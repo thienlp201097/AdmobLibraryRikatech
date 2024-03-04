@@ -11,9 +11,8 @@ import com.vapp.admobexample.utilsdemp.AdsManager.interholder
 import com.vapp.admobexample.view.MainActivity
 import com.vapp.admoblibrary.AdsInterCallBack
 import com.vapp.admoblibrary.ads.AOAManager
-import com.vapp.admoblibrary.ads.AOAManagerDeviceId
-import com.vapp.admoblibrary.ads.AdmodUtils.initAdmob
-import com.vapp.admoblibrary.ads.AdmodUtils.loadAndShowAdInterstitial
+import com.vapp.admoblibrary.ads.AdmobUtils.initAdmob
+import com.vapp.admoblibrary.ads.AdmobUtils.loadAndShowAdInterstitial
 import com.vapp.admoblibrary.ads.AppOpenManager
 import com.vapp.admoblibrary.cmp.GoogleMobileAdsConsentManager
 import com.vapp.admoblibrary.utils.Utils
@@ -23,7 +22,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 
 class SplashActivity : AppCompatActivity() {
-    var aoaManager: AOAManagerDeviceId? = null
+    var aoaManager: AOAManager? = null
     var isAOAFalse = false
     private var isMobileAdsInitializeCalled = AtomicBoolean(false)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,7 +87,7 @@ class SplashActivity : AppCompatActivity() {
         }
         isMobileAdsInitializeCalled.set(true)
         initAdmob(this, 10000, isDebug = true, isEnableAds = true)
-        AppOpenManager.getInstance().init(application, getString(R.string.test_ads_admob_app_open))
+        AppOpenManager.getInstance().init(application, getString(R.string.test_ads_admob_app_open_new))
         AppOpenManager.getInstance().disableAppResumeWithActivity(SplashActivity::class.java)
 //        showInter()
         showAOA()
@@ -119,11 +118,11 @@ class SplashActivity : AppCompatActivity() {
     }
 
     fun showAOA(){
-        aoaManager = AOAManagerDeviceId(
+        aoaManager = AOAManager(
             this,
             "ca-app-pub-3940256099942544/3419835294",
-            20000,true,
-            object : AOAManagerDeviceId.AppOpenAdsListener {
+            20000,
+            object : AOAManager.AppOpenAdsListener {
                 override fun onAdPaid(adValue: AdValue, s: String) {
                     Toast.makeText(
                         this@SplashActivity,

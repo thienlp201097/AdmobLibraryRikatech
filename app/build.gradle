@@ -1,20 +1,19 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
-//    id 'com.google.gms.google-services'
 }
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 34
     buildToolsVersion "30.0.2"
 
     defaultConfig {
         applicationId "com.vapp.admobexample"
         minSdkVersion 21
-        targetSdkVersion 33
-        versionCode 10
-        versionName "1.0"
-        multiDexEnabled false
+        targetSdkVersion 34
+        versionCode 719
+        versionName "7.1.9"
+        multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildFeatures {

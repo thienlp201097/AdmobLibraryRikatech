@@ -1,18 +1,13 @@
 package com.vapp.admobexample.view;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,11 +18,7 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdValue;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.vapp.admobexample.utilsdemp.AdsManager;
-import com.vapp.admobexample.utilsdemp.RemoteConfigManager;
-import com.vapp.admobexample.utilsdemp.UtilsDemoActivity;
 import com.vapp.admoblibrary.AdsInterCallBack;
-import com.vapp.admoblibrary.ads.AOAManager;
-import com.vapp.admoblibrary.ads.AdCallbackNew;
 import com.vapp.admoblibrary.ads.AdLoadCallback;
 import com.vapp.admoblibrary.ads.AppOpenManager;
 import com.vapp.admoblibrary.ads.NativeAdCallback;
@@ -38,7 +29,7 @@ import com.vapp.admobexample.iap.IAPActivity;
 import com.vapp.admoblibrary.ads.model.AdUnitListModel;
 import com.vapp.admoblibrary.ads.model.BannerAdCallback;
 import com.vapp.admoblibrary.utils.Utils;
-import com.vapp.admoblibrary.ads.AdmodUtils;
+import com.vapp.admoblibrary.ads.AdmobUtils;
 import com.vapp.admoblibrary.ads.RewardAdCallback;
 
 public class MainActivity extends AppCompatActivity {
@@ -94,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
 //                    }
 //                });
 
-                AdmodUtils.loadAndShowAdInterstitial(MainActivity.this, AdsManager.INSTANCE.getInterholder().getAds(), new AdsInterCallBack() {
+                AdmobUtils.loadAndShowAdInterstitial(MainActivity.this, AdsManager.INSTANCE.getInterholder().getAds(), new AdsInterCallBack() {
                     @Override
                     public void onStartAction() {
 
@@ -141,13 +132,13 @@ public class MainActivity extends AppCompatActivity {
         btn_LoadAndShowReward.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AdmodUtils.loadAndShowAdRewardWithCallback(MainActivity.this, getString(R.string.test_ads_admob_reward_id), new RewardAdCallback() {
+                AdmobUtils.loadAndShowAdRewardWithCallback(MainActivity.this, getString(R.string.test_ads_admob_reward_id), new RewardAdCallback() {
                     @Override
                     public void onAdClosed() {
-                        if (AdmodUtils.mRewardedAd != null) {
-                            AdmodUtils.mRewardedAd = null;
+                        if (AdmobUtils.mRewardedAd != null) {
+                            AdmobUtils.mRewardedAd = null;
                         }
-                        AdmodUtils.dismissAdDialog();
+                        AdmobUtils.dismissAdDialog();
                         //Utils.getInstance().showMessenger(MainActivity.this, "close ad");
                         startActivity(new Intent(MainActivity.this, OtherActivity.class));
                     }
@@ -155,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onAdShowed() {
                         Utils.getInstance().showMessenger(MainActivity.this, "onAdShowed");
-                        new Handler().postDelayed(() -> AdmodUtils.dismissAdDialog(),800);
+                        new Handler().postDelayed(() -> AdmobUtils.dismissAdDialog(),800);
                     }
 
                     @Override
@@ -166,10 +157,10 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onEarned() {
-                        if (AdmodUtils.mRewardedAd != null) {
-                            AdmodUtils.mRewardedAd = null;
+                        if (AdmobUtils.mRewardedAd != null) {
+                            AdmobUtils.mRewardedAd = null;
                         }
-                        AdmodUtils.dismissAdDialog();
+                        AdmobUtils.dismissAdDialog();
                         Utils.getInstance().showMessenger(MainActivity.this, "Reward");
 
                     }
@@ -197,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
         btn_LoadInterReward.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AdmodUtils.loadAdInterstitialReward(MainActivity.this, AdsManager.INSTANCE.getInterRewardHolder(), new AdLoadCallback() {
+                AdmobUtils.loadAdInterstitialReward(MainActivity.this, AdsManager.INSTANCE.getInterRewardHolder(), new AdLoadCallback() {
                     @Override
                     public void onAdFail(String message) {
 
@@ -215,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
         btn_ShowInterReward.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AdmodUtils.showAdInterstitialRewardWithCallback( MainActivity.this,AdsManager.INSTANCE.getInterRewardHolder(), new RewardAdCallback() {
+                AdmobUtils.showAdInterstitialRewardWithCallback( MainActivity.this,AdsManager.INSTANCE.getInterRewardHolder(), new RewardAdCallback() {
                     @Override
                     public void onAdClosed() {
                         startActivity(new Intent(MainActivity.this, OtherActivity.class));
@@ -256,7 +247,7 @@ public class MainActivity extends AppCompatActivity {
         btn_Rate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AdmodUtils.loadAdBannerCollapsibleNoShimmer(MainActivity.this, getString(R.string.test_ads_admob_banner_id), CollapsibleBanner.BOTTOM, banner, new BannerAdCallback() {
+                AdmobUtils.loadAdBannerCollapsibleNoShimmer(MainActivity.this, getString(R.string.test_ads_admob_banner_id), CollapsibleBanner.BOTTOM, banner, new BannerAdCallback() {
                     @Override
                     public void onBannerAdLoaded(AdSize adSize) {
                         Toast.makeText(MainActivity.this, String.valueOf(adSize.getHeight()), Toast.LENGTH_SHORT).show();
@@ -279,7 +270,7 @@ public class MainActivity extends AppCompatActivity {
         btn_LoadAndShowNative.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AdmodUtils.loadAndShowNativeAdsWithLayoutAds(MainActivity.this, AdsManager.INSTANCE.getNativeHolder(), viewNativeAds, R.layout.ad_template_medium, GoogleENative.UNIFIED_MEDIUM, new NativeAdCallback() {
+                AdmobUtils.loadAndShowNativeAdsWithLayoutAds(MainActivity.this, AdsManager.INSTANCE.getNativeHolder(), viewNativeAds, R.layout.ad_template_medium, GoogleENative.UNIFIED_MEDIUM, new NativeAdCallback() {
                     @Override
                     public void onNativeAdLoaded() {
                     }
@@ -316,8 +307,8 @@ public class MainActivity extends AppCompatActivity {
                 AdsManager.INSTANCE.showAdNativeMedium(MainActivity.this,viewNativeAds,AdsManager.INSTANCE.getNativeHolder());
             }
         });
-//        AdsManager.showAdBanner(this,"", findViewById(R.id.banner),findViewById(R.id.line));
-        AdsManager.showAdBannerCollapsible(this,"", findViewById(R.id.banner),findViewById(R.id.line));
+        AdsManager.showAdBanner(this,"", findViewById(R.id.banner),findViewById(R.id.line));
+//        AdsManager.showAdBannerCollapsible(this,"", findViewById(R.id.banner),findViewById(R.id.line));
 //        AdmodUtils.loadAndShowBannerRemote(this,"","", RemoteConfigManager.INSTANCE.getBannerConfig("test_banner_2"), findViewById(R.id.banner),findViewById(R.id.line));
     }
     private void showDialogRate() {

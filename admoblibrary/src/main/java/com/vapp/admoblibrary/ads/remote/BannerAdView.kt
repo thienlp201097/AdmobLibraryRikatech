@@ -10,11 +10,8 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import androidx.core.view.doOnLayout
 import androidx.core.view.updateLayoutParams
-import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.ads.mediation.admob.AdMobAdapter
 import com.google.android.gms.ads.*
-import com.vapp.admoblibrary.R
-import com.vapp.admoblibrary.ads.AdmodUtils
 import com.vapp.admoblibrary.ads.remote.BannerPlugin.Companion.log
 
 @SuppressLint("ViewConstructor")

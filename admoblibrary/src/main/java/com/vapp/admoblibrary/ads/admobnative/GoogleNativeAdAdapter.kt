@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.ads.AdValue
 import com.google.android.gms.ads.nativead.NativeAd
 import com.vapp.admoblibrary.R
-import com.vapp.admoblibrary.ads.AdmodUtils
+import com.vapp.admoblibrary.ads.AdmobUtils
 import com.vapp.admoblibrary.ads.NativeAdCallback
 import com.vapp.admoblibrary.ads.admobnative.enumclass.GoogleENative
 
@@ -58,12 +58,12 @@ class GoogleNativeAdAdapter(private val mParam: Param) :
         if (mParam.forceReloadAdOnBind || !adHolder.loaded) {
 
             var idAdmob = ""
-            if (AdmodUtils.isTesting) {
+            if (AdmobUtils.isTesting) {
                 idAdmob = mParam.activity!!.getString(R.string.test_ads_admob_native_id);
             } else {
                 idAdmob = mParam.idAdmob;
             }
-            AdmodUtils.loadAndShowNativeAdsWithLayout(mParam.activity!!,
+            AdmobUtils.loadAndShowNativeAdsWithLayout(mParam.activity!!,
                 idAdmob,
                 holder.adFrame,
                 mParam.layout, GoogleENative.UNIFIED_MEDIUM,object : NativeAdCallback {

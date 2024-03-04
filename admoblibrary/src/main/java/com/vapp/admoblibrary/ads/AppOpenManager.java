@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.Window;
 import android.widget.LinearLayout;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
@@ -23,9 +22,7 @@ import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.OnUserEarnedRewardListener;
 import com.google.android.gms.ads.appopen.AppOpenAd;
-import com.google.android.gms.ads.rewarded.RewardItem;
 import com.vapp.admoblibrary.R;
 
 import java.util.ArrayList;
@@ -85,8 +82,8 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
         isInitialized = true;
         this.myApplication = application;
         initAdRequest();
-        if (AdmodUtils.isTesting) {
-            this.appResumeAdId = application.getString(R.string.test_ads_admob_app_open);
+        if (AdmobUtils.isTesting) {
+            this.appResumeAdId = application.getString(R.string.test_ads_admob_app_open_new);
 
         } else {
             this.appResumeAdId = appOpenAdId;
@@ -218,13 +215,21 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
 
     @Override
     public void onActivityStarted(Activity activity) {
+        Log.d("===ADS", activity.getClass() + "|"+AdActivity.class);
+        if (activity.getClass() == AdActivity.class){
+            Log.d("===ADS", "Back");
+            return;
+        }
         currentActivity = activity;
+        Log.d("===ADS", "Running");
     }
 
     @Override
     public void onActivityResumed(Activity activity) {
+        if (activity.getClass() == AdActivity.class){
+            return;
+        }
         currentActivity = activity;
-
         if (splashActivity == null) {
             if (!activity.getClass().getName().equals(AdActivity.class.getName())) {
                 fetchAd(false);
@@ -250,6 +255,9 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
 
     @Override
     public void onActivityDestroyed(Activity activity) {
+        if (activity.getClass() == AdActivity.class){
+            return;
+        }
         currentActivity = null;
         if (dialogFullScreen != null && dialogFullScreen.isShowing()){
             dialogFullScreen.dismiss();
@@ -348,10 +356,10 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
         if (currentActivity == null) {
             return;
         }
-        if(AdmodUtils.isAdShowing){
+        if(AdmobUtils.isAdShowing){
             return;
         }
-        if (!AdmodUtils.isShowAds) {
+        if (!AdmobUtils.isShowAds) {
             return;
         }
 
@@ -359,8 +367,8 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
             Log.d("===Onresume", "isAppResumeEnabled");
             return;
         } else {
-            if(AdmodUtils.dialog != null && AdmodUtils.dialog.isShowing())
-                AdmodUtils.dialog.dismiss();
+            if(AdmobUtils.dialog != null && AdmobUtils.dialog.isShowing())
+                AdmobUtils.dialog.dismiss();
         }
 
         for (Class activity : disabledAppOpenList) {

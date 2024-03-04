@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.vapp.admobexample.R;
 import com.vapp.admoblibrary.iap.PurchaseCallback;
 import com.vapp.admoblibrary.utils.Utils;
-import com.vapp.admoblibrary.ads.AdmodUtils;
+import com.vapp.admoblibrary.ads.AdmobUtils;
 import com.vapp.admoblibrary.iap.PurchaseUtils;
 import com.vapp.admoblibrary.iap.SkuDetailsModel;
 
@@ -125,21 +125,21 @@ public class IAPActivity extends AppCompatActivity {
         new Handler().postDelayed(() -> {
             if (PurchaseUtils.getInstance().isSubscriptiond(getString(R.string.premium))) {
                 tvStatus.setText("Vip");
-                AdmodUtils.initAdmob(this, 10000,true,  false);
+                AdmobUtils.initAdmob(this, 10000,true,  false);
 
             }else {
                 tvStatus.setText("Free");
-                AdmodUtils.initAdmob(this, 10000,true,  true);
+                AdmobUtils.initAdmob(this, 10000,true,  true);
 
             }
 
             if (PurchaseUtils.getInstance().isPurchased(getString(R.string.product_id))) {
                 tvStatusPurchases.setText("Buyed");
-                AdmodUtils.initAdmob(this,10000, true,  false);
+                AdmobUtils.initAdmob(this,10000, true,  false);
 
             }else {
                 tvStatusPurchases.setText("not buy");
-                AdmodUtils.initAdmob(this, 10000,true,  true);
+                AdmobUtils.initAdmob(this, 10000,true,  true);
 
             }
 

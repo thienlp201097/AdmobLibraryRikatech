@@ -5,7 +5,6 @@ import android.content.Context;
 
 import androidx.multidex.MultiDex;
 
-import com.vapp.admoblibrary.ads.AdmodUtils;
 import com.vapp.admoblibrary.ads.AppOpenManager;
 
 public class MyApplication extends Application {

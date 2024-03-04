@@ -7,15 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.ads.AdValue;
 import com.google.android.gms.ads.nativead.NativeAd;
-import com.vapp.admoblibrary.ads.AdmodUtils;
+import com.vapp.admoblibrary.ads.AdmobUtils;
 import com.vapp.admoblibrary.ads.NativeAdCallback;
 import com.vapp.admoblibrary.ads.admobnative.enumclass.GoogleENative;
 
@@ -107,7 +105,7 @@ public class SectionedGridRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder sectionViewHolder, int position) {
         if (isSectionHeaderPosition(position)) {
-            AdmodUtils.loadAndShowNativeAdsWithLayout(
+            AdmobUtils.loadAndShowNativeAdsWithLayout(
                     mContext,
                     admobid,
                     ((SectionViewHolder)sectionViewHolder).ads,

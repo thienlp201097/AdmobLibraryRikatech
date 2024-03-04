@@ -17,12 +17,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AdmobExample"
         tools:replace="android:icon,android:theme">
-        <meta-data
-            android:name="com.google.android.gms.ads.flag.OPTIMIZE_AD_LOADING"
-            android:value="true"/>
-        <meta-data
-            android:name="com.google.android.gms.ads.flag.OPTIMIZE_INITIALIZATION"
-            android:value="true"/>
         <activity
             android:name=".view.OtherActivity"
             android:theme="@style/Theme.AdmobExample.NoActionBar" />

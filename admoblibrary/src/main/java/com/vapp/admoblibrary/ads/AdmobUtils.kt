@@ -73,7 +73,7 @@ import java.security.NoSuchAlgorithmException
 import java.util.Date
 import java.util.Locale
 
-object AdmodUtils {
+object AdmobUtils {
     //Dialog loading
     @JvmField
     var dialog: SweetAlertDialog? = null
@@ -196,7 +196,7 @@ object AdmodUtils {
 
             override fun onAdOpened() {}
             override fun onAdClicked() {
-                AppOpenManager.getInstance().disableAppResumeWithActivity(activity.javaClass)
+
             }
 
             override fun onAdClosed() {
@@ -254,7 +254,7 @@ object AdmodUtils {
 
                 override fun onAdOpened() {}
                 override fun onAdClicked() {
-                    AppOpenManager.getInstance().disableAppResumeWithActivity(activity.javaClass)
+
                 }
 
                 override fun onAdClosed() {
@@ -312,7 +312,7 @@ object AdmodUtils {
 
             override fun onAdOpened() {}
             override fun onAdClicked() {
-                AppOpenManager.getInstance().disableAppResumeWithActivity(activity.javaClass)
+//
             }
 
             override fun onAdClosed() {
@@ -376,7 +376,7 @@ object AdmodUtils {
 
             override fun onAdOpened() {}
             override fun onAdClicked() {
-                AppOpenManager.getInstance().disableAppResumeWithActivity(activity.javaClass)
+
             }
 
             override fun onAdClosed() {
@@ -442,7 +442,7 @@ object AdmodUtils {
 
             override fun onAdOpened() {}
             override fun onAdClicked() {
-                AppOpenManager.getInstance().disableAppResumeWithActivity(activity.javaClass)
+
             }
 
             override fun onAdClosed() {
@@ -509,7 +509,7 @@ object AdmodUtils {
 
             override fun onAdOpened() {}
             override fun onAdClicked() {
-                AppOpenManager.getInstance().disableAppResumeWithActivity(activity.javaClass)
+
             }
 
             override fun onAdClosed() {
@@ -655,7 +655,7 @@ object AdmodUtils {
 
             override fun onAdOpened() {}
             override fun onAdClicked() {
-                AppOpenManager.getInstance().disableAppResumeWithActivity(activity.javaClass)
+
             }
 
             override fun onAdClosed() {
@@ -871,6 +871,10 @@ object AdmodUtils {
         size: GoogleENative,
         adCallback: NativeAdCallback
     ) {
+        if (!isShowAds || !isNetworkConnected(activity)) {
+            viewGroup.visibility = View.GONE
+            return
+        }
         var s = s
         val tagView: View = if (size === GoogleENative.UNIFIED_MEDIUM) {
             activity.layoutInflater.inflate(R.layout.layoutnative_loading_medium, null, false)
@@ -881,10 +885,6 @@ object AdmodUtils {
         val shimmerFrameLayout =
             tagView.findViewById<ShimmerFrameLayout>(R.id.shimmer_view_container)
         shimmerFrameLayout.startShimmer()
-        if (!isShowAds || !isNetworkConnected(activity)) {
-            viewGroup.visibility = View.GONE
-            return
-        }
         if (isTesting) {
             s = activity.getString(R.string.test_ads_admob_native_id)
         }
@@ -909,7 +909,7 @@ object AdmodUtils {
                 }
                 override fun onAdClicked() {
                     super.onAdClicked()
-                    AppOpenManager.getInstance().disableAppResumeWithActivity(activity.javaClass)
+
                 }
             })
             .withNativeAdOptions(NativeAdOptions.Builder().build()).build()
@@ -928,6 +928,10 @@ object AdmodUtils {
         adCallback: NativeAdCallback
     ) {
         Log.d("===Native", "Native1")
+        if (!isShowAds || !isNetworkConnected(activity)) {
+            viewGroup.visibility = View.GONE
+            return
+        }
         viewGroup.removeAllViews()
         var s = nativeHolder.ads
         val tagView: View = if (size === GoogleENative.UNIFIED_MEDIUM) {
@@ -939,10 +943,7 @@ object AdmodUtils {
         val shimmerFrameLayout =
             tagView.findViewById<ShimmerFrameLayout>(R.id.shimmer_view_container)
         shimmerFrameLayout.startShimmer()
-        if (!isShowAds || !isNetworkConnected(activity)) {
-            viewGroup.visibility = View.GONE
-            return
-        }
+
         if (isTesting) {
             s = activity.getString(R.string.test_ads_admob_native_video_id)
         }
@@ -971,7 +972,7 @@ object AdmodUtils {
 
                 override fun onAdClicked() {
                     super.onAdClicked()
-                    AppOpenManager.getInstance().disableAppResumeWithActivity(activity.javaClass)
+
                 }
             })
             .withNativeAdOptions(NativeAdOptions.Builder().build()).build()
@@ -1020,7 +1021,7 @@ object AdmodUtils {
                 }
                 override fun onAdClicked() {
                     super.onAdClicked()
-                    AppOpenManager.getInstance().disableAppResumeWithActivity(activity.javaClass)
+
                 }
             })
             .withNativeAdOptions(NativeAdOptions.Builder().build()).build()
@@ -1029,73 +1030,6 @@ object AdmodUtils {
         }
         Log.e("Admod", "loadAdNativeAds")
     }
-
-    @JvmStatic
-    fun loadAndShowNativeAdsWithLayoutAdsWithOnResume(
-        activity: Activity,
-        nativeHolder: NativeHolder,
-        viewGroup: ViewGroup,
-        layout: Int,
-        size: GoogleENative,
-        adCallback: NativeAdCallback
-    ) {
-        if (ProcessLifecycleOwner.get().lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) && !AppOpenManager.getInstance().isShowingAdsOnResume && !interIsShowingWithNative){
-            if (nativeHolder.isLoad){
-                adCallback.onAdFail("native is loading...")
-                return
-            }
-            viewGroup.removeAllViews()
-            nativeHolder.isLoad = true
-            Log.d("===Checked","LoadNative")
-            var s = nativeHolder.ads
-            val tagView: View = if (size === GoogleENative.UNIFIED_MEDIUM) {
-                activity.layoutInflater.inflate(R.layout.layoutnative_loading_medium, null, false)
-            } else {
-                activity.layoutInflater.inflate(R.layout.layoutnative_loading_small, null, false)
-            }
-            viewGroup.addView(tagView, 0)
-            val shimmerFrameLayout = tagView.findViewById<ShimmerFrameLayout>(R.id.shimmer_view_container)
-            shimmerFrameLayout.startShimmer()
-            if (!isShowAds || !isNetworkConnected(activity)) {
-                viewGroup.visibility = View.GONE
-                return
-            }
-            if (isTesting) {
-                s = activity.getString(R.string.test_ads_admob_native_id)
-            }
-            val adLoader: AdLoader = AdLoader.Builder(activity, s)
-                .forNativeAd { nativeAd ->
-                    nativeHolder.isLoad = false
-                    adCallback.onNativeAdLoaded()
-                    val adView = activity.layoutInflater
-                        .inflate(layout, null) as NativeAdView
-                    populateNativeAdView(nativeAd, adView, GoogleENative.UNIFIED_MEDIUM)
-                    shimmerFrameLayout.stopShimmer()
-                    viewGroup.removeAllViews()
-                    viewGroup.addView(adView)
-                    //viewGroup.setVisibility(View.VISIBLE);
-                }.withAdListener(object : AdListener() {
-                    override fun onAdFailedToLoad(adError: LoadAdError) {
-                        Log.e("Admodfail", "onAdFailedToLoad" + adError.message)
-                        Log.e("Admodfail", "errorCodeAds" + adError.cause)
-//                        loadAndShowNativeAdsWithLayout2(activity,nativeHolder.ads2,nativeHolder,viewGroup,layout,shimmerFrameLayout,adCallback)
-                    }
-                    override fun onAdClicked() {
-                        super.onAdClicked()
-                        AppOpenManager.getInstance().disableAppResumeWithActivity(activity.javaClass)
-                    }
-                })
-                .withNativeAdOptions(NativeAdOptions.Builder().build()).build()
-            if (adRequest != null) {
-                adLoader.loadAd(adRequest!!)
-            }
-        }else{
-            AppOpenManager.getInstance().isShowingAdsOnResume = false
-            interIsShowingWithNative = false
-        }
-        Log.e("Admod", "loadAdNativeAds")
-    }
-
 
     // ads native
     @SuppressLint("StaticFieldLeak")
@@ -1107,6 +1041,10 @@ object AdmodUtils {
         size: GoogleENative,
         adCallback: NativeAdCallback
     ) {
+        if (!isShowAds || !isNetworkConnected(activity)) {
+            viewGroup.visibility = View.GONE
+            return
+        }
         var s = s
         val tagView: View = if (size === GoogleENative.UNIFIED_MEDIUM) {
             activity.layoutInflater.inflate(R.layout.layoutnative_loading_medium, null, false)
@@ -1117,10 +1055,6 @@ object AdmodUtils {
         val shimmerFrameLayout =
             tagView.findViewById<ShimmerFrameLayout>(R.id.shimmer_view_container)
         shimmerFrameLayout.startShimmer()
-        if (!isShowAds || !isNetworkConnected(activity)) {
-            viewGroup.visibility = View.GONE
-            return
-        }
         if (isTesting) {
             s = activity.getString(R.string.test_ads_admob_native_id)
         }
@@ -2538,7 +2472,7 @@ object AdmodUtils {
             }
             override fun onAdClicked() {
                 super.onAdClicked()
-                AppOpenManager.getInstance().disableAppResumeWithActivity(activity.javaClass)
+
             }
         })
         if (adRequest != null) {

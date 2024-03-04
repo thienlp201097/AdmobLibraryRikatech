@@ -39,10 +39,10 @@ class AOAManager(private val activity: Activity,val appOpen: String,val timeOut:
     fun loadAndShowAoA() {
         Log.d("===Load","id1")
         var idAoa = appOpen
-        if (AdmodUtils.isTesting){
-            idAoa = activity.getString(R.string.test_ads_admob_app_open)
+        if (AdmobUtils.isTesting){
+            idAoa = activity.getString(R.string.test_ads_admob_app_open_new)
         }
-        if (!AdmodUtils.isShowAds){
+        if (!AdmobUtils.isShowAds){
             appOpenAdsListener.onAdsFailed("isShowAds false")
             return
         }

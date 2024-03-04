@@ -18,7 +18,7 @@ import com.google.android.gms.ads.nativead.NativeAd
 import com.vapp.admobexample.R
 import com.vapp.admoblibrary.AdsInterCallBack
 import com.vapp.admoblibrary.ads.AdCallBackInterLoad
-import com.vapp.admoblibrary.ads.AdmodUtils
+import com.vapp.admoblibrary.ads.AdmobUtils
 import com.vapp.admoblibrary.ads.AppOpenManager
 import com.vapp.admoblibrary.ads.NativeAdCallback
 import com.vapp.admoblibrary.ads.admobnative.enumclass.CollapsibleBanner
@@ -61,11 +61,11 @@ object AdsManager {
     }
 
     fun loadAndShowNative(activity: Activity, nativeAdContainer: ViewGroup, nativeHolder: NativeHolder){
-        if (!AdmodUtils.isNetworkConnected(activity)) {
+        if (!AdmobUtils.isNetworkConnected(activity)) {
             nativeAdContainer.visibility = View.GONE
             return
         }
-        AdmodUtils.loadAndShowNativeAdsWithLayoutAds(activity,nativeHolder, nativeAdContainer,R.layout.ad_template_medium,GoogleENative.UNIFIED_MEDIUM,object : NativeAdCallback{
+        AdmobUtils.loadAndShowNativeAdsWithLayoutAds(activity,nativeHolder, nativeAdContainer,R.layout.ad_template_medium,GoogleENative.UNIFIED_MEDIUM,object : NativeAdCallback{
             override fun onLoadedAndGetNativeAd(ad: NativeAd?) {
             }
 
@@ -85,7 +85,7 @@ object AdsManager {
     }
 
     fun loadInter(context: Context, interHolder: InterHolder) {
-        AdmodUtils.loadAndGetAdInterstitial(context, interHolder, object :
+        AdmobUtils.loadAndGetAdInterstitial(context, interHolder, object :
             AdCallBackInterLoad {
             override fun onAdClosed() {
 
@@ -110,7 +110,7 @@ object AdsManager {
 
     fun showAdInter(context: Context, interHolder: InterHolder, callback: AdListener, ) {
         AppOpenManager.getInstance().isAppResumeEnabled = true
-        AdmodUtils.showAdInterstitialWithCallbackNotLoadNew(
+        AdmobUtils.showAdInterstitialWithCallbackNotLoadNew(
             context as Activity,
             interHolder,
             10000,
@@ -129,7 +129,7 @@ object AdsManager {
                     Log.d("===AdValue", "Show" )
                     Handler().postDelayed({
                         try {
-                            AdmodUtils.dismissAdDialog()
+                            AdmobUtils.dismissAdDialog()
                         } catch (_: Exception) {
 
                         }
@@ -156,7 +156,7 @@ object AdsManager {
     }
 
     fun loadAndShowIntersial(activity: Activity, adListener: AdListener) {
-        AdmodUtils.loadAndShowAdInterstitialWithCallbackMultiAds(activity as AppCompatActivity, "", "",
+        AdmobUtils.loadAndShowAdInterstitialWithCallbackMultiAds(activity as AppCompatActivity, "", "",
             object : AdsInterCallBack {
                 override fun onStartAction() {
                     adListener.onAdClosedOrFailed()
@@ -189,7 +189,7 @@ object AdsManager {
     }
 
     fun loadNative(activity: Context, nativeHolder: NativeHolder) {
-        AdmodUtils.loadAndGetNativeAds(activity, nativeHolder, object : NativeAdCallback {
+        AdmobUtils.loadAndGetNativeAds(activity, nativeHolder, object : NativeAdCallback {
                 override fun onLoadedAndGetNativeAd(ad: NativeAd?) {
                 }
 
@@ -211,7 +211,7 @@ object AdsManager {
     }
 
     fun loadNativeFullScreen(activity: Context, nativeHolder: NativeHolder) {
-        AdmodUtils.loadAndGetNativeFullScreenAds(activity, nativeHolder,MediaAspectRatio.SQUARE, object : NativeAdCallback {
+        AdmobUtils.loadAndGetNativeFullScreenAds(activity, nativeHolder,MediaAspectRatio.SQUARE, object : NativeAdCallback {
             override fun onLoadedAndGetNativeAd(ad: NativeAd?) {
             }
 
@@ -233,11 +233,11 @@ object AdsManager {
     }
 
     fun showAdNativeFullScreen(activity: Activity, nativeAdContainer: ViewGroup, nativeHolder: NativeHolder) {
-        if (!AdmodUtils.isNetworkConnected(activity)) {
+        if (!AdmobUtils.isNetworkConnected(activity)) {
             nativeAdContainer.visibility = View.GONE
             return
         }
-        AdmodUtils.showNativeFullScreenAdsWithLayout(activity, nativeHolder, nativeAdContainer, R.layout.ad_unified, object : AdmodUtils.AdsNativeCallBackAdmod {
+        AdmobUtils.showNativeFullScreenAdsWithLayout(activity, nativeHolder, nativeAdContainer, R.layout.ad_unified, object : AdmobUtils.AdsNativeCallBackAdmod {
                 override fun NativeLoaded() {
                     Log.d("===NativeAds", "Native showed")
                     nativeAdContainer.visibility = View.VISIBLE
@@ -256,11 +256,11 @@ object AdsManager {
     }
 
     fun showAdNativeMedium(activity: Activity, nativeAdContainer: ViewGroup, nativeHolder: NativeHolder) {
-        if (!AdmodUtils.isNetworkConnected(activity)) {
+        if (!AdmobUtils.isNetworkConnected(activity)) {
             nativeAdContainer.visibility = View.GONE
             return
         }
-        AdmodUtils.showNativeAdsWithLayout(activity, nativeHolder, nativeAdContainer, R.layout.ad_template_medium, GoogleENative.UNIFIED_MEDIUM, object : AdmodUtils.AdsNativeCallBackAdmod {
+        AdmobUtils.showNativeAdsWithLayout(activity, nativeHolder, nativeAdContainer, R.layout.ad_template_medium, GoogleENative.UNIFIED_MEDIUM, object : AdmobUtils.AdsNativeCallBackAdmod {
             override fun NativeLoaded() {
                 Log.d("===NativeAds", "Native showed")
                 nativeAdContainer.visibility = View.VISIBLE
@@ -280,13 +280,13 @@ object AdsManager {
 
     @JvmStatic
     fun showAdBannerCollapsible(activity: Activity, bannerHolder: String, view: ViewGroup, line: View) {
-        if (AdmodUtils.isNetworkConnected(activity)) {
-            AdmodUtils.loadAdBannerCollapsible(
+        if (AdmobUtils.isNetworkConnected(activity)) {
+            AdmobUtils.loadAdBannerCollapsible(
                 activity,
                 bannerHolder,
                 CollapsibleBanner.BOTTOM,
                 view,
-                object : AdmodUtils.BannerCollapsibleAdCallback {
+                object : AdmobUtils.BannerCollapsibleAdCallback {
                     override fun onBannerAdLoaded(adSize: AdSize) {
                         view.visibility = View.VISIBLE
                         line.visibility = View.VISIBLE
@@ -312,9 +312,9 @@ object AdsManager {
 
     @JvmStatic
     fun showAdBanner(activity: Activity, bannerHolder: String, view: ViewGroup, line: View) {
-        if (AdmodUtils.isNetworkConnected(activity)) {
-            AdmodUtils.loadAdBanner(activity, bannerHolder, view, object :
-                AdmodUtils.BannerCallBack {
+        if (AdmobUtils.isNetworkConnected(activity)) {
+            AdmobUtils.loadAdBanner(activity, bannerHolder, view, object :
+                AdmobUtils.BannerCallBack {
                 override fun onLoad() {
                     view.visibility = View.VISIBLE
                     line.visibility = View.VISIBLE
@@ -337,7 +337,7 @@ object AdsManager {
 
     fun loadAndShowNativeFullScreen(activity: Activity, nativeAdContainer: ViewGroup, nativeHolder: NativeHolder){
 
-        AdmodUtils.loadAndShowNativeFullScreen(activity,nativeHolder.ads,nativeAdContainer,R.layout.ad_unified,MediaAspectRatio.SQUARE,object : NativeFullScreenCallBack{
+        AdmobUtils.loadAndShowNativeFullScreen(activity,nativeHolder.ads,nativeAdContainer,R.layout.ad_unified,MediaAspectRatio.SQUARE,object : NativeFullScreenCallBack{
             override fun onLoaded(nativeAd: NativeAd) {
                 Log.d("===native","loadAndShowNativeFullScreen")
             }
