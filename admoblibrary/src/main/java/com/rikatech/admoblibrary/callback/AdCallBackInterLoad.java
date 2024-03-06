@@ -1,4 +1,4 @@
-package com.rikatech.admoblibrary.ads;
+package com.rikatech.admoblibrary.callback;
 
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 

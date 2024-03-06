@@ -1,4 +1,4 @@
-package com.rikatech.admoblibrary.ads.model;
+package com.rikatech.admoblibrary.callback;
 
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdValue;

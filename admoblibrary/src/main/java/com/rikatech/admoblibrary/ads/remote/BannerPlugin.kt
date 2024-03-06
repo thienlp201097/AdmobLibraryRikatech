@@ -8,11 +8,12 @@ import android.view.ViewGroup.LayoutParams
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.gson.annotations.SerializedName
 import com.rikatech.admoblibrary.R
-import com.rikatech.admoblibrary.ads.AdmobUtils
+import com.rikatech.admoblibrary.ads.AdmobRikatech
 import com.rikatech.admoblibrary.ads.remote.BannerPlugin.BannerConfig.Companion.TYPE_ADAPTIVE
 import com.rikatech.admoblibrary.ads.remote.BannerPlugin.BannerConfig.Companion.TYPE_COLLAPSIBLE_BOTTOM
 import com.rikatech.admoblibrary.ads.remote.BannerPlugin.BannerConfig.Companion.TYPE_COLLAPSIBLE_TOP
 import com.rikatech.admoblibrary.ads.remote.BannerPlugin.BannerConfig.Companion.TYPE_STANDARD
+import com.rikatech.admoblibrary.callback.BannerRemoteConfig
 
 @SuppressLint("ViewConstructor")
 class BannerPlugin(
@@ -75,7 +76,7 @@ class BannerPlugin(
         this.defaultBannerType = BannerType.Adaptive
         this.defaultRefreshRateSec = 10
         this.defaultCBFetchIntervalSec = 20
-        this.loadAdAfterInit = AdmobUtils.isShowAds
+        this.loadAdAfterInit = AdmobRikatech.isShowAds
     }
 
     init {
@@ -95,7 +96,7 @@ class BannerPlugin(
         var cbFetchIntervalSec = config.defaultCBFetchIntervalSec
         var refreshRateSec: Int? = config.defaultRefreshRateSec
 
-        if (AdmobUtils.isTesting) {
+        if (AdmobRikatech.isTesting) {
             adUnitId = activity.getString(R.string.test_ads_admob_banner_id)
         }
         bannerType = when (bannerConfig?.type) {

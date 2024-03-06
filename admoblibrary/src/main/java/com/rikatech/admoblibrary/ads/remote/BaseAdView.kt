@@ -4,10 +4,10 @@ import android.app.Activity
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.annotation.CallSuper
 import com.rikatech.admoblibrary.ads.remote.BannerPlugin.Companion.log
+import com.rikatech.admoblibrary.callback.BannerRemoteConfig
 import kotlin.math.max
 
 internal abstract class BaseAdView(

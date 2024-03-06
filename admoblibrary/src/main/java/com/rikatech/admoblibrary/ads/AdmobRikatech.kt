@@ -1,6 +1,5 @@
 package com.rikatech.admoblibrary.ads
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
@@ -48,20 +47,23 @@ import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoadCallback
-import com.rikatech.admoblibrary.AdsInterCallBack
+import com.rikatech.admoblibrary.callback.AdsInterCallBack
 import com.rikatech.admoblibrary.R
 import com.rikatech.admoblibrary.ads.admobnative.NativeFunc.Companion.populateNativeAdView
 import com.rikatech.admoblibrary.ads.admobnative.enumclass.CollapsibleBanner
 import com.rikatech.admoblibrary.ads.admobnative.enumclass.GoogleENative
-import com.rikatech.admoblibrary.ads.model.BannerAdCallback
 import com.rikatech.admoblibrary.ads.model.BannerHolder
 import com.rikatech.admoblibrary.ads.model.InterHolder
 import com.rikatech.admoblibrary.ads.model.NativeHolder
 import com.rikatech.admoblibrary.ads.model.RewardedInterstitialHolder
-import com.rikatech.admoblibrary.ads.nativefullscreen.NativeFullScreenCallBack
+import com.rikatech.admoblibrary.callback.NativeFullScreenCallBack
 import com.rikatech.admoblibrary.ads.remote.BannerAdView
 import com.rikatech.admoblibrary.ads.remote.BannerPlugin
-import com.rikatech.admoblibrary.ads.remote.BannerRemoteConfig
+import com.rikatech.admoblibrary.callback.BannerRemoteConfig
+import com.rikatech.admoblibrary.callback.AdCallBackInterLoad
+import com.rikatech.admoblibrary.callback.AdLoadCallback
+import com.rikatech.admoblibrary.callback.NativeAdCallback
+import com.rikatech.admoblibrary.callback.RewardAdCallback
 import com.rikatech.admoblibrary.utils.SweetAlert.SweetAlertDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -73,7 +75,7 @@ import java.security.NoSuchAlgorithmException
 import java.util.Date
 import java.util.Locale
 
-object AdmobUtils {
+object AdmobRikatech {
     //Dialog loading
     @JvmField
     var dialog: SweetAlertDialog? = null
@@ -888,11 +890,11 @@ object AdmobUtils {
     @JvmStatic
     fun loadAndShowAdRewardWithCallback(
         activity: Activity,
-        admobId: String?,
+        admobId: RewardedInterstitialHolder,
         adCallback2: RewardAdCallback,
         enableLoadingDialog: Boolean
     ) {
-        var admobId = admobId
+        var admobId = admobId.ads
         mInterstitialAd = null
         isAdShowing = false
         if (!isShowAds || !isNetworkConnected(activity)) {

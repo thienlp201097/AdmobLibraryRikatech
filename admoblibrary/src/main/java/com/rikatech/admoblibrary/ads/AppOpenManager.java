@@ -82,7 +82,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
         isInitialized = true;
         this.myApplication = application;
         initAdRequest();
-        if (AdmobUtils.isTesting) {
+        if (AdmobRikatech.isTesting) {
             this.appResumeAdId = application.getString(R.string.test_ads_admob_app_open_new);
 
         } else {
@@ -356,10 +356,10 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
         if (currentActivity == null) {
             return;
         }
-        if(AdmobUtils.isAdShowing){
+        if(AdmobRikatech.isAdShowing){
             return;
         }
-        if (!AdmobUtils.isShowAds) {
+        if (!AdmobRikatech.isShowAds) {
             return;
         }
 
@@ -367,8 +367,8 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
             Log.d("===Onresume", "isAppResumeEnabled");
             return;
         } else {
-            if(AdmobUtils.dialog != null && AdmobUtils.dialog.isShowing())
-                AdmobUtils.dialog.dismiss();
+            if(AdmobRikatech.dialog != null && AdmobRikatech.dialog.isShowing())
+                AdmobRikatech.dialog.dismiss();
         }
 
         for (Class activity : disabledAppOpenList) {

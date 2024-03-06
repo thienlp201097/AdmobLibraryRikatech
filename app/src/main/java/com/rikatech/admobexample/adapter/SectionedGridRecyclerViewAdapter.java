@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.ads.AdValue;
 import com.google.android.gms.ads.nativead.NativeAd;
-import com.rikatech.admoblibrary.ads.AdmobUtils;
-import com.rikatech.admoblibrary.ads.NativeAdCallback;
+import com.rikatech.admoblibrary.ads.AdmobRikatech;
+import com.rikatech.admoblibrary.callback.NativeAdCallback;
 import com.rikatech.admoblibrary.ads.admobnative.enumclass.GoogleENative;
 
 import java.util.Arrays;
@@ -105,7 +105,7 @@ public class SectionedGridRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder sectionViewHolder, int position) {
         if (isSectionHeaderPosition(position)) {
-            AdmobUtils.loadAndShowNativeAdsWithLayout(
+            AdmobRikatech.loadAndShowNativeAdsWithLayout(
                     mContext,
                     admobid,
                     ((SectionViewHolder)sectionViewHolder).ads,

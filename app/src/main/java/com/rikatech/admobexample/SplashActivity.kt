@@ -7,12 +7,12 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.ads.AdValue
-import com.rikatech.admobexample.utilsdemp.AdsManager.interholder
-import com.rikatech.admobexample.view.MainActivity
-import com.rikatech.admoblibrary.AdsInterCallBack
+import com.rikatech.admobexample.utilsdemp.AdsManager
+import com.rikatech.admobexample.view.AdsActivity
+import com.rikatech.admoblibrary.callback.AdsInterCallBack
 import com.rikatech.admoblibrary.ads.AOAManager
-import com.rikatech.admoblibrary.ads.AdmobUtils.initAdmob
-import com.rikatech.admoblibrary.ads.AdmobUtils.loadAndShowAdInterstitial
+import com.rikatech.admoblibrary.ads.AdmobRikatech.initAdmob
+import com.rikatech.admoblibrary.ads.AdmobRikatech.loadAndShowAdInterstitial
 import com.rikatech.admoblibrary.ads.AppOpenManager
 import com.rikatech.admoblibrary.cmp.GoogleMobileAdsConsentManager
 import com.rikatech.admoblibrary.utils.Utils
@@ -61,7 +61,7 @@ class SplashActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         if (isAOAFalse) {
-            Utils.getInstance().replaceActivity(this@SplashActivity, MainActivity::class.java)
+            Utils.getInstance().replaceActivity(this@SplashActivity, AdsActivity::class.java)
         }
     }
 
@@ -94,12 +94,13 @@ class SplashActivity : AppCompatActivity() {
     }
 
     fun showInter(){
-        loadAndShowAdInterstitial(this@SplashActivity, interholder, object : AdsInterCallBack {
+        loadAndShowAdInterstitial(this@SplashActivity, AdsManager.inter_holder, object :
+            AdsInterCallBack {
             override fun onStartAction() {}
             override fun onEventClickAdClosed() {
                 Utils.getInstance().addActivity(
                     this@SplashActivity,
-                    MainActivity::class.java
+                    AdsActivity::class.java
                 )
             }
 
@@ -108,7 +109,7 @@ class SplashActivity : AppCompatActivity() {
             override fun onAdFail(error: String) {
                 Utils.getInstance().addActivity(
                     this@SplashActivity,
-                    MainActivity::class.java
+                    AdsActivity::class.java
                 )
             }
 
@@ -133,13 +134,13 @@ class SplashActivity : AppCompatActivity() {
 
                 override fun onAdsClose() {
                     Utils.getInstance()
-                        .replaceActivity(this@SplashActivity, MainActivity::class.java)
+                        .replaceActivity(this@SplashActivity, AdsActivity::class.java)
                 }
 
                 override fun onAdsFailed(massage: String) {
                     isAOAFalse = true
                     Utils.getInstance()
-                        .replaceActivity(this@SplashActivity, MainActivity::class.java)
+                        .replaceActivity(this@SplashActivity, AdsActivity::class.java)
                 }
             })
         aoaManager!!.loadAndShowAoA()

@@ -2,11 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.rikatech.admobexample">
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission  android:name="com.google.android.gms.permission.AD_ID"/>
-
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
 
     <application
         android:name=".MyApplication"
@@ -26,7 +26,7 @@
             android:value="ca-app-pub-6315271820521359~1022027969" />
 
         <activity
-            android:name=".view.MainActivity"
+            android:name=".view.AdsActivity"
             android:exported="true"
             android:theme="@style/Theme.AdmobExample.NoActionBar"
             android:windowSoftInputMode="adjustPan">
@@ -49,10 +49,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.NativeRecyclerActivity" />
-        <activity android:name=".iap.IAPActivity" />
         <activity android:name=".utilsdemp.UtilsDemoActivity" />
         <activity android:name=".view.NativeGridActivity" />
-
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package com.rikatech.admoblibrary.ads.nativefullscreen
+package com.rikatech.admoblibrary.callback
 
 import com.google.android.gms.ads.AdValue
 import com.google.android.gms.ads.nativead.NativeAd

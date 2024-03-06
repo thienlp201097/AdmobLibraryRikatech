@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.ads.AdValue
 import com.google.android.gms.ads.nativead.NativeAd
 import com.rikatech.admoblibrary.R
-import com.rikatech.admoblibrary.ads.AdmobUtils
-import com.rikatech.admoblibrary.ads.NativeAdCallback
+import com.rikatech.admoblibrary.ads.AdmobRikatech
+import com.rikatech.admoblibrary.callback.NativeAdCallback
 import com.rikatech.admoblibrary.ads.admobnative.enumclass.GoogleENative
 
 class GoogleGridNativeAdAdapter(private val mParam: Param) :
@@ -57,15 +57,16 @@ class GoogleGridNativeAdAdapter(private val mParam: Param) :
         if (mParam.forceReloadAdOnBind || !adHolder.loaded) {
 
             var idAdmob = ""
-            if (AdmobUtils.isTesting){
+            if (AdmobRikatech.isTesting){
                 idAdmob = mParam.activity!!.getString(R.string.test_ads_admob_native_id);
             }else{
                 idAdmob = mParam.idAdmob;
             }
-            AdmobUtils.loadAndShowNativeAdsWithLayout(mParam.activity!!,
+            AdmobRikatech.loadAndShowNativeAdsWithLayout(mParam.activity!!,
                 idAdmob,
                 holder.adFrame,
-                mParam.layout,  GoogleENative.UNIFIED_MEDIUM,object : NativeAdCallback {
+                mParam.layout,  GoogleENative.UNIFIED_MEDIUM,object :
+                    NativeAdCallback {
                     override fun onLoadedAndGetNativeAd(ad: NativeAd?) {
                     }
 

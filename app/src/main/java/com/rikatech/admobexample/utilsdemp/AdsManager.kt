@@ -3,12 +3,12 @@ package com.rikatech.admobexample.utilsdemp
 import android.app.Activity
 import android.content.Context
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdValue
 import com.google.android.gms.ads.AdView
@@ -16,82 +16,90 @@ import com.google.android.gms.ads.MediaAspectRatio
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.nativead.NativeAd
 import com.rikatech.admobexample.R
-import com.rikatech.admobexample.view.MainActivity
-import com.rikatech.admoblibrary.AdsInterCallBack
-import com.rikatech.admoblibrary.ads.AdCallBackInterLoad
-import com.rikatech.admoblibrary.ads.AdmobUtils
+import com.rikatech.admoblibrary.ads.AdmobRikatech
 import com.rikatech.admoblibrary.ads.AppOpenManager
-import com.rikatech.admoblibrary.ads.NativeAdCallback
 import com.rikatech.admoblibrary.ads.admobnative.enumclass.CollapsibleBanner
 import com.rikatech.admoblibrary.ads.admobnative.enumclass.GoogleENative
-import com.rikatech.admoblibrary.ads.model.AppOpenAppHolder
-import com.rikatech.admoblibrary.ads.model.BannerHolder
 import com.rikatech.admoblibrary.ads.model.InterHolder
 import com.rikatech.admoblibrary.ads.model.NativeHolder
 import com.rikatech.admoblibrary.ads.model.RewardedInterstitialHolder
-import com.rikatech.admoblibrary.ads.nativefullscreen.NativeFullScreenCallBack
 import com.rikatech.admoblibrary.ads.remote.BannerPlugin
-import com.rikatech.admoblibrary.ads.remote.BannerRemoteConfig
-import com.rikatech.admoblibrary.utils.Utils
+import com.rikatech.admoblibrary.callback.AdCallBackInterLoad
+import com.rikatech.admoblibrary.callback.AdLoadCallback
+import com.rikatech.admoblibrary.callback.AdsInterCallBack
+import com.rikatech.admoblibrary.callback.BannerRemoteConfig
+import com.rikatech.admoblibrary.callback.NativeAdCallback
+import com.rikatech.admoblibrary.callback.NativeFullScreenCallBack
+import com.rikatech.admoblibrary.callback.RewardAdCallback
 
 object AdsManager {
-    var interAds1: InterstitialAd? = null
-    val mutable_inter1: MutableLiveData<InterstitialAd> = MutableLiveData()
-    var check_inter1 = false
-
     var nativeHolder = NativeHolder("")
-    var bannerHolder = BannerHolder("", "")
-    var aoaHolder = AppOpenAppHolder("", "")
-    var interholder = InterHolder("")
+    var inter_holder = InterHolder("")
     var interRewardHolder = RewardedInterstitialHolder("")
-    fun loadAndShowBannerRemote(activity: Activity, id : String ,bannerConfig: BannerPlugin.BannerConfig?, view: ViewGroup, line: View){
-        BannerPlugin(activity, view,id,bannerConfig,object : BannerRemoteConfig{
-                override fun onBannerAdLoaded(adSize: AdSize?) {
-                    view.visibility = View.VISIBLE
-                    line.visibility = View.VISIBLE
-                }
-
-                override fun onAdFail() {
-                    view.visibility = View.GONE
-                    line.visibility = View.GONE
-                }
-
-                override fun onAdPaid(adValue: AdValue, mAdView: AdView) {
-                }
+    fun loadAndShowBannerRemote(
+        activity: Activity,
+        id: String,
+        bannerConfig: BannerPlugin.BannerConfig?,
+        view: ViewGroup,
+        line: View
+    ) {
+        BannerPlugin(activity, view, id, bannerConfig, object : BannerRemoteConfig {
+            override fun onBannerAdLoaded(adSize: AdSize?) {
+                view.visibility = View.VISIBLE
+                line.visibility = View.VISIBLE
             }
+
+            override fun onAdFail() {
+                view.visibility = View.GONE
+                line.visibility = View.GONE
+            }
+
+            override fun onAdPaid(adValue: AdValue, mAdView: AdView) {
+            }
+        }
         )
     }
 
-    fun loadAndShowNative(activity: Activity, nativeAdContainer: ViewGroup, nativeHolder: NativeHolder){
-        if (!AdmobUtils.isNetworkConnected(activity)) {
+    fun loadAndShowNative(
+        activity: Activity,
+        nativeAdContainer: ViewGroup,
+        nativeHolder: NativeHolder
+    ) {
+        if (!AdmobRikatech.isNetworkConnected(activity)) {
             nativeAdContainer.visibility = View.GONE
             return
         }
-        AdmobUtils.loadAndShowNativeAdsWithLayoutAds(activity,nativeHolder, nativeAdContainer,R.layout.ad_template_medium,GoogleENative.UNIFIED_MEDIUM,object : AdmobUtils.NativeAdCallbackNew{
-            override fun onLoadedAndGetNativeAd(ad: NativeAd?) {
-            }
+        AdmobRikatech.loadAndShowNativeAdsWithLayoutAds(
+            activity,
+            nativeHolder,
+            nativeAdContainer,
+            R.layout.ad_template_medium,
+            GoogleENative.UNIFIED_MEDIUM,
+            object : AdmobRikatech.NativeAdCallbackNew {
+                override fun onLoadedAndGetNativeAd(ad: NativeAd?) {
+                }
 
-            override fun onNativeAdLoaded() {
-                Log.d("===nativeload","true")
-                nativeAdContainer.visibility = View.VISIBLE
-            }
+                override fun onNativeAdLoaded() {
+                    Log.d("===nativeload", "true")
+                    nativeAdContainer.visibility = View.VISIBLE
+                }
 
-            override fun onAdFail(error: String) {
-                nativeAdContainer.visibility = View.GONE
-            }
+                override fun onAdFail(error: String) {
+                    nativeAdContainer.visibility = View.GONE
+                }
 
-            override fun onAdPaid(adValue: AdValue?, adUnitAds: String?) {
-                Log.d("===AdValue","Native: ${adValue?.currencyCode}|${adValue?.valueMicros}")
-            }
+                override fun onAdPaid(adValue: AdValue?, adUnitAds: String?) {
+                    Log.d("===AdValue", "Native: ${adValue?.currencyCode}|${adValue?.valueMicros}")
+                }
 
-            override fun onClickAds() {
+                override fun onClickAds() {
 
-            }
-        })
+                }
+            })
     }
 
     fun loadInter(context: Context, interHolder: InterHolder) {
-        AdmobUtils.loadAndGetAdInterstitial(context, interHolder, object :
+        AdmobRikatech.loadAndGetAdInterstitial(context, interHolder, object :
             AdCallBackInterLoad {
             override fun onAdClosed() {
 
@@ -114,9 +122,9 @@ object AdsManager {
         })
     }
 
-    fun showAdInter(context: Context, interHolder: InterHolder, callback: AdListener, ) {
+    fun showAdInter(context: Context, interHolder: InterHolder, callback: AdListener) {
         AppOpenManager.getInstance().isAppResumeEnabled = true
-        AdmobUtils.showAdInterstitialWithCallbackNotLoadNew(
+        AdmobRikatech.showAdInterstitialWithCallbackNotLoadNew(
             context as Activity,
             interHolder,
             10000,
@@ -133,9 +141,9 @@ object AdsManager {
 
                 override fun onAdShowed() {
                     Log.d("===AdValue", "Show" )
-                    Handler().postDelayed({
+                    Handler(Looper.getMainLooper()).postDelayed({
                         try {
-                            AdmobUtils.dismissAdDialog()
+                            AdmobRikatech.dismissAdDialog()
                         } catch (_: Exception) {
 
                         }
@@ -148,23 +156,26 @@ object AdsManager {
 
                 override fun onAdFail(error: String?) {
                     Log.d("===Failed", error.toString())
-                    val log = error?.split(":")?.get(0)?.replace(" ", "_")
                     loadInter(context, interHolder)
                     callback.onAdClosedOrFailed()
                 }
 
                 override fun onPaid(adValue: AdValue?, adUnitAds: String?) {
-                    Log.d("===AdValue","Inter: ${adValue?.currencyCode}|${adValue?.valueMicros}")
+                    Log.d("===AdValue", "Inter: ${adValue?.currencyCode}|${adValue?.valueMicros}")
                 }
             },
             true
         )
     }
 
-    fun loadAndShowIntersial(activity: AppCompatActivity, adListener: AdListener) {
-
-        AdmobUtils.loadAndShowAdInterstitial(activity,
-            interholder,
+    fun loadAndShowIntersial(
+        activity: AppCompatActivity,
+        inter: InterHolder,
+        adListener: AdListener
+    ) {
+        AdmobRikatech.loadAndShowAdInterstitial(
+            activity,
+            inter,
             object : AdsInterCallBack {
                 override fun onStartAction() {}
                 override fun onEventClickAdClosed() {
@@ -185,16 +196,18 @@ object AdsManager {
     }
 
     fun loadNative(activity: Context, nativeHolder: NativeHolder) {
-        AdmobUtils.loadAndGetNativeAds(activity, nativeHolder, object : NativeAdCallback {
-                override fun onLoadedAndGetNativeAd(ad: NativeAd?) {
-                }
+        AdmobRikatech.loadAndGetNativeAds(activity, nativeHolder, object :
+            NativeAdCallback {
+            override fun onLoadedAndGetNativeAd(ad: NativeAd?) {
+            }
 
             override fun onNativeAdLoaded() {
 
             }
 
             override fun onAdFail(error: String) {
-                Log.d("===AdsLoadsNative",
+                Log.d(
+                    "===AdsLoadsNative",
                     error.replace(":", "").replace(" ", "_").replace(".", "").replace("?", "")
                         .replace("!", "")
                 )
@@ -207,37 +220,47 @@ object AdsManager {
     }
 
     fun loadNativeFullScreen(activity: Context, nativeHolder: NativeHolder) {
-        AdmobUtils.loadAndGetNativeFullScreenAds(activity, nativeHolder,MediaAspectRatio.SQUARE, object : AdmobUtils.NativeAdCallbackNew {
-            override fun onLoadedAndGetNativeAd(ad: NativeAd?) {
-            }
+        AdmobRikatech.loadAndGetNativeFullScreenAds(
+            activity,
+            nativeHolder,
+            MediaAspectRatio.SQUARE,
+            object : AdmobRikatech.NativeAdCallbackNew {
+                override fun onLoadedAndGetNativeAd(ad: NativeAd?) {
+                }
 
-            override fun onNativeAdLoaded() {
+                override fun onNativeAdLoaded() {
 
-            }
+                }
 
-            override fun onAdFail(error: String) {
-                Log.d("===AdsLoadsNative",
-                    error.replace(":", "").replace(" ", "_").replace(".", "").replace("?", "")
-                        .replace("!", "")
-                )
-            }
+                override fun onAdFail(error: String) {
+                    Log.d(
+                        "===AdsLoadsNative",
+                        error.replace(":", "").replace(" ", "_").replace(".", "").replace("?", "")
+                            .replace("!", "")
+                    )
+                }
 
-            override fun onAdPaid(adValue: AdValue?, adUnitAds: String?) {
+                override fun onAdPaid(adValue: AdValue?, adUnitAds: String?) {
 
-            }
+                }
 
-            override fun onClickAds() {
-                TODO("Not yet implemented")
-            }
-        })
+                override fun onClickAds() {
+
+                }
+            })
     }
 
     fun showAdNativeFullScreen(activity: Activity, nativeAdContainer: ViewGroup, nativeHolder: NativeHolder) {
-        if (!AdmobUtils.isNetworkConnected(activity)) {
+        if (!AdmobRikatech.isNetworkConnected(activity)) {
             nativeAdContainer.visibility = View.GONE
             return
         }
-        AdmobUtils.showNativeFullScreenAdsWithLayout(activity, nativeHolder, nativeAdContainer, R.layout.ad_unified, object : AdmobUtils.AdsNativeCallBackAdmod {
+        AdmobRikatech.showNativeFullScreenAdsWithLayout(
+            activity,
+            nativeHolder,
+            nativeAdContainer,
+            R.layout.ad_unified,
+            object : AdmobRikatech.AdsNativeCallBackAdmod {
                 override fun NativeLoaded() {
                     Log.d("===NativeAds", "Native showed")
                     nativeAdContainer.visibility = View.VISIBLE
@@ -248,45 +271,51 @@ object AdsManager {
                     nativeAdContainer.visibility = View.GONE
                 }
 
-            override fun onPaidNative(adValue: AdValue, adUnitAds: String) {
+                override fun onPaidNative(adValue: AdValue, adUnitAds: String) {
 
+                }
             }
-        }
         )
     }
 
-    fun showAdNativeMedium(activity: Activity, nativeAdContainer: ViewGroup, nativeHolder: NativeHolder) {
-        if (!AdmobUtils.isNetworkConnected(activity)) {
+    fun showAdNative(activity: Activity, nativeAdContainer: ViewGroup, nativeHolder: NativeHolder) {
+        if (!AdmobRikatech.isNetworkConnected(activity)) {
             nativeAdContainer.visibility = View.GONE
             return
         }
-        AdmobUtils.showNativeAdsWithLayout(activity, nativeHolder, nativeAdContainer, R.layout.ad_template_medium, GoogleENative.UNIFIED_MEDIUM, object : AdmobUtils.AdsNativeCallBackAdmod {
-            override fun NativeLoaded() {
-                Log.d("===NativeAds", "Native showed")
-                nativeAdContainer.visibility = View.VISIBLE
-            }
+        AdmobRikatech.showNativeAdsWithLayout(
+            activity,
+            nativeHolder,
+            nativeAdContainer,
+            R.layout.ad_template_medium,
+            GoogleENative.UNIFIED_MEDIUM,
+            object : AdmobRikatech.AdsNativeCallBackAdmod {
+                override fun NativeLoaded() {
+                    Log.d("===NativeAds", "Native showed")
+                    nativeAdContainer.visibility = View.VISIBLE
+                }
 
-            override fun NativeFailed(massage: String) {
-                Log.d("===NativeAds", "Native false")
-                nativeAdContainer.visibility = View.GONE
-            }
+                override fun NativeFailed(massage: String) {
+                    Log.d("===NativeAds", "Native false")
+                    nativeAdContainer.visibility = View.GONE
+                }
 
-            override fun onPaidNative(adValue: AdValue, adUnitAds: String) {
+                override fun onPaidNative(adValue: AdValue, adUnitAds: String) {
 
+                }
             }
-        }
         )
     }
 
     @JvmStatic
-    fun showAdBannerCollapsible(activity: Activity, bannerHolder: String, view: ViewGroup, line: View) {
-        if (AdmobUtils.isNetworkConnected(activity)) {
-            AdmobUtils.loadAdBannerCollapsible(
+    fun showAdBannerCollapsible(activity: Activity, id: String, view: ViewGroup, line: View) {
+        if (AdmobRikatech.isNetworkConnected(activity)) {
+            AdmobRikatech.loadAdBannerCollapsible(
                 activity,
-                bannerHolder,
+                id,
                 CollapsibleBanner.BOTTOM,
                 view,
-                object : AdmobUtils.BannerCollapsibleAdCallback {
+                object : AdmobRikatech.BannerCollapsibleAdCallback {
                     override fun onClickAds() {
 
                     }
@@ -315,10 +344,10 @@ object AdsManager {
     }
 
     @JvmStatic
-    fun showAdBanner(activity: Activity, bannerHolder: String, view: ViewGroup, line: View) {
-        if (AdmobUtils.isNetworkConnected(activity)) {
-            AdmobUtils.loadAdBanner(activity, bannerHolder, view, object :
-                AdmobUtils.BannerCallBack {
+    fun showAdBanner(activity: Activity, id: String, view: ViewGroup, line: View) {
+        if (AdmobRikatech.isNetworkConnected(activity)) {
+            AdmobRikatech.loadAdBanner(activity, id, view, object :
+                AdmobRikatech.BannerCallBack {
                 override fun onClickAds() {
 
                 }
@@ -334,7 +363,7 @@ object AdsManager {
                 }
 
                 override fun onPaid(adValue: AdValue?, mAdView: AdView?) {
-                    Log.d("===AdValue","Banner: ${adValue?.currencyCode}|${adValue?.valueMicros}")
+                    Log.d("===AdValue", "Banner: ${adValue?.currencyCode}|${adValue?.valueMicros}")
                 }
             })
         } else {
@@ -343,22 +372,123 @@ object AdsManager {
         }
     }
 
-    fun loadAndShowNativeFullScreen(activity: Activity, nativeAdContainer: ViewGroup, nativeHolder: NativeHolder){
+    fun loadAndShowNativeFullScreen(
+        activity: Activity,
+        nativeAdContainer: ViewGroup,
+        nativeHolder: NativeHolder
+    ) {
+        AdmobRikatech.loadAndShowNativeFullScreen(
+            activity,
+            nativeHolder.ads,
+            nativeAdContainer,
+            R.layout.ad_unified,
+            MediaAspectRatio.SQUARE,
+            object :
+                NativeFullScreenCallBack {
+                override fun onLoaded(nativeAd: NativeAd) {
+                    Log.d("===native", "loadAndShowNativeFullScreen")
+                }
 
-        AdmobUtils.loadAndShowNativeFullScreen(activity,nativeHolder.ads,nativeAdContainer,R.layout.ad_unified,MediaAspectRatio.SQUARE,object : NativeFullScreenCallBack{
-            override fun onLoaded(nativeAd: NativeAd) {
-                Log.d("===native","loadAndShowNativeFullScreen")
+                override fun onLoadFailed() {
+
+                }
+
+                override fun onPaidNative(adValue: AdValue, adUnitAds: String) {
+
+                }
+
+            })
+    }
+
+    fun loadReward(activity: Activity, interstitialAd: RewardedInterstitialHolder) {
+        AdmobRikatech.loadAdInterstitialReward(activity, interstitialAd,
+            object : AdLoadCallback {
+                override fun onAdFail(message: String?) {}
+                override fun onAdLoaded() {
+                }
+            })
+    }
+
+    fun showInterReward(
+        activity: Activity,
+        interstitialAd: RewardedInterstitialHolder,
+        callback: AdListener
+    ) {
+        AdmobRikatech.showAdInterstitialRewardWithCallback(
+            activity,
+            interstitialAd,
+            object : RewardAdCallback {
+                override fun onAdClosed() {
+                    callback.onAdClosedOrFailed()
+                }
+
+                override fun onAdShowed() {
+
+                }
+
+                override fun onAdFail(message: String?) {
+                    callback.onAdClosedOrFailed()
+                }
+
+                override fun onEarned() {
+                    Toast.makeText(
+                        activity,
+                        "onEarned",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+                override fun onPaid(adValue: AdValue, adUnitAds: String?) {
+                    Toast.makeText(
+                        activity,
+                        adValue.valueMicros.toString() + adValue.currencyCode,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            })
+    }
+
+    fun loadAndShowReward(
+        activity: Activity,
+        interstitialAd: RewardedInterstitialHolder,
+        callback: AdListener
+    ) {
+        AdmobRikatech.loadAndShowAdRewardWithCallback(activity,interstitialAd,object : RewardAdCallback{
+            override fun onAdClosed() {
+                callback.onAdClosedOrFailed()
             }
 
-            override fun onLoadFailed() {
+            override fun onAdShowed() {
+                Handler(Looper.getMainLooper()).postDelayed({
+                    try {
+                        AdmobRikatech.dismissAdDialog()
+                    } catch (_: Exception) {
 
+                    }
+                }, 800)
             }
 
-            override fun onPaidNative(adValue: AdValue, adUnitAds: String) {
-
+            override fun onAdFail(message: String?) {
+                callback.onAdClosedOrFailed()
             }
 
-        })
+            override fun onEarned() {
+                Toast.makeText(
+                    activity,
+                    "onEarned",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            override fun onPaid(adValue: AdValue?, adUnitAds: String?) {
+                Toast.makeText(
+                    activity,
+                    adValue?.valueMicros.toString() + adValue?.currencyCode,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+        },true)
     }
 
     interface AdListener {

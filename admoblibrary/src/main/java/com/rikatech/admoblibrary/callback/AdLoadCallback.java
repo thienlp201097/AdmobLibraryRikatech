@@ -1,4 +1,4 @@
-package com.rikatech.admoblibrary.ads;
+package com.rikatech.admoblibrary.callback;
 
 public interface AdLoadCallback {
     void onAdFail(String message);

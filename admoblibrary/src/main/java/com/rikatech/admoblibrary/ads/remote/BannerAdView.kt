@@ -13,6 +13,7 @@ import androidx.core.view.updateLayoutParams
 import com.google.ads.mediation.admob.AdMobAdapter
 import com.google.android.gms.ads.*
 import com.rikatech.admoblibrary.ads.remote.BannerPlugin.Companion.log
+import com.rikatech.admoblibrary.callback.BannerRemoteConfig
 
 @SuppressLint("ViewConstructor")
 internal class BannerAdView(
