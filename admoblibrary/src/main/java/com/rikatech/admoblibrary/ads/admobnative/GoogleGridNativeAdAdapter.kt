@@ -62,7 +62,7 @@ class GoogleGridNativeAdAdapter(private val mParam: Param) :
             }else{
                 idAdmob = mParam.idAdmob;
             }
-            AdmobRikatech.loadAndShowNativeAdsWithLayout(mParam.activity!!,
+            AdmobRikatech.loadAndShowNativeAdsWithLayout(mParam.activity,
                 idAdmob,
                 holder.adFrame,
                 mParam.layout,  GoogleENative.UNIFIED_MEDIUM,object :
@@ -71,7 +71,7 @@ class GoogleGridNativeAdAdapter(private val mParam: Param) :
                     }
 
                     override fun onNativeAdLoaded() {}
-                    override fun onAdFail(error: String?) {}
+                    override fun onAdFail(error: String) {}
                     override fun onAdPaid(adValue: AdValue?, adUnitAds: String?) {
                     }
                 })

@@ -73,7 +73,7 @@ class GoogleNativeAdAdapter(private val mParam: Param) :
                     }
 
                     override fun onNativeAdLoaded() {}
-                    override fun onAdFail(error: String?) {}
+                    override fun onAdFail(error: String) {}
                     override fun onAdPaid(adValue: AdValue?, adUnitAds: String?) {
                         TODO("Not yet implemented")
                     }
