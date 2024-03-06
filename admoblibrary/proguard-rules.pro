@@ -21,7 +21,7 @@
 #-renamesourcefileattribute SourceFile
 -keep class com.android.vending.billing.**
 -keepnames class com.google.android.play.core.review.ReviewInfo
--keep class com.vapp.admoblibrary.utils.SweetAlert.**
+-keep class com.rikatech.admoblibrary.utils.SweetAlert.**
 -keep class com.adjust.sdk.** { *; }
 -keep class com.google.android.gms.common.ConnectionResult {
    int SUCCESS;
