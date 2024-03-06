@@ -1,11 +1,11 @@
-package com.rikatech.admoblibrary.callback;
+package com.rikatech.admoblibrary.callback
 
-import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAd
 
-public interface AdCallBackInterLoad {
-    void onAdClosed();
-    void onEventClickAdClosed();
-    void onAdShowed();
-    void onAdLoaded(InterstitialAd interstitialAd, boolean isLoading);
-    void onAdFail(String message);
+interface AdCallBackInterLoad {
+    fun onAdClosed()
+    fun onEventClickAdClosed()
+    fun onAdShowed()
+    fun onAdLoaded(interstitialAd: InterstitialAd?, isLoading: Boolean)
+    fun onAdFail(message: String?)
 }

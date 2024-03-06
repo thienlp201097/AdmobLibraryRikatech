@@ -1,11 +1,11 @@
-package com.rikatech.admoblibrary.callback;
+package com.rikatech.admoblibrary.callback
 
-import com.google.android.gms.ads.AdValue;
-import com.google.android.gms.ads.nativead.NativeAd;
+import com.google.android.gms.ads.AdValue
+import com.google.android.gms.ads.nativead.NativeAd
 
-public interface NativeAdCallback {
-    void onLoadedAndGetNativeAd(NativeAd ad );
-    void onNativeAdLoaded();
-    void onAdFail(String error);
-    void onAdPaid(AdValue adValue, String adUnitAds);
+interface NativeAdCallback {
+    fun onLoadedAndGetNativeAd(ad: NativeAd?)
+    fun onNativeAdLoaded()
+    fun onAdFail(error: String)
+    fun onAdPaid(adValue: AdValue?, adUnitAds: String?)
 }

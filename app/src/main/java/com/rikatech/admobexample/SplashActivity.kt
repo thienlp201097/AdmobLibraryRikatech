@@ -106,14 +106,14 @@ class SplashActivity : AppCompatActivity() {
 
             override fun onAdShowed() {}
             override fun onAdLoaded() {}
-            override fun onAdFail(error: String) {
+            override fun onAdFail(error: String?) {
                 Utils.getInstance().addActivity(
                     this@SplashActivity,
                     AdsActivity::class.java
                 )
             }
 
-            override fun onPaid(adValue: AdValue, adUnitAds: String) {
+            override fun onPaid(adValue: AdValue, adUnitAds: String?) {
                 }
         }, false)
     }

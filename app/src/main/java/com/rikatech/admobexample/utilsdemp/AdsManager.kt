@@ -160,8 +160,8 @@ object AdsManager {
                     callback.onAdClosedOrFailed()
                 }
 
-                override fun onPaid(adValue: AdValue?, adUnitAds: String?) {
-                    Log.d("===AdValue", "Inter: ${adValue?.currencyCode}|${adValue?.valueMicros}")
+                override fun onPaid(adValue: AdValue, adUnitAds: String?) {
+                    Log.d("===AdValue", "Inter: ${adValue.currencyCode}|${adValue.valueMicros}")
                 }
             },
             true
@@ -184,11 +184,11 @@ object AdsManager {
 
                 override fun onAdShowed() {}
                 override fun onAdLoaded() {}
-                override fun onAdFail(error: String) {
+                override fun onAdFail(error: String?) {
                     adListener.onAdClosedOrFailed()
                 }
 
-                override fun onPaid(adValue: AdValue, adUnitAds: String) {
+                override fun onPaid(adValue: AdValue, adUnitAds: String?) {
                 }
             },
             true
@@ -480,7 +480,7 @@ object AdsManager {
                 ).show()
             }
 
-            override fun onPaid(adValue: AdValue?, adUnitAds: String?) {
+            override fun onPaid(adValue: AdValue, adUnitAds: String?) {
                 Toast.makeText(
                     activity,
                     adValue?.valueMicros.toString() + adValue?.currencyCode,

@@ -1,10 +1,10 @@
-package com.rikatech.admoblibrary.callback;
+package com.rikatech.admoblibrary.callback
 
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdValue;
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdValue
 
-public interface BannerAdCallback {
-    void onBannerAdLoaded(AdSize adSize);
-    void onAdFail();
-    void onAdPaid(AdValue adValue);
+interface BannerAdCallback {
+    fun onBannerAdLoaded(adSize: AdSize?)
+    fun onAdFail()
+    fun onAdPaid(adValue: AdValue?)
 }

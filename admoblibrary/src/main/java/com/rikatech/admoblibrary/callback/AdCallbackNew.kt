@@ -1,12 +1,9 @@
-package com.rikatech.admoblibrary.callback;
+package com.rikatech.admoblibrary.callback
 
-import com.google.android.gms.ads.AdValue;
-
-public interface AdCallbackNew {
-    void onAdClosed();
-    void onEventClickAdClosed();
-    void onAdShowed();
-    void onAdLoaded();
-    void onAdFail();
-
+interface AdCallbackNew {
+    fun onAdClosed()
+    fun onEventClickAdClosed()
+    fun onAdShowed()
+    fun onAdLoaded()
+    fun onAdFail()
 }

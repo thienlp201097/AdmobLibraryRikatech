@@ -1,6 +1,6 @@
-package com.rikatech.admoblibrary.callback;
+package com.rikatech.admoblibrary.callback
 
-public interface AdLoadCallback {
-    void onAdFail(String message);
-    void onAdLoaded();
+interface AdLoadCallback {
+    fun onAdFail(message: String?)
+    fun onAdLoaded()
 }

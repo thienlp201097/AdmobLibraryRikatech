@@ -1239,7 +1239,10 @@ object AdmobRikatech {
                         mInterstitialAd = interstitialAd
                         if (mInterstitialAd != null) {
                             mInterstitialAd!!.onPaidEventListener =
-                                OnPaidEventListener { adValue: AdValue? -> adCallback.onPaid(adValue,mInterstitialAd?.adUnitId) }
+                                OnPaidEventListener { adValue: AdValue? -> adValue?.let {
+                                    adCallback.onPaid(
+                                        it,mInterstitialAd?.adUnitId)
+                                } }
                             mInterstitialAd!!.fullScreenContentCallback =
                                 object : FullScreenContentCallback() {
                                     override fun onAdFailedToShowFullScreenContent(adError: AdError) {

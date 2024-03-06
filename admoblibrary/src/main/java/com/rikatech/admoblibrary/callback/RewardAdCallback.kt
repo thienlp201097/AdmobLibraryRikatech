@@ -1,12 +1,11 @@
-package com.rikatech.admoblibrary.callback;
+package com.rikatech.admoblibrary.callback
 
-import com.google.android.gms.ads.AdValue;
+import com.google.android.gms.ads.AdValue
 
-public interface RewardAdCallback {
-    void onAdClosed();
-    void onAdShowed();
-    void onAdFail(String message);
-    void onEarned();
-    void onPaid(AdValue adValue, String adUnitAds);
-
+interface RewardAdCallback {
+    fun onAdClosed()
+    fun onAdShowed()
+    fun onAdFail(message: String?)
+    fun onEarned()
+    fun onPaid(adValue: AdValue, adUnitAds: String?)
 }

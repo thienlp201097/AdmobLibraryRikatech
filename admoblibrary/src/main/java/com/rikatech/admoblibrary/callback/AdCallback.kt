@@ -1,6 +1,6 @@
-package com.rikatech.admoblibrary.callback;
+package com.rikatech.admoblibrary.callback
 
-public interface AdCallback {
-    void onAdClosed();
-    void onAdFail();
+interface AdCallback {
+    fun onAdClosed()
+    fun onAdFail()
 }
