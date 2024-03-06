@@ -48,9 +48,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.NativeRecyclerActivity" />
-        <activity android:name=".utilsdemp.UtilsDemoActivity" />
-        <activity android:name=".view.NativeGridActivity" />
     </application>
 
 </manifest>
