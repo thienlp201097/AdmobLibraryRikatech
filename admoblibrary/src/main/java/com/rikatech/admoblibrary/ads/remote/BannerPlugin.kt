@@ -97,7 +97,7 @@ class BannerPlugin(
         var refreshRateSec: Int? = config.defaultRefreshRateSec
 
         if (AdmobRikatech.isTesting) {
-            adUnitId = activity.getString(R.string.test_ads_admob_banner_id)
+            adUnitId = activity.getString(R.string.test_ads_admob_banner_collapsible_id)
         }
         bannerType = when (bannerConfig?.type) {
             TYPE_STANDARD -> BannerType.Standard

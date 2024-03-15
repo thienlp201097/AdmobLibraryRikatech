@@ -235,7 +235,7 @@ object AdmobRikatech {
         }
         val mAdView = AdView(activity)
         if (isTesting) {
-            bannerId = activity.getString(R.string.test_ads_admob_banner_id)
+            bannerId = activity.getString(R.string.test_ads_admob_banner_collapsible_id)
         }
         mAdView.adUnitId = bannerId!!
         viewGroup.removeAllViews()
@@ -285,6 +285,33 @@ object AdmobRikatech {
         val adRequest2 = AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter::class.java, extras).build()
         mAdView.loadAd(adRequest2)
         Log.e(" Admod", "loadAdBanner")
+    }
+
+    @JvmStatic
+    fun loadAndShowBannerCollapsibleWithConfig(
+        activity: Activity,
+        id: String,refreshRateSec : Int,view: ViewGroup,
+        bannerAdCallback: BannerCollapsibleAdCallback
+    ) {
+        var bannerPlugin: BannerPlugin? = null
+        val bannerConfig = BannerPlugin.BannerConfig(id,"collapsible_bottom",refreshRateSec,0)
+        bannerPlugin = bannerConfig.adUnitId?.let {
+            BannerPlugin(
+                activity, view, it, bannerConfig, object : BannerRemoteConfig {
+                    override fun onBannerAdLoaded(adSize: AdSize?) {
+                        adSize?.let { it1 -> bannerAdCallback.onBannerAdLoaded(it1) }
+                    }
+
+                    override fun onAdFail() {
+                        Log.d("===Banner", "Banner2")
+                        bannerAdCallback.onAdFail("Banner Failed")
+                    }
+
+                    override fun onAdPaid(adValue: AdValue, mAdView: AdView) {
+                        bannerAdCallback.onAdPaid(adValue,mAdView)
+                    }
+                })
+        }
     }
 
     @JvmStatic
