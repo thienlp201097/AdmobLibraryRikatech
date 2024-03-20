@@ -37,11 +37,11 @@ import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.OnPaidEventListener
 import com.google.android.gms.ads.RequestConfiguration
 import com.google.android.gms.ads.VideoOptions
-import com.google.android.gms.ads.formats.NativeAdOptions
 import com.google.android.gms.ads.initialization.InitializationStatus
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.gms.ads.nativead.NativeAd
+import com.google.android.gms.ads.nativead.NativeAdOptions
 import com.google.android.gms.ads.nativead.NativeAdView
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
@@ -288,6 +288,73 @@ object AdmobRikatech {
     }
 
     @JvmStatic
+    fun loadAdBannerCollapsibleReload(
+        activity: Activity,
+        banner: BannerHolder,
+        collapsibleBannerSize: CollapsibleBanner,
+        viewGroup: ViewGroup,
+        callback: BannerCollapsibleAdCallback
+    ) {
+        var bannerId = banner.ads
+        if (!isShowAds || !isNetworkConnected(activity)) {
+            viewGroup.visibility = View.GONE
+            return
+        }
+        banner.mAdView?.destroy()
+        banner.mAdView = AdView(activity)
+        if (isTesting) {
+            bannerId = activity.getString(R.string.test_ads_admob_banner_collapsible_id)
+        }
+        banner.mAdView?.adUnitId = bannerId
+        viewGroup.removeAllViews()
+        val adSize = getAdSize(activity)
+        banner.mAdView?.setAdSize(adSize)
+
+        val tagView = activity.layoutInflater.inflate(R.layout.layoutbanner_loading, null, false)
+        viewGroup.addView(tagView, 0)
+        viewGroup.addView(banner.mAdView, 1)
+        shimmerFrameLayout = tagView.findViewById(R.id.shimmer_view_container)
+        shimmerFrameLayout?.startShimmer()
+
+        banner.mAdView?.adListener = object : AdListener() {
+            override fun onAdLoaded() {
+                banner.mAdView?.onPaidEventListener =
+                    OnPaidEventListener { adValue -> callback.onAdPaid(adValue, banner.mAdView!!) }
+                shimmerFrameLayout?.stopShimmer()
+                viewGroup.removeView(tagView)
+                callback.onBannerAdLoaded(adSize)
+            }
+
+            override fun onAdFailedToLoad(adError: LoadAdError) {
+                Log.e(" Admod", "failloadbanner" + adError.message)
+                shimmerFrameLayout?.stopShimmer()
+                viewGroup.removeView(tagView)
+                callback.onAdFail(adError.message)
+            }
+
+            override fun onAdOpened() {}
+            override fun onAdClicked() {
+                callback.onClickAds()
+            }
+
+            override fun onAdClosed() {
+
+            }
+        }
+        val extras = Bundle()
+        var anchored = "top"
+        anchored = if (collapsibleBannerSize === CollapsibleBanner.TOP) {
+            "top"
+        } else {
+            "bottom"
+        }
+        extras.putString("collapsible", anchored)
+        val adRequest2 = AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter::class.java, extras).build()
+        banner.mAdView?.loadAd(adRequest2)
+        Log.e(" Admod", "loadAdBanner")
+    }
+
+    @JvmStatic
     fun loadAndShowBannerCollapsibleWithConfig(
         activity: Activity,
         id: String,refreshRateSec : Int,view: ViewGroup,
@@ -334,24 +401,8 @@ object AdmobRikatech {
 
                 override fun onAdFail() {
                     Log.d("===Banner", "Banner2")
-                    bannerPlugin = BannerPlugin(activity,
-                        view,
-                        bannerHolder.ads2,
-                        bannerConfig,
-                        object : BannerRemoteConfig {
-                            override fun onBannerAdLoaded(adSize: AdSize?) {
-                                view.visibility = View.VISIBLE
-                                line.visibility = View.VISIBLE
-                            }
-
-                            override fun onAdFail() {
-                                view.visibility = View.GONE
-                                line.visibility = View.GONE
-                            }
-
-                            override fun onAdPaid(adValue: AdValue, mAdView: AdView) {
-                            }
-                        })
+                    view.visibility = View.GONE
+                    line.visibility = View.GONE
                 }
 
                 override fun onAdPaid(adValue: AdValue, mAdView: AdView) {
@@ -380,24 +431,8 @@ object AdmobRikatech {
 
                 override fun onAdFail() {
                     Log.d("===Banner", "Banner2")
-                    bannerPlugin = BannerPlugin(activity,
-                        view,
-                        bannerHolder.ads2,
-                        bannerConfig,
-                        object : BannerRemoteConfig {
-                            override fun onBannerAdLoaded(adSize: AdSize?) {
-                                view.visibility = View.VISIBLE
-                                line.visibility = View.VISIBLE
-                            }
-
-                            override fun onAdFail() {
-                                view.visibility = View.GONE
-                                line.visibility = View.GONE
-                            }
-
-                            override fun onAdPaid(adValue: AdValue, mAdView: AdView) {
-                            }
-                        })
+                    view.visibility = View.GONE
+                    line.visibility = View.GONE
                 }
 
                 override fun onAdPaid(adValue: AdValue, mAdView: AdView) {
@@ -433,6 +468,8 @@ object AdmobRikatech {
             Log.d("===AdsLoadsNative", "Native not null")
             return
         }
+        val videoOptions =
+            VideoOptions.Builder().setStartMuted(false).build()
         if (isTesting) {
             nativeHolder.ads = context.getString(R.string.test_ads_admob_native_id)
         }
@@ -456,11 +493,8 @@ object AdmobRikatech {
                     nativeHolder.native_mutable.value = null
                     adCallback.onAdFail(adError.message)
                 }
-                override fun onAdClicked() {
-                    super.onAdClicked()
-                }
             })
-            .withNativeAdOptions(NativeAdOptions.Builder().build()).build()
+            .withNativeAdOptions(NativeAdOptions.Builder().setVideoOptions(videoOptions).build()).build()
         if (adRequest != null) {
             adLoader.loadAd(adRequest!!)
         }
@@ -570,6 +604,8 @@ object AdmobRikatech {
         if (isTesting) {
             s = activity.getString(R.string.test_ads_admob_native_id)
         }
+        val videoOptions =
+            VideoOptions.Builder().setStartMuted(false).build()
         val adLoader: AdLoader = AdLoader.Builder(activity, s!!)
             .forNativeAd { nativeAd ->
                 nativeAd.setOnPaidEventListener { adValue: AdValue -> adCallback.onAdPaid(adValue,s) }
@@ -589,12 +625,8 @@ object AdmobRikatech {
                     viewGroup.removeAllViews()
                     adCallback.onAdFail(adError.message)
                 }
-                override fun onAdClicked() {
-                    super.onAdClicked()
-
-                }
             })
-            .withNativeAdOptions(NativeAdOptions.Builder().build()).build()
+            .withNativeAdOptions(NativeAdOptions.Builder().setVideoOptions(videoOptions).build()).build()
         if (adRequest != null) {
             adLoader.loadAd(adRequest!!)
         }
@@ -636,8 +668,10 @@ object AdmobRikatech {
         shimmerFrameLayout.startShimmer()
 
         if (isTesting) {
-            s = activity.getString(R.string.test_ads_admob_native_video_id)
+            s = activity.getString(R.string.test_ads_admob_native_id)
         }
+        val videoOptions =
+            VideoOptions.Builder().setStartMuted(false).build()
         val adLoader: AdLoader = AdLoader.Builder(activity, s)
             .forNativeAd { nativeAd ->
                 adCallback.onNativeAdLoaded()
@@ -666,7 +700,7 @@ object AdmobRikatech {
                     adCallback.onClickAds()
                 }
             })
-            .withNativeAdOptions(NativeAdOptions.Builder().build()).build()
+            .withNativeAdOptions(NativeAdOptions.Builder().setVideoOptions(videoOptions).build()).build()
         if (adRequest != null) {
             adLoader.loadAd(adRequest!!)
         }
@@ -941,7 +975,7 @@ object AdmobRikatech {
         if (AppOpenManager.getInstance().isInitialized) {
             AppOpenManager.getInstance().isAppResumeEnabled = false
         }
-        RewardedAd.load(activity, admobId!!,
+        RewardedAd.load(activity, admobId,
             adRequest!!, object : RewardedAdLoadCallback() {
                 override fun onAdFailedToLoad(loadAdError: LoadAdError) {
                     // Handle the error.
@@ -1436,7 +1470,7 @@ object AdmobRikatech {
         val adView = activity.layoutInflater.inflate(layout, null) as NativeAdView
         val builder = AdLoader.Builder(activity,adMobId)
         val videoOptions = VideoOptions.Builder().setStartMuted(false).setCustomControlsRequested(false).build()
-        val adOptions = com.google.android.gms.ads.nativead.NativeAdOptions.Builder()
+        val adOptions = NativeAdOptions.Builder()
             .setMediaAspectRatio(mediaAspectRatio)
             .setVideoOptions(videoOptions)
             .build()
@@ -1453,10 +1487,6 @@ object AdmobRikatech {
                 Log.d("===AdmobFailed", loadAdError.toString())
                 shimmerFrameLayout?.stopShimmer()
                 listener.onLoadFailed()
-            }
-            override fun onAdClicked() {
-                super.onAdClicked()
-
             }
         })
         if (adRequest != null) {
@@ -1484,7 +1514,7 @@ object AdmobRikatech {
         }
         nativeHolder.isLoad = true
         val videoOptions = VideoOptions.Builder().setStartMuted(false).setCustomControlsRequested(true).build()
-        val adOptions = com.google.android.gms.ads.nativead.NativeAdOptions.Builder()
+        val adOptions = NativeAdOptions.Builder()
             .setMediaAspectRatio(mediaAspectRatio)
             .setVideoOptions(videoOptions)
             .build()

@@ -1,3 +1,7 @@
 package com.rikatech.admoblibrary.ads.model
 
-class BannerHolder(var ads: String,var ads2: String)
+import com.google.android.gms.ads.AdView
+
+class BannerHolder(var ads: String) {
+    var mAdView: AdView? = null
+}
