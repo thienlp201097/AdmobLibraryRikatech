@@ -121,7 +121,6 @@ object AdmobRikatech {
         isTesting = isDebug
         isShowAds = isEnableAds
         MobileAds.initialize(context!!) { initializationStatus: InitializationStatus? -> }
-        deviceId = getDeviceID(context)
         initListIdTest()
         val requestConfiguration = RequestConfiguration.Builder()
             .setTestDeviceIds(testDevices)
