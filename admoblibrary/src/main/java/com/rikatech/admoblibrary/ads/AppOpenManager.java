@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class AppOpenManager implements Application.ActivityLifecycleCallbacks, LifecycleObserver {
+public class AppOpenManager implements Application.ActivityLifecycleCallbacks, LifecycleObserver  {
     private static final String TAG = "AppOpenManager";
     private static volatile AppOpenManager INSTANCE;
     private AppOpenAd appResumeAd = null;
@@ -187,8 +187,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
 
                     };
             AppOpenAd.load(
-                    myApplication, appResumeAdId, adRequest,
-                    AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT, loadCallback);
+                    myApplication, appResumeAdId, adRequest, loadCallback);
         }
 
     }
@@ -348,10 +347,9 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
             }, 100);
         }
     }
-
-
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    public void onResume() {
+    protected void onMoveToForeground() {
+        // Show the ad (if available) when the app moves to foreground.
         Log.d("===Onresume", "onresume");
         if (currentActivity == null) {
             return;

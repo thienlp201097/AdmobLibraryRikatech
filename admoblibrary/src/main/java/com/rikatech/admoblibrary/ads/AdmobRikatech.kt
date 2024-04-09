@@ -493,7 +493,7 @@ object AdmobRikatech {
                     adCallback.onAdFail(adError.message)
                 }
             })
-            .withNativeAdOptions(NativeAdOptions.Builder().setVideoOptions(videoOptions).build()).build()
+            .withNativeAdOptions(NativeAdOptions.Builder().build()).build()
         if (adRequest != null) {
             adLoader.loadAd(adRequest!!)
         }
@@ -625,7 +625,7 @@ object AdmobRikatech {
                     adCallback.onAdFail(adError.message)
                 }
             })
-            .withNativeAdOptions(NativeAdOptions.Builder().setVideoOptions(videoOptions).build()).build()
+            .withNativeAdOptions(NativeAdOptions.Builder().build()).build()
         if (adRequest != null) {
             adLoader.loadAd(adRequest!!)
         }
@@ -699,7 +699,7 @@ object AdmobRikatech {
                     adCallback.onClickAds()
                 }
             })
-            .withNativeAdOptions(NativeAdOptions.Builder().setVideoOptions(videoOptions).build()).build()
+            .withNativeAdOptions(NativeAdOptions.Builder().build()).build()
         if (adRequest != null) {
             adLoader.loadAd(adRequest!!)
         }
@@ -837,6 +837,7 @@ object AdmobRikatech {
                                 Log.e("Admodfail", "errorCodeAds" + adError.cause)
                                 interHolder.mutable.removeObservers((activity as LifecycleOwner))
                                 interHolder.mutable.value = null
+                                handler.removeCallbacksAndMessages(null)
                                 adCallback?.onAdFail(adError.message)
                             }
 
@@ -854,6 +855,8 @@ object AdmobRikatech {
                         }
                         showInterstitialAdNew(activity, aBoolean, adCallback)
                     }, 400)
+                }else{
+                    interHolder.check = true
                 }
             }
             return
@@ -866,6 +869,7 @@ object AdmobRikatech {
                     AppOpenManager.getInstance().isAppResumeEnabled = true
                 }
                 adCallback.onAdFail("inter null")
+                handler.removeCallbacksAndMessages(null)
             }
         } else {
             if (enableLoadingDialog) {
@@ -891,6 +895,7 @@ object AdmobRikatech {
                             if (AppOpenManager.getInstance().isInitialized) {
                                 AppOpenManager.getInstance().isAppResumeEnabled = true
                             }
+                            handler.removeCallbacksAndMessages(null)
                             isClick = false
                             interHolder.inter = null
                             interHolder.mutable.removeObservers((activity as LifecycleOwner))
