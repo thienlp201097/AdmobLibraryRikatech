@@ -132,7 +132,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
 
     public void enableAppResumeWithActivity(Class activityClass) {
         Log.d(TAG, "enableAppResumeWithActivity: " + activityClass.getName());
-        disabledAppOpenList.remove(activityClass);
+        new Handler().postDelayed(() -> disabledAppOpenList.remove(activityClass),40);
     }
 
 
@@ -215,19 +215,16 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
     @Override
     public void onActivityStarted(Activity activity) {
         Log.d("===ADS", activity.getClass() + "|"+AdActivity.class);
-        if (activity.getClass() == AdActivity.class){
-            Log.d("===ADS", "Back");
-            return;
-        }
+//        if (activity.getClass() == AdActivity.class){
+//            Log.d("===ADS", "Back");
+//            return;
+//        }
         currentActivity = activity;
         Log.d("===ADS", "Running");
     }
 
     @Override
     public void onActivityResumed(Activity activity) {
-        if (activity.getClass() == AdActivity.class){
-            return;
-        }
         currentActivity = activity;
         if (splashActivity == null) {
             if (!activity.getClass().getName().equals(AdActivity.class.getName())) {
@@ -254,9 +251,9 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
 
     @Override
     public void onActivityDestroyed(Activity activity) {
-        if (activity.getClass() == AdActivity.class){
-            return;
-        }
+//        if (activity.getClass() == AdActivity.class){
+//            return;
+//        }
         currentActivity = null;
         if (dialogFullScreen != null && dialogFullScreen.isShowing()){
             dialogFullScreen.dismiss();
@@ -347,35 +344,44 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
             }, 100);
         }
     }
+
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     protected void onMoveToForeground() {
         // Show the ad (if available) when the app moves to foreground.
-        Log.d("===Onresume", "onresume");
-        if (currentActivity == null) {
-            return;
-        }
-        if(AdmobRikatech.isAdShowing){
-            return;
-        }
-        if (!AdmobRikatech.isShowAds) {
-            return;
-        }
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("===Onresume", "onresume");
+                if (currentActivity == null) {
+                    return;
+                }
+                if (currentActivity.getClass() == AdActivity.class){
+                    return;
+                }
+                if(AdmobRikatech.isAdShowing){
+                    return;
+                }
+                if (!AdmobRikatech.isShowAds) {
+                    return;
+                }
 
-        if (!isAppResumeEnabled) {
-            Log.d("===Onresume", "isAppResumeEnabled");
-            return;
-        } else {
-            if(AdmobRikatech.dialog != null && AdmobRikatech.dialog.isShowing())
-                AdmobRikatech.dialog.dismiss();
-        }
+                if (!isAppResumeEnabled) {
+                    Log.d("===Onresume", "isAppResumeEnabled");
+                    return;
+                } else {
+                    if(AdmobRikatech.dialog != null && AdmobRikatech.dialog.isShowing())
+                        AdmobRikatech.dialog.dismiss();
+                }
 
-        for (Class activity : disabledAppOpenList) {
-            if (activity.getName().equals(currentActivity.getClass().getName())) {
-                Log.d(TAG, "onStart: activity is disabled");
-                return;
+                for (Class activity : disabledAppOpenList) {
+                    if (activity.getName().equals(currentActivity.getClass().getName())) {
+                        Log.d(TAG, "onStart: activity is disabled");
+                        return;
+                    }
+                }
+                showAdIfAvailable(false);
             }
-        }
-        showAdIfAvailable(false);
+        },30);
     }
 
     public void showDialog(Context context){
